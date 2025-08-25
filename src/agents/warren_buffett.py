@@ -8,6 +8,11 @@ from src.tools.api import get_financial_metrics, get_market_cap, search_line_ite
 from src.utils.llm import call_llm
 from src.utils.progress import progress
 from src.utils.api_key import get_api_key_from_state
+from src.agents.regime_detector import get_current_market_regime, AdaptiveThresholds
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 class WarrenBuffettSignal(BaseModel):
     signal: Literal["bullish", "bearish", "neutral"]
@@ -16,11 +21,28 @@ class WarrenBuffettSignal(BaseModel):
 
 
 def warren_buffett_agent(state: AgentState, agent_id: str = "warren_buffett_agent"):
-    """Analyzes stocks using Buffett's principles and LLM reasoning."""
+    """Analyzes stocks using Buffett's principles with adaptive, regime-aware thresholds."""
     data = state["data"]
     end_date = data["end_date"]
     tickers = data["tickers"]
     api_key = get_api_key_from_state(state, "FINANCIAL_DATASETS_API_KEY")
+    
+    # Get current market regime for adaptive thresholds
+    try:
+        current_regime = get_current_market_regime(end_date, api_key)
+        logger.info(f"Market regime detected: {current_regime.market_state}/{current_regime.volatility}/{current_regime.structure} (confidence: {current_regime.confidence:.2f})")
+    except Exception as e:
+        logger.warning(f"Failed to detect market regime: {e}. Using fallback neutral regime.")
+        from src.agents.regime_detector import MarketRegime
+        from datetime import datetime
+        current_regime = MarketRegime(
+            market_state="neutral",
+            volatility="low", 
+            structure="mean_reverting",
+            confidence=0.3,
+            timestamp=datetime.now()
+        )
+    
     # Collect all analysis for LLM reasoning
     analysis_data = {}
     buffett_analysis = {}
@@ -57,9 +79,9 @@ def warren_buffett_agent(state: AgentState, agent_id: str = "warren_buffett_agen
         # Get current market cap
         market_cap = get_market_cap(ticker, end_date, api_key=api_key)
 
-        progress.update_status(agent_id, ticker, "Analyzing fundamentals")
-        # Analyze fundamentals
-        fundamental_analysis = analyze_fundamentals(metrics)
+        progress.update_status(agent_id, ticker, "Analyzing fundamentals with adaptive thresholds")
+        # Analyze fundamentals with adaptive thresholds
+        fundamental_analysis = analyze_fundamentals_adaptive(metrics, current_regime, ticker)
 
         progress.update_status(agent_id, ticker, "Analyzing consistency")
         consistency_analysis = analyze_consistency(financial_line_items)
@@ -68,7 +90,7 @@ def warren_buffett_agent(state: AgentState, agent_id: str = "warren_buffett_agen
         moat_analysis = analyze_moat(metrics)
 
         progress.update_status(agent_id, ticker, "Analyzing pricing power")
-        pricing_power_analysis = analyze_pricing_power(financial_line_items, metrics)
+        pricing_power_analysis = analyze_pricing_power_adaptive(financial_line_items, metrics, current_regime)
 
         progress.update_status(agent_id, ticker, "Analyzing book value growth")
         book_value_analysis = analyze_book_value_growth(financial_line_items)
@@ -76,8 +98,8 @@ def warren_buffett_agent(state: AgentState, agent_id: str = "warren_buffett_agen
         progress.update_status(agent_id, ticker, "Analyzing management quality")
         mgmt_analysis = analyze_management_quality(financial_line_items)
 
-        progress.update_status(agent_id, ticker, "Calculating intrinsic value")
-        intrinsic_value_analysis = calculate_intrinsic_value(financial_line_items)
+        progress.update_status(agent_id, ticker, "Calculating intrinsic value with adaptive parameters")
+        intrinsic_value_analysis = calculate_intrinsic_value_adaptive(financial_line_items, current_regime)
 
         # Calculate total score without circle of competence (LLM will handle that)
         total_score = (
@@ -98,12 +120,15 @@ def warren_buffett_agent(state: AgentState, agent_id: str = "warren_buffett_agen
             5     # book_value_growth (0-5)
         )
 
-        # Add margin of safety analysis if we have both intrinsic value and current price
+        # Add margin of safety analysis with adaptive thresholds
         margin_of_safety = None
         intrinsic_value = intrinsic_value_analysis["intrinsic_value"]
         if intrinsic_value and market_cap:
             margin_of_safety = (intrinsic_value - market_cap) / market_cap
 
+        # Get adaptive thresholds for this analysis
+        adaptive_thresholds = AdaptiveThresholds.get_adaptive_threshold("margin_of_safety", current_regime)
+        
         # Combine all analysis results for LLM evaluation
         analysis_data[ticker] = {
             "ticker": ticker,
@@ -118,12 +143,24 @@ def warren_buffett_agent(state: AgentState, agent_id: str = "warren_buffett_agen
             "intrinsic_value_analysis": intrinsic_value_analysis,
             "market_cap": market_cap,
             "margin_of_safety": margin_of_safety,
+            "market_regime": {
+                "state": current_regime.market_state,
+                "volatility": current_regime.volatility,
+                "structure": current_regime.structure,
+                "confidence": current_regime.confidence
+            },
+            "adaptive_thresholds": {
+                "margin_of_safety_required": adaptive_thresholds,
+                "discount_rate_used": intrinsic_value_analysis.get("assumptions", {}).get("discount_rate"),
+                "regime_adjustments": f"Using {current_regime.market_state} market/{current_regime.volatility} volatility parameters"
+            }
         }
 
-        progress.update_status(agent_id, ticker, "Generating Warren Buffett analysis")
-        buffett_output = generate_buffett_output(
+        progress.update_status(agent_id, ticker, "Generating adaptive Warren Buffett analysis")
+        buffett_output = generate_buffett_output_adaptive(
             ticker=ticker,
             analysis_data=analysis_data,
+            current_regime=current_regime,
             state=state,
             agent_id=agent_id,
         )
@@ -152,55 +189,414 @@ def warren_buffett_agent(state: AgentState, agent_id: str = "warren_buffett_agen
     return {"messages": [message], "data": state["data"]}
 
 
-def analyze_fundamentals(metrics: list) -> dict[str, any]:
-    """Analyze company fundamentals based on Buffett's criteria."""
+def analyze_fundamentals_adaptive(metrics: list, regime, ticker: str, sector: str = None) -> dict[str, any]:
+    """Analyze company fundamentals with adaptive, regime-aware thresholds."""
     if not metrics:
-        return {"score": 0, "details": "Insufficient fundamental data"}
+        return {"score": 0, "details": "Insufficient fundamental data", "regime_info": "No regime adjustments applied"}
 
     latest_metrics = metrics[0]
-
     score = 0
     reasoning = []
 
-    # Check ROE (Return on Equity)
-    if latest_metrics.return_on_equity and latest_metrics.return_on_equity > 0.15:  # 15% ROE threshold
+    # Get adaptive thresholds based on market regime
+    roe_threshold = AdaptiveThresholds.get_adaptive_threshold("roe_threshold", regime, sector)
+    debt_threshold = AdaptiveThresholds.get_adaptive_threshold("debt_to_equity_threshold", regime, sector)
+    margin_threshold = AdaptiveThresholds.get_adaptive_threshold("operating_margin_threshold", regime, sector)
+    current_ratio_threshold = AdaptiveThresholds.get_adaptive_threshold("current_ratio_threshold", regime, sector)
+    
+    # Log the adaptive adjustments
+    reasoning.append(f"REGIME-ADAPTIVE ANALYSIS ({regime.market_state}/{regime.volatility})")
+    
+    # Check ROE with adaptive threshold
+    if latest_metrics.return_on_equity and latest_metrics.return_on_equity > roe_threshold:
         score += 2
-        reasoning.append(f"Strong ROE of {latest_metrics.return_on_equity:.1%}")
+        reasoning.append(f"Strong ROE of {latest_metrics.return_on_equity:.1%} (threshold: {roe_threshold:.1%})")
     elif latest_metrics.return_on_equity:
-        reasoning.append(f"Weak ROE of {latest_metrics.return_on_equity:.1%}")
+        reasoning.append(f"Weak ROE of {latest_metrics.return_on_equity:.1%} (threshold: {roe_threshold:.1%})")
     else:
         reasoning.append("ROE data not available")
 
-    # Check Debt to Equity
-    if latest_metrics.debt_to_equity and latest_metrics.debt_to_equity < 0.5:
+    # Check Debt to Equity with adaptive threshold
+    if latest_metrics.debt_to_equity and latest_metrics.debt_to_equity < debt_threshold:
         score += 2
-        reasoning.append("Conservative debt levels")
+        reasoning.append(f"Conservative debt levels {latest_metrics.debt_to_equity:.1f} (threshold: <{debt_threshold:.1f})")
     elif latest_metrics.debt_to_equity:
-        reasoning.append(f"High debt to equity ratio of {latest_metrics.debt_to_equity:.1f}")
+        reasoning.append(f"High debt to equity ratio of {latest_metrics.debt_to_equity:.1f} (threshold: <{debt_threshold:.1f})")
     else:
         reasoning.append("Debt to equity data not available")
 
-    # Check Operating Margin
-    if latest_metrics.operating_margin and latest_metrics.operating_margin > 0.15:
+    # Check Operating Margin with adaptive threshold
+    if latest_metrics.operating_margin and latest_metrics.operating_margin > margin_threshold:
         score += 2
-        reasoning.append("Strong operating margins")
+        reasoning.append(f"Strong operating margins {latest_metrics.operating_margin:.1%} (threshold: >{margin_threshold:.1%})")
     elif latest_metrics.operating_margin:
-        reasoning.append(f"Weak operating margin of {latest_metrics.operating_margin:.1%}")
+        reasoning.append(f"Weak operating margin of {latest_metrics.operating_margin:.1%} (threshold: >{margin_threshold:.1%})")
     else:
         reasoning.append("Operating margin data not available")
 
-    # Check Current Ratio
-    if latest_metrics.current_ratio and latest_metrics.current_ratio > 1.5:
+    # Check Current Ratio with adaptive threshold
+    if latest_metrics.current_ratio and latest_metrics.current_ratio > current_ratio_threshold:
         score += 1
-        reasoning.append("Good liquidity position")
+        reasoning.append(f"Good liquidity position {latest_metrics.current_ratio:.1f} (threshold: >{current_ratio_threshold:.1f})")
     elif latest_metrics.current_ratio:
-        reasoning.append(f"Weak liquidity with current ratio of {latest_metrics.current_ratio:.1f}")
+        reasoning.append(f"Weak liquidity with current ratio of {latest_metrics.current_ratio:.1f} (threshold: >{current_ratio_threshold:.1f})")
     else:
         reasoning.append("Current ratio data not available")
 
-    return {"score": score, "details": "; ".join(reasoning), "metrics": latest_metrics.model_dump()}
+    # Add regime context
+    regime_explanation = f"Thresholds adjusted for {regime.market_state} market conditions"
+    if regime.volatility == "high":
+        regime_explanation += " with heightened volatility requirements"
+    
+    return {
+        "score": score, 
+        "details": "; ".join(reasoning), 
+        "metrics": latest_metrics.model_dump(),
+        "regime_adjustments": regime_explanation,
+        "adaptive_thresholds": {
+            "roe": roe_threshold,
+            "debt_to_equity": debt_threshold,
+            "operating_margin": margin_threshold,
+            "current_ratio": current_ratio_threshold
+        }
+    }
 
 
+def analyze_pricing_power_adaptive(financial_line_items: list, metrics: list, regime) -> dict[str, any]:
+    """
+    Analyze pricing power with adaptive thresholds based on market regime.
+    In volatile markets, require more consistent pricing power evidence.
+    """
+    if not financial_line_items or not metrics:
+        return {"score": 0, "details": "Insufficient data for pricing power analysis"}
+    
+    score = 0
+    reasoning = []
+    
+    # Adaptive thresholds based on regime
+    margin_improvement_threshold = 0.02 if regime.volatility == "low" else 0.03  # Higher bar in volatile markets
+    high_margin_threshold = 0.5 if regime.market_state == "bear" else 0.45  # Stricter in bear markets
+    good_margin_threshold = 0.3 if regime.market_state == "bear" else 0.25
+    
+    # Check gross margin trends
+    gross_margins = []
+    for item in financial_line_items:
+        if hasattr(item, 'gross_margin') and item.gross_margin is not None:
+            gross_margins.append(item.gross_margin)
+    
+    if len(gross_margins) >= 3:
+        # Check margin stability/improvement with adaptive thresholds
+        recent_avg = sum(gross_margins[:2]) / 2 if len(gross_margins) >= 2 else gross_margins[0]
+        older_avg = sum(gross_margins[-2:]) / 2 if len(gross_margins) >= 2 else gross_margins[-1]
+        
+        margin_change = recent_avg - older_avg
+        
+        if margin_change > margin_improvement_threshold:
+            score += 3
+            reasoning.append(f"Expanding gross margins (+{margin_change:.1%}) indicate strong pricing power (regime-adjusted threshold: >{margin_improvement_threshold:.1%})")
+        elif margin_change > 0:
+            score += 2
+            reasoning.append(f"Improving gross margins (+{margin_change:.1%}) suggest good pricing power")
+        elif abs(margin_change) < 0.01:  # Stable within 1%
+            score += 1
+            reasoning.append(f"Stable gross margins during {regime.market_state} market uncertainty")
+        else:
+            reasoning.append(f"Declining gross margins ({margin_change:.1%}) may indicate pricing pressure - concerning in {regime.market_state} environment")
+    
+    # Check if company has been able to maintain high margins consistently (stricter in bear markets)
+    if gross_margins:
+        avg_margin = sum(gross_margins) / len(gross_margins)
+        if avg_margin > high_margin_threshold:
+            score += 2
+            reasoning.append(f"Consistently high gross margins ({avg_margin:.1%}) indicate strong pricing power (regime-adjusted threshold: >{high_margin_threshold:.1%})")
+        elif avg_margin > good_margin_threshold:
+            score += 1
+            reasoning.append(f"Good gross margins ({avg_margin:.1%}) suggest decent pricing power (regime-adjusted threshold: >{good_margin_threshold:.1%})")
+    
+    regime_context = f"Analysis adjusted for {regime.market_state} market with {regime.volatility} volatility"
+    
+    return {
+        "score": score,
+        "details": "; ".join(reasoning) if reasoning else "Limited pricing power analysis available",
+        "regime_adjustments": regime_context,
+        "adaptive_thresholds": {
+            "margin_improvement_required": margin_improvement_threshold,
+            "high_margin_threshold": high_margin_threshold,
+            "good_margin_threshold": good_margin_threshold
+        }
+    }
+
+
+def calculate_intrinsic_value_adaptive(financial_line_items: list, regime) -> dict[str, any]:
+    """
+    Calculate intrinsic value with adaptive discount rates and growth assumptions based on market regime.
+    """
+    if not financial_line_items or len(financial_line_items) < 3:
+        return {"intrinsic_value": None, "details": ["Insufficient data for reliable valuation"]}
+
+    # Calculate owner earnings with better methodology
+    earnings_data = calculate_owner_earnings(financial_line_items)
+    if not earnings_data["owner_earnings"]:
+        return {"intrinsic_value": None, "details": earnings_data["details"]}
+
+    owner_earnings = earnings_data["owner_earnings"]
+    latest_financial_line_items = financial_line_items[0]
+    shares_outstanding = latest_financial_line_items.outstanding_shares
+
+    if not shares_outstanding or shares_outstanding <= 0:
+        return {"intrinsic_value": None, "details": ["Missing or invalid shares outstanding data"]}
+
+    # Enhanced DCF with regime-adaptive assumptions
+    details = []
+    
+    # Estimate growth rate based on historical performance (more conservative)
+    historical_earnings = []
+    for item in financial_line_items[:5]:  # Last 5 years
+        if hasattr(item, 'net_income') and item.net_income:
+            historical_earnings.append(item.net_income)
+    
+    # Calculate historical growth rate
+    if len(historical_earnings) >= 3:
+        oldest_earnings = historical_earnings[-1]
+        latest_earnings = historical_earnings[0]
+        years = len(historical_earnings) - 1
+        
+        if oldest_earnings > 0:
+            historical_growth = ((latest_earnings / oldest_earnings) ** (1/years)) - 1
+            # Conservative adjustment - cap growth and apply haircut
+            historical_growth = max(-0.05, min(historical_growth, 0.15))  # Cap between -5% and 15%
+            
+            # Regime-based growth adjustment
+            regime_growth_multiplier = {
+                'bull': 1.1,    # Slightly higher growth expectations in bull markets
+                'bear': 0.7,    # Much more conservative in bear markets
+                'neutral': 0.85  # Moderately conservative in neutral markets
+            }.get(regime.market_state, 0.85)
+            
+            conservative_growth = historical_growth * regime_growth_multiplier
+        else:
+            conservative_growth = 0.02 if regime.market_state == 'bear' else 0.03  # Lower default in bear markets
+    else:
+        conservative_growth = 0.02 if regime.market_state == 'bear' else 0.03
+    
+    # Adaptive assumptions based on market regime
+    stage1_growth = min(conservative_growth, 0.08 if regime.market_state != 'bear' else 0.06)
+    stage2_growth = min(conservative_growth * 0.5, 0.04 if regime.market_state != 'bear' else 0.03)
+    terminal_growth = 0.025 if regime.market_state != 'bear' else 0.02
+    
+    # Regime-adaptive discount rate
+    base_discount_rate = AdaptiveThresholds.get_adaptive_threshold("discount_rate", regime)
+    
+    # Additional volatility premium in high volatility environments
+    volatility_premium = 0.01 if regime.volatility == "high" else 0
+    discount_rate = base_discount_rate + volatility_premium
+    
+    # Three-stage DCF model
+    stage1_years = 5 if regime.market_state != 'bear' else 4  # Shorter projection in bear markets
+    stage2_years = 5
+    
+    present_value = 0
+    details.append(f"Regime-adjusted DCF: {regime.market_state} market, {regime.volatility} volatility")
+    details.append(f"Stage 1 ({stage1_growth:.1%}, {stage1_years}y), Stage 2 ({stage2_growth:.1%}, {stage2_years}y), Terminal ({terminal_growth:.1%})")
+    
+    # Stage 1: Higher growth
+    stage1_pv = 0
+    for year in range(1, stage1_years + 1):
+        future_earnings = owner_earnings * (1 + stage1_growth) ** year
+        pv = future_earnings / (1 + discount_rate) ** year
+        stage1_pv += pv
+    
+    # Stage 2: Transition growth
+    stage2_pv = 0
+    stage1_final_earnings = owner_earnings * (1 + stage1_growth) ** stage1_years
+    for year in range(1, stage2_years + 1):
+        future_earnings = stage1_final_earnings * (1 + stage2_growth) ** year
+        pv = future_earnings / (1 + discount_rate) ** (stage1_years + year)
+        stage2_pv += pv
+    
+    # Terminal value using Gordon Growth Model
+    final_earnings = stage1_final_earnings * (1 + stage2_growth) ** stage2_years
+    terminal_earnings = final_earnings * (1 + terminal_growth)
+    terminal_value = terminal_earnings / (discount_rate - terminal_growth)
+    terminal_pv = terminal_value / (1 + discount_rate) ** (stage1_years + stage2_years)
+    
+    # Total intrinsic value
+    intrinsic_value = stage1_pv + stage2_pv + terminal_pv
+    
+    # Apply regime-adaptive margin of safety
+    margin_of_safety_multiplier = {
+        'bull': 0.90,    # 10% haircut in bull markets
+        'bear': 0.75,    # 25% haircut in bear markets  
+        'neutral': 0.85  # 15% haircut in neutral markets
+    }.get(regime.market_state, 0.85)
+    
+    if regime.volatility == "high":
+        margin_of_safety_multiplier *= 0.95  # Additional 5% haircut for high volatility
+    
+    conservative_intrinsic_value = intrinsic_value * margin_of_safety_multiplier
+    
+    details.extend([
+        f"Regime-adjusted discount rate: {discount_rate:.1%} (base: {base_discount_rate:.1%})",
+        f"Growth assumptions adjusted for {regime.market_state} market",
+        f"Margin of safety: {(1-margin_of_safety_multiplier)*100:.0f}% (regime-adjusted)",
+        f"Stage 1 PV: ${stage1_pv:,.0f}",
+        f"Stage 2 PV: ${stage2_pv:,.0f}",
+        f"Terminal PV: ${terminal_pv:,.0f}",
+        f"Total IV: ${intrinsic_value:,.0f}",
+        f"Conservative IV: ${conservative_intrinsic_value:,.0f}",
+        f"Owner earnings: ${owner_earnings:,.0f}",
+    ])
+
+    return {
+        "intrinsic_value": conservative_intrinsic_value,
+        "raw_intrinsic_value": intrinsic_value,
+        "owner_earnings": owner_earnings,
+        "assumptions": {
+            "stage1_growth": stage1_growth,
+            "stage2_growth": stage2_growth,
+            "terminal_growth": terminal_growth,
+            "discount_rate": discount_rate,
+            "base_discount_rate": base_discount_rate,
+            "volatility_premium": volatility_premium,
+            "stage1_years": stage1_years,
+            "stage2_years": stage2_years,
+            "historical_growth": conservative_growth,
+            "regime_multiplier": margin_of_safety_multiplier,
+            "market_regime": regime.market_state,
+            "volatility_regime": regime.volatility
+        },
+        "details": details,
+    }
+
+
+def generate_buffett_output_adaptive(
+    ticker: str,
+    analysis_data: dict[str, any],
+    current_regime,
+    state: AgentState,
+    agent_id: str = "warren_buffett_agent",
+) -> WarrenBuffettSignal:
+    """Get investment decision from LLM with adaptive Buffett principles based on market regime"""
+    template = ChatPromptTemplate.from_messages(
+        [
+            (
+                "system",
+                """You are Warren Buffett, the Oracle of Omaha, but now with ADAPTIVE market intelligence. Analyze investment opportunities using my proven methodology enhanced with dynamic parameter adjustment based on current market conditions.
+
+                MY ADAPTIVE CORE PRINCIPLES:
+                
+                🎯 REGIME-AWARE CIRCLE OF COMPETENCE: "Risk comes from not knowing what you're doing" - but risk parameters change with market conditions:
+
+                BULL MARKET ADAPTATION:
+                - Slightly more flexible on valuation metrics (P/E can be higher)
+                - Still require strong business fundamentals but can accept growth premiums
+                - Focus on companies that can sustain performance in eventual downturns
+                - "Be greedy when others are greedy, but not recklessly so"
+
+                BEAR MARKET ADAPTATION:
+                - Stricter valuation requirements and higher margins of safety
+                - Emphasize balance sheet strength and cash generation even more
+                - Look for companies with pricing power during economic stress
+                - "Be greedy when others are fearful" - but verify the fear is justified
+
+                HIGH VOLATILITY PERIODS:
+                - Require wider margins of safety due to uncertainty
+                - Emphasize companies with predictable earnings streams
+                - Value balance sheet conservatism more highly
+                - Shorter valuation projection periods due to uncertainty
+
+                ADAPTIVE VALUATION FRAMEWORK:
+                The analysis provided uses regime-adjusted parameters:
+                - Discount rates adapt to volatility conditions
+                - Growth assumptions become more conservative in bear markets  
+                - Margin of safety requirements increase in uncertain times
+                - Fundamental thresholds adjust for sector and market conditions
+
+                MY DECISION FRAMEWORK REMAINS THE SAME:
+                1. Circle of Competence - Do I understand this business? (Consider regime impact on business model)
+                2. Economic Moats - Will competitive advantages persist through market cycles?
+                3. Management Quality - How do they perform under different market conditions?
+                4. Financial Strength - Can they survive and thrive in current regime?
+                5. Adaptive Valuation - Am I paying the right price for current conditions?
+
+                CONFIDENCE LEVELS (Regime-Adjusted):
+                - 90-100%: Exceptional business, regime-appropriate valuation, fits market conditions perfectly
+                - 70-89%: Good business with decent moat, appropriately valued for current regime
+                - 50-69%: Mixed signals, regime creates uncertainty about business prospects
+                - 30-49%: Outside my expertise OR concerning fundamentals for current market environment
+                - 10-29%: Poor business OR significantly overvalued for current conditions
+
+                Remember: "Our favorite holding period is forever" - but "forever" must account for how businesses perform across different market regimes. The key is finding wonderful businesses at regime-appropriate prices.
+                """,
+            ),
+            (
+                "human",
+                """Analyze this investment opportunity for {ticker} with current market conditions:
+
+                CURRENT MARKET REGIME: {regime_info}
+
+                COMPREHENSIVE ANALYSIS DATA WITH ADAPTIVE PARAMETERS:
+                {analysis_data}
+
+                🎯 KEY REGIME CONSIDERATIONS:
+                - Market State: {market_state} (affects growth expectations and risk tolerance)
+                - Volatility: {volatility} (affects margin of safety requirements)  
+                - Structure: {structure} (affects business model sustainability)
+                - Regime Confidence: {regime_confidence:.1%}
+
+                Please provide your investment decision in exactly this JSON format:
+                {{
+                  "signal": "bullish" | "bearish" | "neutral",
+                  "confidence": float between 0 and 100,
+                  "reasoning": "string with your detailed Warren Buffett-style analysis incorporating regime adaptations"
+                }}
+
+                In your reasoning, be specific about:
+                1. How the current {market_state}/{volatility} regime affects this investment (CRITICAL)
+                2. Whether this falls within your circle of competence for current market conditions
+                3. Your assessment of the business's competitive moat during this regime
+                4. How management/capital allocation looks under current market stress/optimism
+                5. Financial health relative to current economic environment
+                6. Valuation using the regime-adjusted parameters provided
+                7. Long-term prospects considering market cycle changes
+                8. Why the adaptive analysis changes (or doesn't change) your view vs static analysis
+
+                Speak as Warren Buffett would - with conviction, folksy wisdom, and specific references to how the current market environment affects your traditional criteria. Acknowledge when regime-adjusted parameters lead to different conclusions than static analysis would suggest.
+                """,
+            ),
+        ]
+    )
+
+    regime_info = f"{current_regime.market_state.title()} Market / {current_regime.volatility.title()} Volatility / {current_regime.structure.replace('_', ' ').title()} Structure"
+    
+    prompt = template.invoke({
+        "analysis_data": json.dumps(analysis_data, indent=2), 
+        "ticker": ticker,
+        "regime_info": regime_info,
+        "market_state": current_regime.market_state,
+        "volatility": current_regime.volatility, 
+        "structure": current_regime.structure,
+        "regime_confidence": current_regime.confidence
+    })
+
+    # Default fallback signal in case parsing fails
+    def create_default_warren_buffett_signal():
+        return WarrenBuffettSignal(
+            signal="neutral", 
+            confidence=30.0, 
+            reasoning=f"Error in regime-adaptive analysis for {regime_info} conditions. Defaulting to neutral with regime-appropriate caution."
+        )
+
+    return call_llm(
+        prompt=prompt,
+        pydantic_model=WarrenBuffettSignal,
+        agent_name=agent_id,
+        state=state,
+        default_factory=create_default_warren_buffett_signal,
+    )
+
+
+# Preserve original functions that don't need modification
 def analyze_consistency(financial_line_items: list) -> dict[str, any]:
     """Analyze earnings consistency and growth."""
     if len(financial_line_items) < 4:  # Need at least 4 periods for trend analysis
@@ -496,123 +892,6 @@ def estimate_maintenance_capex(financial_line_items: list) -> float:
         return max(method_1, method_2)
 
 
-def calculate_intrinsic_value(financial_line_items: list) -> dict[str, any]:
-    """
-    Calculate intrinsic value using enhanced DCF with owner earnings.
-    Uses more sophisticated assumptions and conservative approach like Buffett.
-    """
-    if not financial_line_items or len(financial_line_items) < 3:
-        return {"intrinsic_value": None, "details": ["Insufficient data for reliable valuation"]}
-
-    # Calculate owner earnings with better methodology
-    earnings_data = calculate_owner_earnings(financial_line_items)
-    if not earnings_data["owner_earnings"]:
-        return {"intrinsic_value": None, "details": earnings_data["details"]}
-
-    owner_earnings = earnings_data["owner_earnings"]
-    latest_financial_line_items = financial_line_items[0]
-    shares_outstanding = latest_financial_line_items.outstanding_shares
-
-    if not shares_outstanding or shares_outstanding <= 0:
-        return {"intrinsic_value": None, "details": ["Missing or invalid shares outstanding data"]}
-
-    # Enhanced DCF with more realistic assumptions
-    details = []
-    
-    # Estimate growth rate based on historical performance (more conservative)
-    historical_earnings = []
-    for item in financial_line_items[:5]:  # Last 5 years
-        if hasattr(item, 'net_income') and item.net_income:
-            historical_earnings.append(item.net_income)
-    
-    # Calculate historical growth rate
-    if len(historical_earnings) >= 3:
-        oldest_earnings = historical_earnings[-1]
-        latest_earnings = historical_earnings[0]
-        years = len(historical_earnings) - 1
-        
-        if oldest_earnings > 0:
-            historical_growth = ((latest_earnings / oldest_earnings) ** (1/years)) - 1
-            # Conservative adjustment - cap growth and apply haircut
-            historical_growth = max(-0.05, min(historical_growth, 0.15))  # Cap between -5% and 15%
-            conservative_growth = historical_growth * 0.7  # Apply 30% haircut for conservatism
-        else:
-            conservative_growth = 0.03  # Default 3% if negative base
-    else:
-        conservative_growth = 0.03  # Default conservative growth
-    
-    # Buffett's conservative assumptions
-    stage1_growth = min(conservative_growth, 0.08)  # Stage 1: cap at 8%
-    stage2_growth = min(conservative_growth * 0.5, 0.04)  # Stage 2: half of stage 1, cap at 4%
-    terminal_growth = 0.025  # Long-term GDP growth rate
-    
-    # Risk-adjusted discount rate based on business quality
-    base_discount_rate = 0.09  # Base 9%
-    
-    # Adjust based on analysis scores (if available in calling context)
-    # For now, use conservative 10%
-    discount_rate = 0.10
-    
-    # Three-stage DCF model
-    stage1_years = 5   # High growth phase
-    stage2_years = 5   # Transition phase
-    
-    present_value = 0
-    details.append(f"Using three-stage DCF: Stage 1 ({stage1_growth:.1%}, {stage1_years}y), Stage 2 ({stage2_growth:.1%}, {stage2_years}y), Terminal ({terminal_growth:.1%})")
-    
-    # Stage 1: Higher growth
-    stage1_pv = 0
-    for year in range(1, stage1_years + 1):
-        future_earnings = owner_earnings * (1 + stage1_growth) ** year
-        pv = future_earnings / (1 + discount_rate) ** year
-        stage1_pv += pv
-    
-    # Stage 2: Transition growth
-    stage2_pv = 0
-    stage1_final_earnings = owner_earnings * (1 + stage1_growth) ** stage1_years
-    for year in range(1, stage2_years + 1):
-        future_earnings = stage1_final_earnings * (1 + stage2_growth) ** year
-        pv = future_earnings / (1 + discount_rate) ** (stage1_years + year)
-        stage2_pv += pv
-    
-    # Terminal value using Gordon Growth Model
-    final_earnings = stage1_final_earnings * (1 + stage2_growth) ** stage2_years
-    terminal_earnings = final_earnings * (1 + terminal_growth)
-    terminal_value = terminal_earnings / (discount_rate - terminal_growth)
-    terminal_pv = terminal_value / (1 + discount_rate) ** (stage1_years + stage2_years)
-    
-    # Total intrinsic value
-    intrinsic_value = stage1_pv + stage2_pv + terminal_pv
-    
-    # Apply additional margin of safety (Buffett's conservatism)
-    conservative_intrinsic_value = intrinsic_value * 0.85  # 15% additional haircut
-    
-    details.extend([
-        f"Stage 1 PV: ${stage1_pv:,.0f}",
-        f"Stage 2 PV: ${stage2_pv:,.0f}",
-        f"Terminal PV: ${terminal_pv:,.0f}",
-        f"Total IV: ${intrinsic_value:,.0f}",
-        f"Conservative IV (15% haircut): ${conservative_intrinsic_value:,.0f}",
-        f"Owner earnings: ${owner_earnings:,.0f}",
-        f"Discount rate: {discount_rate:.1%}"
-    ])
-
-    return {
-        "intrinsic_value": conservative_intrinsic_value,
-        "raw_intrinsic_value": intrinsic_value,
-        "owner_earnings": owner_earnings,
-        "assumptions": {
-            "stage1_growth": stage1_growth,
-            "stage2_growth": stage2_growth,
-            "terminal_growth": terminal_growth,
-            "discount_rate": discount_rate,
-            "stage1_years": stage1_years,
-            "stage2_years": stage2_years,
-            "historical_growth": conservative_growth if 'conservative_growth' in locals() else None,
-        },
-        "details": details,
-    }
-
 def analyze_book_value_growth(financial_line_items: list) -> dict[str, any]:
     """Analyze book value per share growth - a key Buffett metric."""
     if len(financial_line_items) < 3:
@@ -680,165 +959,3 @@ def _calculate_book_value_cagr(book_values: list) -> tuple[int, str]:
         return 0, "Warning: Company declined from positive to negative book value"
     else:
         return 0, "Unable to calculate meaningful book value CAGR due to negative values"
-
-
-def analyze_pricing_power(financial_line_items: list, metrics: list) -> dict[str, any]:
-    """
-    Analyze pricing power - Buffett's key indicator of a business moat.
-    Looks at ability to raise prices without losing customers (margin expansion during inflation).
-    """
-    if not financial_line_items or not metrics:
-        return {"score": 0, "details": "Insufficient data for pricing power analysis"}
-    
-    score = 0
-    reasoning = []
-    
-    # Check gross margin trends (ability to maintain/expand margins)
-    gross_margins = []
-    for item in financial_line_items:
-        if hasattr(item, 'gross_margin') and item.gross_margin is not None:
-            gross_margins.append(item.gross_margin)
-    
-    if len(gross_margins) >= 3:
-        # Check margin stability/improvement
-        recent_avg = sum(gross_margins[:2]) / 2 if len(gross_margins) >= 2 else gross_margins[0]
-        older_avg = sum(gross_margins[-2:]) / 2 if len(gross_margins) >= 2 else gross_margins[-1]
-        
-        if recent_avg > older_avg + 0.02:  # 2%+ improvement
-            score += 3
-            reasoning.append("Expanding gross margins indicate strong pricing power")
-        elif recent_avg > older_avg:
-            score += 2
-            reasoning.append("Improving gross margins suggest good pricing power")
-        elif abs(recent_avg - older_avg) < 0.01:  # Stable within 1%
-            score += 1
-            reasoning.append("Stable gross margins during economic uncertainty")
-        else:
-            reasoning.append("Declining gross margins may indicate pricing pressure")
-    
-    # Check if company has been able to maintain high margins consistently
-    if gross_margins:
-        avg_margin = sum(gross_margins) / len(gross_margins)
-        if avg_margin > 0.5:  # 50%+ gross margins
-            score += 2
-            reasoning.append(f"Consistently high gross margins ({avg_margin:.1%}) indicate strong pricing power")
-        elif avg_margin > 0.3:  # 30%+ gross margins
-            score += 1
-            reasoning.append(f"Good gross margins ({avg_margin:.1%}) suggest decent pricing power")
-    
-    return {
-        "score": score,
-        "details": "; ".join(reasoning) if reasoning else "Limited pricing power analysis available"
-    }
-
-
-def generate_buffett_output(
-    ticker: str,
-    analysis_data: dict[str, any],
-    state: AgentState,
-    agent_id: str = "warren_buffett_agent",
-) -> WarrenBuffettSignal:
-    """Get investment decision from LLM with Buffett's principles"""
-    template = ChatPromptTemplate.from_messages(
-        [
-            (
-                "system",
-                """You are Warren Buffett, the Oracle of Omaha. Analyze investment opportunities using my proven methodology developed over 60+ years of investing:
-
-                MY CORE PRINCIPLES:
-                1. Circle of Competence: "Risk comes from not knowing what you're doing." Only invest in businesses I thoroughly understand.
-                2. Economic Moats: Seek companies with durable competitive advantages - pricing power, brand strength, scale advantages, switching costs.
-                3. Quality Management: Look for honest, competent managers who think like owners and allocate capital wisely.
-                4. Financial Fortress: Prefer companies with strong balance sheets, consistent earnings, and minimal debt.
-                5. Intrinsic Value & Margin of Safety: Pay significantly less than what the business is worth - "Price is what you pay, value is what you get."
-                6. Long-term Perspective: "Our favorite holding period is forever." Look for businesses that will prosper for decades.
-                7. Pricing Power: The best businesses can raise prices without losing customers.
-
-                MY CIRCLE OF COMPETENCE PREFERENCES:
-                STRONGLY PREFER:
-                - Consumer staples with strong brands (Coca-Cola, P&G, Walmart, Costco)
-                - Commercial banking (Bank of America, Wells Fargo) - NOT investment banking
-                - Insurance (GEICO, property & casualty)
-                - Railways and utilities (BNSF, simple infrastructure)
-                - Simple industrials with moats (UPS, FedEx, Caterpillar)
-                - Energy companies with reserves and pipelines (Chevron, not exploration)
-
-                GENERALLY AVOID:
-                - Complex technology (semiconductors, software, except Apple due to consumer ecosystem)
-                - Biotechnology and pharmaceuticals (too complex, regulatory risk)
-                - Airlines (commodity business, poor economics)
-                - Cryptocurrency and fintech speculation
-                - Complex derivatives or financial instruments
-                - Rapid technology change industries
-                - Capital-intensive businesses without pricing power
-
-                APPLE EXCEPTION: I own Apple not as a tech stock, but as a consumer products company with an ecosystem that creates switching costs.
-
-                MY INVESTMENT CRITERIA HIERARCHY:
-                First: Circle of Competence - If I don't understand the business model or industry dynamics, I don't invest, regardless of potential returns.
-                Second: Business Quality - Does it have a moat? Will it still be thriving in 20 years?
-                Third: Management - Do they act in shareholders' interests? Smart capital allocation?
-                Fourth: Financial Strength - Consistent earnings, low debt, strong returns on capital?
-                Fifth: Valuation - Am I paying a reasonable price for this wonderful business?
-
-                MY LANGUAGE & STYLE:
-                - Use folksy wisdom and simple analogies ("It's like...")
-                - Reference specific past investments when relevant (Coca-Cola, Apple, GEICO, See's Candies, etc.)
-                - Quote my own sayings when appropriate
-                - Be candid about what I don't understand
-                - Show patience - most opportunities don't meet my criteria
-                - Express genuine enthusiasm for truly exceptional businesses
-                - Be skeptical of complexity and Wall Street jargon
-
-                CONFIDENCE LEVELS:
-                - 90-100%: Exceptional business within my circle, trading at attractive price
-                - 70-89%: Good business with decent moat, fair valuation
-                - 50-69%: Mixed signals, would need more information or better price
-                - 30-49%: Outside my expertise or concerning fundamentals
-                - 10-29%: Poor business or significantly overvalued
-
-                Remember: I'd rather own a wonderful business at a fair price than a fair business at a wonderful price. And when in doubt, the answer is usually "no" - there's no penalty for missed opportunities, only for permanent capital loss.
-                """,
-            ),
-            (
-                "human",
-                """Analyze this investment opportunity for {ticker}:
-
-                COMPREHENSIVE ANALYSIS DATA:
-                {analysis_data}
-
-                Please provide your investment decision in exactly this JSON format:
-                {{
-                  "signal": "bullish" | "bearish" | "neutral",
-                  "confidence": float between 0 and 100,
-                  "reasoning": "string with your detailed Warren Buffett-style analysis"
-                }}
-
-                In your reasoning, be specific about:
-                1. Whether this falls within your circle of competence and why (CRITICAL FIRST STEP)
-                2. Your assessment of the business's competitive moat
-                3. Management quality and capital allocation
-                4. Financial health and consistency
-                5. Valuation relative to intrinsic value
-                6. Long-term prospects and any red flags
-                7. How this compares to opportunities in your portfolio
-
-                Write as Warren Buffett would speak - plainly, with conviction, and with specific references to the data provided.
-                """,
-            ),
-        ]
-    )
-
-    prompt = template.invoke({"analysis_data": json.dumps(analysis_data, indent=2), "ticker": ticker})
-
-    # Default fallback signal in case parsing fails
-    def create_default_warren_buffett_signal():
-        return WarrenBuffettSignal(signal="neutral", confidence=0.0, reasoning="Error in analysis, defaulting to neutral")
-
-    return call_llm(
-        prompt=prompt,
-        pydantic_model=WarrenBuffettSignal,
-        agent_name=agent_id,
-        state=state,
-        default_factory=create_default_warren_buffett_signal,
-    )
