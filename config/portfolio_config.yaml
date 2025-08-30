@@ -1,0 +1,115 @@
+# AI Hedge Fund Configuration - Phase 2 Enhanced Portfolio Manager
+# Configuration for dual-mode portfolio management with ML ensemble capability
+
+portfolio_manager:
+  # Enable enhanced portfolio manager with ML ensemble capability
+  use_enhanced_manager: false  # Set to true to enable ML ensemble
+  
+  # ML Ensemble Configuration
+  use_ml_ensemble: false  # Set to true to use ML ensemble instead of LLM
+  
+  ensemble_config:
+    # Model training and retraining
+    retrain_frequency: "weekly"  # weekly, monthly, never
+    min_training_samples: 1000   # minimum samples before using ML models
+    confidence_threshold: 0.65   # minimum confidence for ML predictions
+    
+    # Model storage
+    models_dir: "data/models"
+    
+    # Feature engineering
+    lookback_days: 252          # days of history for regime detection
+    return_threshold: 0.02      # 2% return threshold for success/failure labels
+    
+    # Risk management
+    max_position_size_multiplier: 1.0  # multiply max_shares by this factor
+    ensemble_risk_adjustment: 0.9      # reduce quantities by this factor for ML decisions
+
+# Performance Tracking Configuration  
+performance_tracking:
+  enabled: true
+  storage_path: "data/agent_performance"
+  
+  # Performance calculation parameters
+  history_window: 60           # days to consider for weight calculation
+  min_predictions_for_weight: 5  # minimum predictions before trusting weights
+  decay_rate: 0.05            # exponential decay rate for time weighting
+  confidence_bins: 10         # bins for confidence calibration analysis
+  
+  # Data management
+  update_frequency: "daily"    # daily, weekly
+  cleanup_interval: "monthly"  # when to clean old data
+  data_retention_days: 730    # days to keep performance data
+  compression_enabled: true    # use gzip compression for storage
+
+# A/B Testing Configuration
+ab_testing:
+  enabled: true
+  decision_logging: true       # log all portfolio decisions for analysis
+  comparison_metrics:
+    - "accuracy"
+    - "sharpe_ratio" 
+    - "max_drawdown"
+    - "return_contribution"
+  
+  # Test configuration
+  test_duration_days: 90      # duration for A/B test periods
+  significance_threshold: 0.05 # p-value threshold for statistical significance
+  
+# Regime Detection Integration
+regime_detection:
+  enabled: true
+  cache_regime_results: true
+  regime_cache_duration: 1440  # minutes (24 hours)
+  
+  # Fallback behavior when regime detection fails
+  fallback_regime:
+    market_state: "neutral"
+    volatility: "low"
+    structure: "mean_reverting"
+    confidence: 0.3
+
+# Agent Weight Configuration
+agent_weighting:
+  # Default weights when no performance history available
+  default_weights:
+    warren_buffett_agent: 0.35
+    technical_analyst_agent: 0.35
+    sentiment_agent: 0.30
+  
+  # Weight calculation parameters
+  performance_weight: 0.7     # weight given to accuracy
+  calibration_weight: 0.3     # weight given to confidence calibration
+  
+  # Weight bounds (prevents extreme weights)
+  min_agent_weight: 0.05      # minimum weight for any agent
+  max_agent_weight: 0.70      # maximum weight for any agent
+  
+# Logging Configuration
+logging:
+  level: "INFO"               # DEBUG, INFO, WARNING, ERROR
+  log_ml_decisions: true      # log detailed ML ensemble decisions
+  log_performance_updates: true  # log agent performance updates
+  log_weight_calculations: false  # log detailed weight calculations (verbose)
+  
+  # Log file configuration
+  log_to_file: true
+  log_file_path: "logs/portfolio_manager.log"
+  max_log_file_size: "10MB"
+  backup_count: 5
+
+# Development and Testing
+development:
+  # Enable additional validation and checks
+  validate_predictions: true
+  strict_error_handling: false  # set to true for debugging
+  
+  # Mock data for testing
+  use_mock_regime_data: false
+  mock_performance_data: false
+  
+  # Feature flags for gradual rollout
+  feature_flags:
+    ensemble_feature_engineering_v2: false
+    advanced_risk_management: false
+    cross_asset_correlation: false

@@ -1,4 +1,7 @@
 import sys
+import json
+from pathlib import Path
+import os
 
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
@@ -27,6 +30,17 @@ from src.utils.ollama import ensure_ollama_and_model
 init(autoreset=True)
 
 
+def is_interactive():
+    """Check if running in interactive mode"""
+    # Check multiple indicators of non-interactive mode
+    return (
+        sys.stdin.isatty() and 
+        not os.environ.get('PYTHONUNBUFFERED') and
+        not os.environ.get('CI') and  # Common CI environment variable
+        sys.stdout.isatty()  # Also check stdout
+    )
+
+
 class Backtester:
     def __init__(
         self,
@@ -39,6 +53,7 @@ class Backtester:
         model_provider: str = "OpenAI",
         selected_analysts: list[str] = [],
         initial_margin_requirement: float = 0.0,
+        output_file: str = None,
     ):
         """
         :param agent: The trading agent (Callable).
@@ -50,6 +65,7 @@ class Backtester:
         :param model_provider: Which LLM provider (OpenAI, etc).
         :param selected_analysts: List of analyst names or IDs to incorporate.
         :param initial_margin_requirement: The margin ratio (e.g. 0.5 = 50%).
+        :param output_file: Path to save training data JSON file.
         """
         self.agent = agent
         self.tickers = tickers
@@ -59,9 +75,13 @@ class Backtester:
         self.model_name = model_name
         self.model_provider = model_provider
         self.selected_analysts = selected_analysts
+        self.output_file = output_file
 
         # Initialize portfolio with support for long/short positions
         self.portfolio_values = []
+        
+        # Training data collection for ML ensemble
+        self.training_data = []
         self.portfolio = {
             "cash": initial_capital,
             "margin_used": 0.0,  # total margin usage across all short positions
@@ -368,6 +388,20 @@ class Backtester:
             #    portfolio value for this day.
             # ---------------------------------------------------------------
             total_value = self.calculate_portfolio_value(current_prices)
+            
+            # ---------------------------------------------------------------
+            # 3) Collect training data for ML ensemble (if output file specified)
+            # ---------------------------------------------------------------
+            if self.output_file:
+                self._collect_training_data(
+                    date=current_date_str,
+                    analyst_signals=analyst_signals,
+                    decisions=decisions,
+                    executed_trades=executed_trades,
+                    current_prices=current_prices,
+                    portfolio_value_before=self.portfolio_values[-1]["Portfolio Value"] if self.portfolio_values else self.initial_capital,
+                    portfolio_value_after=total_value
+                )
 
             # Also compute long/short exposures for final post‐trade state
             long_exposure = sum(self.portfolio["positions"][t]["long"] * current_prices[t] for t in self.tickers)
@@ -604,6 +638,183 @@ class Backtester:
 
         return performance_df
 
+    def _collect_training_data(
+        self, 
+        date: str, 
+        analyst_signals: dict, 
+        decisions: dict, 
+        executed_trades: dict,
+        current_prices: dict,
+        portfolio_value_before: float,
+        portfolio_value_after: float
+    ):
+        """
+        Collect training data for ML ensemble from each trading day.
+        
+        This method captures all agent signals, portfolio decisions, outcomes,
+        and market context needed to train the ML ensemble models.
+        """
+        try:
+            # Calculate daily portfolio return
+            daily_return = (portfolio_value_after - portfolio_value_before) / portfolio_value_before if portfolio_value_before > 0 else 0.0
+            
+            # For each ticker, create a training record
+            for ticker in self.tickers:
+                # Get agent signals for this ticker
+                ticker_signals = {}
+                for agent_name, signals in analyst_signals.items():
+                    if ticker in signals and isinstance(signals[ticker], dict):
+                        signal_data = signals[ticker]
+                        ticker_signals[agent_name] = {
+                            'signal': signal_data.get('signal', 'neutral'),
+                            'confidence': signal_data.get('confidence', 0.0),
+                            'reasoning': signal_data.get('reasoning', '')
+                        }
+                
+                # Get portfolio decision for this ticker
+                decision = decisions.get(ticker, {})
+                executed_qty = executed_trades.get(ticker, 0)
+                
+                # Calculate ticker-specific return (simplified)
+                # This is an approximation - in practice, you'd want more sophisticated attribution
+                position = self.portfolio["positions"][ticker]
+                current_price = current_prices[ticker]
+                
+                # Calculate position value and return contribution
+                position_value = (position["long"] - position["short"]) * current_price
+                
+                # Estimate return for this specific ticker (proportional to position size)
+                total_position_value = sum(
+                    (self.portfolio["positions"][t]["long"] - self.portfolio["positions"][t]["short"]) * current_prices[t]
+                    for t in self.tickers
+                )
+                
+                if total_position_value != 0:
+                    ticker_weight = abs(position_value) / abs(total_position_value)
+                    ticker_return = daily_return * ticker_weight if position_value != 0 else 0.0
+                else:
+                    ticker_return = 0.0
+                
+                # Create training record
+                training_record = {
+                    'date': date,
+                    'ticker': ticker,
+                    'agent_signals': ticker_signals,
+                    'portfolio_decision': {
+                        'action': decision.get('action', 'hold'),
+                        'planned_quantity': decision.get('quantity', 0),
+                        'executed_quantity': executed_qty,
+                        'confidence': decision.get('confidence', 0.0),
+                        'reasoning': decision.get('reasoning', '')
+                    },
+                    'market_data': {
+                        'price': current_price,
+                        'position_before': {
+                            'long': position['long'],
+                            'short': position['short']
+                        }
+                    },
+                    'outcome': {
+                        'daily_return': daily_return,
+                        'ticker_return': ticker_return,
+                        'portfolio_value_before': portfolio_value_before,
+                        'portfolio_value_after': portfolio_value_after
+                    },
+                    'metadata': {
+                        'model_name': self.model_name,
+                        'model_provider': self.model_provider,
+                        'analysts': self.selected_analysts
+                    }
+                }
+                
+                self.training_data.append(training_record)
+                
+        except Exception as e:
+            print(f"Warning: Error collecting training data for {date}: {e}")
+
+    def export_training_data(self) -> bool:
+        """
+        Export collected training data to JSON file for ML ensemble training.
+        
+        Creates a structured JSON file with metadata, configuration, and
+        all trading records suitable for ML model training.
+        
+        Returns:
+            bool: True if export successful, False otherwise
+        """
+        if not self.output_file:
+            return False
+            
+        if not self.training_data:
+            print("No training data to export")
+            return False
+            
+        try:
+            # Create output directory if it doesn't exist
+            output_path = Path(self.output_file)
+            output_path.parent.mkdir(parents=True, exist_ok=True)
+            
+            # Create structured export data
+            export_data = {
+                'metadata': {
+                    'generated_at': datetime.now().isoformat(),
+                    'backtest_period': {
+                        'start_date': self.start_date,
+                        'end_date': self.end_date
+                    },
+                    'configuration': {
+                        'tickers': self.tickers,
+                        'initial_capital': self.initial_capital,
+                        'model_name': self.model_name,
+                        'model_provider': self.model_provider,
+                        'selected_analysts': self.selected_analysts,
+                        'margin_requirement': self.portfolio.get('margin_requirement', 0.0)
+                    },
+                    'performance_summary': {
+                        'total_records': len(self.training_data),
+                        'unique_tickers': len(set(record['ticker'] for record in self.training_data)),
+                        'date_range': {
+                            'first_date': min(record['date'] for record in self.training_data) if self.training_data else None,
+                            'last_date': max(record['date'] for record in self.training_data) if self.training_data else None
+                        }
+                    }
+                },
+                'trades': self.training_data
+            }
+            
+            # Add final portfolio performance if available
+            if hasattr(self, 'performance_metrics') and self.performance_metrics:
+                export_data['metadata']['final_performance'] = {
+                    'sharpe_ratio': self.performance_metrics.get('sharpe_ratio'),
+                    'max_drawdown': self.performance_metrics.get('max_drawdown'),
+                    'sortino_ratio': self.performance_metrics.get('sortino_ratio')
+                }
+            
+            if self.portfolio_values:
+                final_value = self.portfolio_values[-1]['Portfolio Value']
+                total_return = (final_value - self.initial_capital) / self.initial_capital
+                export_data['metadata']['final_performance'] = {
+                    **export_data['metadata'].get('final_performance', {}),
+                    'total_return': total_return,
+                    'final_portfolio_value': final_value
+                }
+            
+            # Write to JSON file
+            with open(output_path, 'w') as f:
+                json.dump(export_data, f, indent=2, default=str)
+            
+            print(f"\n{Fore.GREEN}Training data exported successfully:{Style.RESET_ALL}")
+            print(f"  File: {output_path}")
+            print(f"  Records: {len(self.training_data)}")
+            print(f"  Tickers: {', '.join(self.tickers)}")
+            print(f"  Date range: {self.start_date} to {self.end_date}")
+            
+            return True
+            
+        except Exception as e:
+            print(f"{Fore.RED}Error exporting training data: {e}{Style.RESET_ALL}")
+            return False
+
 
 ### 4. Run the Backtest #####
 if __name__ == "__main__":
@@ -638,7 +849,7 @@ if __name__ == "__main__":
         "--margin-requirement",
         type=float,
         default=0.0,
-        help="Margin ratio for short positions, e.g. 0.5 for 50% (default: 0.0)",
+        help="Margin ratio for short positions, e.g. 0.5 for 50%% (default: 0.0)",
     )
     parser.add_argument(
         "--analysts",
@@ -652,8 +863,27 @@ if __name__ == "__main__":
         help="Use all available analysts (overrides --analysts)",
     )
     parser.add_argument("--ollama", action="store_true", help="Use Ollama for local LLM inference")
+    parser.add_argument(
+        '--llm-provider',
+        choices=['openai', 'anthropic', 'groq', 'ollama', 'google', 'none'],
+        default='none',
+        help='LLM provider to use (default: none - skip LLM agents)'
+    )
+    parser.add_argument(
+        "--output",
+        type=str,
+        default=None,
+        help="Path to save backtest results as JSON for ML training"
+    )
 
     args = parser.parse_args()
+
+    # Handle LLM provider configuration
+    if args.llm_provider != 'none':
+        os.environ['DEFAULT_LLM_PROVIDER'] = args.llm_provider
+        print(f"INFO: Using LLM provider: {args.llm_provider}")
+    else:
+        print("INFO: Running without LLM agents (Financial Datasets API only)")
 
     # Parse tickers from comma-separated string
     tickers = [ticker.strip() for ticker in args.tickers.split(",")] if args.tickers else []
@@ -664,8 +894,8 @@ if __name__ == "__main__":
         selected_analysts = [a[1] for a in ANALYST_ORDER]
     elif args.analysts:
         selected_analysts = [a.strip() for a in args.analysts.split(",") if a.strip()]
-    else:
-        # Choose analysts interactively
+    elif is_interactive():
+        # Choose analysts interactively only if in interactive mode
         choices = questionary.checkbox(
             "Use the Space bar to select/unselect analysts.",
             choices=[questionary.Choice(display, value=value) for display, value in ANALYST_ORDER],
@@ -686,6 +916,21 @@ if __name__ == "__main__":
         else:
             selected_analysts = choices
             print(f"\nSelected analysts: " f"{', '.join(Fore.GREEN + choice.title().replace('_', ' ') + Style.RESET_ALL for choice in choices)}")
+    else:
+        # Default to technicals agent when no selection provided
+        print("No analysts specified, using default: technicals")
+        selected_analysts = [a[1] for a in ANALYST_ORDER if a[1] == 'technicals']
+        
+        if not selected_analysts:
+            # Fallback if technicals not found
+            print("Warning: technicals agent not found, using first available agent")
+            selected_analysts = [ANALYST_ORDER[0][1]] if ANALYST_ORDER else []
+
+    if not selected_analysts:
+        print("ERROR: No analysts selected or available")
+        sys.exit(1)
+
+    print(f"Using analysts: {', '.join(selected_analysts)}")
 
     # Select LLM model based on whether Ollama is being used
     model_name = ""
@@ -694,29 +939,34 @@ if __name__ == "__main__":
     if args.ollama:
         print(f"{Fore.CYAN}Using Ollama for local LLM inference.{Style.RESET_ALL}")
 
-        # Select from Ollama-specific models
-        model_name = questionary.select(
-            "Select your Ollama model:",
-            choices=[questionary.Choice(display, value=value) for display, value, _ in OLLAMA_LLM_ORDER],
-            style=questionary.Style(
-                [
-                    ("selected", "fg:green bold"),
-                    ("pointer", "fg:green bold"),
-                    ("highlighted", "fg:green"),
-                    ("answer", "fg:green bold"),
-                ]
-            ),
-        ).ask()
+        if is_interactive():
+            # Select from Ollama-specific models interactively
+            model_name = questionary.select(
+                "Select your Ollama model:",
+                choices=[questionary.Choice(display, value=value) for display, value, _ in OLLAMA_LLM_ORDER],
+                style=questionary.Style(
+                    [
+                        ("selected", "fg:green bold"),
+                        ("pointer", "fg:green bold"),
+                        ("highlighted", "fg:green"),
+                        ("answer", "fg:green bold"),
+                    ]
+                ),
+            ).ask()
 
-        if not model_name:
-            print("\n\nInterrupt received. Exiting...")
-            sys.exit(0)
-
-        if model_name == "-":
-            model_name = questionary.text("Enter the custom model name:").ask()
             if not model_name:
                 print("\n\nInterrupt received. Exiting...")
                 sys.exit(0)
+
+            if model_name == "-":
+                model_name = questionary.text("Enter the custom model name:").ask()
+                if not model_name:
+                    print("\n\nInterrupt received. Exiting...")
+                    sys.exit(0)
+        else:
+            # Non-interactive: use first available Ollama model
+            model_name = OLLAMA_LLM_ORDER[0][1]  # Get the value from first model
+            print(f"Non-interactive mode: using Ollama model {model_name}")
 
         # Ensure Ollama is installed, running, and the model is available
         if not ensure_ollama_and_model(model_name):
@@ -726,38 +976,44 @@ if __name__ == "__main__":
         model_provider = ModelProvider.OLLAMA.value
         print(f"\nSelected {Fore.CYAN}Ollama{Style.RESET_ALL} model: {Fore.GREEN + Style.BRIGHT}{model_name}{Style.RESET_ALL}\n")
     else:
-        # Use the standard cloud-based LLM selection
-        model_choice = questionary.select(
-            "Select your LLM model:",
-            choices=[questionary.Choice(display, value=(name, provider)) for display, name, provider in LLM_ORDER],
-            style=questionary.Style(
-                [
-                    ("selected", "fg:green bold"),
-                    ("pointer", "fg:green bold"),
-                    ("highlighted", "fg:green"),
-                    ("answer", "fg:green bold"),
-                ]
-            ),
-        ).ask()
+        if is_interactive():
+            # Use the standard cloud-based LLM selection interactively
+            model_choice = questionary.select(
+                "Select your LLM model:",
+                choices=[questionary.Choice(display, value=(name, provider)) for display, name, provider in LLM_ORDER],
+                style=questionary.Style(
+                    [
+                        ("selected", "fg:green bold"),
+                        ("pointer", "fg:green bold"),
+                        ("highlighted", "fg:green"),
+                        ("answer", "fg:green bold"),
+                    ]
+                ),
+            ).ask()
 
-        if not model_choice:
-            print("\n\nInterrupt received. Exiting...")
-            sys.exit(0)
-        
-        model_name, model_provider = model_choice
+            if not model_choice:
+                print("\n\nInterrupt received. Exiting...")
+                sys.exit(0)
+            
+            model_name, model_provider = model_choice
 
-        model_info = get_model_info(model_name, model_provider)
-        if model_info:
-            if model_info.is_custom():
-                model_name = questionary.text("Enter the custom model name:").ask()
-                if not model_name:
-                    print("\n\nInterrupt received. Exiting...")
-                    sys.exit(0)
+            model_info = get_model_info(model_name, model_provider)
+            if model_info:
+                if model_info.is_custom():
+                    model_name = questionary.text("Enter the custom model name:").ask()
+                    if not model_name:
+                        print("\n\nInterrupt received. Exiting...")
+                        sys.exit(0)
 
-            print(f"\nSelected {Fore.CYAN}{model_provider}{Style.RESET_ALL} model: {Fore.GREEN + Style.BRIGHT}{model_name}{Style.RESET_ALL}\n")
+                print(f"\nSelected {Fore.CYAN}{model_provider}{Style.RESET_ALL} model: {Fore.GREEN + Style.BRIGHT}{model_name}{Style.RESET_ALL}\n")
+            else:
+                model_provider = "Unknown"
+                print(f"\nSelected model: {Fore.GREEN + Style.BRIGHT}{model_name}{Style.RESET_ALL}\n")
         else:
-            model_provider = "Unknown"
-            print(f"\nSelected model: {Fore.GREEN + Style.BRIGHT}{model_name}{Style.RESET_ALL}\n")
+            # Non-interactive: use first available cloud model  
+            model_name, model_provider = LLM_ORDER[0][1], LLM_ORDER[0][2]
+            print(f"Non-interactive mode: using {model_provider} model {model_name}")
+            print(f"\nSelected {Fore.CYAN}{model_provider}{Style.RESET_ALL} model: {Fore.GREEN + Style.BRIGHT}{model_name}{Style.RESET_ALL}\n")
 
     # Create and run the backtester
     backtester = Backtester(
@@ -770,7 +1026,12 @@ if __name__ == "__main__":
         model_provider=model_provider,
         selected_analysts=selected_analysts,
         initial_margin_requirement=args.margin_requirement,
+        output_file=args.output,
     )
 
     performance_metrics = backtester.run_backtest()
     performance_df = backtester.analyze_performance()
+    
+    # Export training data if output file specified
+    if args.output:
+        backtester.export_training_data()

@@ -1,0 +1,35 @@
+# ML Ensemble Mode Configuration for A/B Testing
+# Uses ML ensemble for signal fusion and decision making
+
+portfolio_manager:
+  use_enhanced_manager: true
+  use_ml_ensemble: true  # Use ML ensemble decisions
+  
+  ensemble_config:
+    confidence_threshold: 0.65
+    models_dir: "data/models"
+    retrain_frequency: "weekly"
+    min_training_samples: 1000
+
+performance_tracking:
+  enabled: true
+  storage_path: "data/agent_performance"
+  history_window: 60
+  min_predictions_for_weight: 5
+
+ab_testing:
+  enabled: true
+  decision_logging: true
+  comparison_metrics:
+    - "accuracy" 
+    - "sharpe_ratio"
+    - "return_contribution"
+
+regime_detection:
+  enabled: true
+  cache_regime_results: true
+
+logging:
+  level: "INFO"
+  log_ml_decisions: true
+  log_performance_updates: true

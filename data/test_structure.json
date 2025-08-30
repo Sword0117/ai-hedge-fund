@@ -1,0 +1,1 @@
+{"metadata": {"test": true}, "trades": [{"date": "2023-01-01", "ticker": "AAPL", "agent_signals": {"test": {"signal": "bullish", "confidence": 75.0}}, "outcome": {"ticker_return": 0.02}}]}

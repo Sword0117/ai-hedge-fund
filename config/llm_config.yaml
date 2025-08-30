@@ -1,0 +1,24 @@
+# LLM Mode Configuration for A/B Testing
+# Uses traditional LLM-based portfolio management
+
+portfolio_manager:
+  use_enhanced_manager: true
+  use_ml_ensemble: false  # Use LLM decisions
+
+performance_tracking:
+  enabled: true
+  storage_path: "data/agent_performance"
+  history_window: 60
+
+ab_testing:
+  enabled: true
+  decision_logging: true
+  comparison_metrics:
+    - "accuracy"
+    - "sharpe_ratio"
+    - "return_contribution"
+
+logging:
+  level: "INFO"
+  log_ml_decisions: true
+  log_performance_updates: true

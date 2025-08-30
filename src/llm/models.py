@@ -200,3 +200,43 @@ def get_model(model_name: str, model_provider: ModelProvider, api_keys: dict = N
                 raise ValueError("GigaChat API key not found. Please make sure GIGACHAT_API_KEY is set in your .env file or provided via API keys.")
 
             return GigaChat(credentials=api_key, model=model_name)
+
+
+# Central LLM Provider Configuration
+LLM_PROVIDER_CONFIG = {
+    'google': {
+        'model': 'gemini-2.0-flash-exp',
+        'provider_name': 'google',
+        'env_var': 'GOOGLE_API_KEY'
+    },
+    'openai': {
+        'model': 'gpt-4',
+        'provider_name': 'openai',
+        'env_var': 'OPENAI_API_KEY'
+    },
+    'anthropic': {
+        'model': 'claude-3-sonnet',
+        'provider_name': 'anthropic', 
+        'env_var': 'ANTHROPIC_API_KEY'
+    },
+    'groq': {
+        'model': 'llama3-70b-8192',
+        'provider_name': 'groq',
+        'env_var': 'GROQ_API_KEY'
+    }
+}
+
+
+def detect_llm_provider():
+    """Auto-detect available LLM provider"""
+    import os
+    from dotenv import load_dotenv
+    load_dotenv()
+    
+    for provider, config in LLM_PROVIDER_CONFIG.items():
+        if os.getenv(config['env_var']):
+            print(f"Detected {config['provider_name']} API key")
+            return config['model'], config['provider_name']
+    
+    print("No LLM API keys found")
+    return None, None

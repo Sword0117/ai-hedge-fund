@@ -1,0 +1,1950 @@
+{
+  "metadata": {
+    "generated_at": "2025-08-27T11:24:35.153619",
+    "backtest_period": {
+      "start_date": "2023-01-01",
+      "end_date": "2023-03-01"
+    },
+    "configuration": {
+      "tickers": [
+        "AAPL",
+        "MSFT",
+        "GOOGL",
+        "TSLA",
+        "NVDA"
+      ],
+      "initial_capital": 100000,
+      "model_name": "gpt-4",
+      "selected_analysts": [
+        "warren_buffett_agent",
+        "technical_analyst_agent",
+        "sentiment_agent"
+      ]
+    },
+    "performance_summary": {
+      "total_records": 60
+    }
+  },
+  "trades": [
+    {
+      "date": "2023-01-01",
+      "ticker": "AAPL",
+      "agent_signals": {
+        "warren_buffett_agent": {
+          "signal": "bearish",
+          "confidence": 58.57121488312167,
+          "reasoning": "warren_buffett_agent analysis for AAPL on 2023-01-01"
+        },
+        "technical_analyst_agent": {
+          "signal": "neutral",
+          "confidence": 63.074855285145226,
+          "reasoning": "technical_analyst_agent analysis for AAPL on 2023-01-01"
+        },
+        "sentiment_agent": {
+          "signal": "neutral",
+          "confidence": 75.68718270819382,
+          "reasoning": "sentiment_agent analysis for AAPL on 2023-01-01"
+        }
+      },
+      "portfolio_decision": {
+        "action": "hold",
+        "planned_quantity": 0,
+        "executed_quantity": 0,
+        "confidence": 65.77775095882023
+      },
+      "outcome": {
+        "ticker_return": -0.03478367004223503,
+        "daily_return": -0.027826936033788024
+      },
+      "return": -0.03478367004223503
+    },
+    {
+      "date": "2023-01-02",
+      "ticker": "TSLA",
+      "agent_signals": {
+        "warren_buffett_agent": {
+          "signal": "bullish",
+          "confidence": 57.65232911812612,
+          "reasoning": "warren_buffett_agent analysis for TSLA on 2023-01-02"
+        },
+        "technical_analyst_agent": {
+          "signal": "bearish",
+          "confidence": 60.79607909051591,
+          "reasoning": "technical_analyst_agent analysis for TSLA on 2023-01-02"
+        },
+        "sentiment_agent": {
+          "signal": "bullish",
+          "confidence": 68.64078451689613,
+          "reasoning": "sentiment_agent analysis for TSLA on 2023-01-02"
+        }
+      },
+      "portfolio_decision": {
+        "action": "buy",
+        "planned_quantity": 157,
+        "executed_quantity": 157,
+        "confidence": 62.363064241846054
+      },
+      "outcome": {
+        "ticker_return": 0.03207949841541416,
+        "daily_return": 0.02566359873233133
+      },
+      "return": 0.03207949841541416
+    },
+    {
+      "date": "2023-01-03",
+      "ticker": "MSFT",
+      "agent_signals": {
+        "warren_buffett_agent": {
+          "signal": "neutral",
+          "confidence": 78.33006598372393,
+          "reasoning": "warren_buffett_agent analysis for MSFT on 2023-01-03"
+        },
+        "technical_analyst_agent": {
+          "signal": "bullish",
+          "confidence": 84.17457755498424,
+          "reasoning": "technical_analyst_agent analysis for MSFT on 2023-01-03"
+        },
+        "sentiment_agent": {
+          "signal": "neutral",
+          "confidence": 56.9045759261401,
+          "reasoning": "sentiment_agent analysis for MSFT on 2023-01-03"
+        }
+      },
+      "portfolio_decision": {
+        "action": "hold",
+        "planned_quantity": 0,
+        "executed_quantity": 0,
+        "confidence": 73.13640648828276
+      },
+      "outcome": {
+        "ticker_return": 0.006672280500298512,
+        "daily_return": 0.00533782440023881
+      },
+      "return": 0.006672280500298512
+    },
+    {
+      "date": "2023-01-04",
+      "ticker": "MSFT",
+      "agent_signals": {
+        "warren_buffett_agent": {
+          "signal": "bullish",
+          "confidence": 63.297455522306805,
+          "reasoning": "warren_buffett_agent analysis for MSFT on 2023-01-04"
+        },
+        "technical_analyst_agent": {
+          "signal": "bullish",
+          "confidence": 70.31867167436913,
+          "reasoning": "technical_analyst_agent analysis for MSFT on 2023-01-04"
+        },
+        "sentiment_agent": {
+          "signal": "bearish",
+          "confidence": 72.28513093097521,
+          "reasoning": "sentiment_agent analysis for MSFT on 2023-01-04"
+        }
+      },
+      "portfolio_decision": {
+        "action": "buy",
+        "planned_quantity": 187,
+        "executed_quantity": 187,
+        "confidence": 68.63375270921705
+      },
+      "outcome": {
+        "ticker_return": 0.033783907201629076,
+        "daily_return": 0.027027125761303263
+      },
+      "return": 0.033783907201629076
+    },
+    {
+      "date": "2023-01-05",
+      "ticker": "AAPL",
+      "agent_signals": {
+        "warren_buffett_agent": {
+          "signal": "bullish",
+          "confidence": 60.261239849248255,
+          "reasoning": "warren_buffett_agent analysis for AAPL on 2023-01-05"
+        },
+        "technical_analyst_agent": {
+          "signal": "bearish",
+          "confidence": 86.56355243810421,
+          "reasoning": "technical_analyst_agent analysis for AAPL on 2023-01-05"
+        },
+        "sentiment_agent": {
+          "signal": "bearish",
+          "confidence": 63.094085810270485,
+          "reasoning": "sentiment_agent analysis for AAPL on 2023-01-05"
+        }
+      },
+      "portfolio_decision": {
+        "action": "sell",
+        "planned_quantity": 55,
+        "executed_quantity": 55,
+        "confidence": 69.97295936587432
+      },
+      "outcome": {
+        "ticker_return": 0.002274310172895408,
+        "daily_return": 0.0018194481383163265
+      },
+      "return": 0.002274310172895408
+    },
+    {
+      "date": "2023-01-06",
+      "ticker": "MSFT",
+      "agent_signals": {
+        "warren_buffett_agent": {
+          "signal": "bearish",
+          "confidence": 79.93612023553014,
+          "reasoning": "warren_buffett_agent analysis for MSFT on 2023-01-06"
+        },
+        "technical_analyst_agent": {
+          "signal": "bearish",
+          "confidence": 71.40378675117498,
+          "reasoning": "technical_analyst_agent analysis for MSFT on 2023-01-06"
+        },
+        "sentiment_agent": {
+          "signal": "bearish",
+          "confidence": 65.42737777057602,
+          "reasoning": "sentiment_agent analysis for MSFT on 2023-01-06"
+        }
+      },
+      "portfolio_decision": {
+        "action": "sell",
+        "planned_quantity": 97,
+        "executed_quantity": 97,
+        "confidence": 72.25576158576037
+      },
+      "outcome": {
+        "ticker_return": -0.018110069261794946,
+        "daily_return": -0.014488055409435957
+      },
+      "return": -0.018110069261794946
+    },
+    {
+      "date": "2023-01-07",
+      "ticker": "GOOGL",
+      "agent_signals": {
+        "warren_buffett_agent": {
+          "signal": "bearish",
+          "confidence": 74.56371097104929,
+          "reasoning": "warren_buffett_agent analysis for GOOGL on 2023-01-07"
+        },
+        "technical_analyst_agent": {
+          "signal": "bearish",
+          "confidence": 62.14207528735645,
+          "reasoning": "technical_analyst_agent analysis for GOOGL on 2023-01-07"
+        },
+        "sentiment_agent": {
+          "signal": "neutral",
+          "confidence": 46.84554592792388,
+          "reasoning": "sentiment_agent analysis for GOOGL on 2023-01-07"
+        }
+      },
+      "portfolio_decision": {
+        "action": "sell",
+        "planned_quantity": 70,
+        "executed_quantity": 70,
+        "confidence": 61.1837773954432
+      },
+      "outcome": {
+        "ticker_return": 0.003747607877020949,
+        "daily_return": 0.0029980863016167594
+      },
+      "return": 0.003747607877020949
+    },
+    {
+      "date": "2023-01-08",
+      "ticker": "TSLA",
+      "agent_signals": {
+        "warren_buffett_agent": {
+          "signal": "bullish",
+          "confidence": 82.38869128674261,
+          "reasoning": "warren_buffett_agent analysis for TSLA on 2023-01-08"
+        },
+        "technical_analyst_agent": {
+          "signal": "bearish",
+          "confidence": 66.58845521910807,
+          "reasoning": "technical_analyst_agent analysis for TSLA on 2023-01-08"
+        },
+        "sentiment_agent": {
+          "signal": "bearish",
+          "confidence": 73.71407680759239,
+          "reasoning": "sentiment_agent analysis for TSLA on 2023-01-08"
+        }
+      },
+      "portfolio_decision": {
+        "action": "sell",
+        "planned_quantity": 79,
+        "executed_quantity": 79,
+        "confidence": 74.23040777114768
+      },
+      "outcome": {
+        "ticker_return": 0.006559994692774684,
+        "daily_return": 0.0052479957542197475
+      },
+      "return": 0.006559994692774684
+    },
+    {
+      "date": "2023-01-09",
+      "ticker": "AAPL",
+      "agent_signals": {
+        "warren_buffett_agent": {
+          "signal": "neutral",
+          "confidence": 52.316601182404156,
+          "reasoning": "warren_buffett_agent analysis for AAPL on 2023-01-09"
+        },
+        "technical_analyst_agent": {
+          "signal": "bearish",
+          "confidence": 77.01540154435507,
+          "reasoning": "technical_analyst_agent analysis for AAPL on 2023-01-09"
+        },
+        "sentiment_agent": {
+          "signal": "neutral",
+          "confidence": 52.587115231939116,
+          "reasoning": "sentiment_agent analysis for AAPL on 2023-01-09"
+        }
+      },
+      "portfolio_decision": {
+        "action": "hold",
+        "planned_quantity": 0,
+        "executed_quantity": 0,
+        "confidence": 60.63970598623278
+      },
+      "outcome": {
+        "ticker_return": -0.0006736800823071987,
+        "daily_return": -0.0005389440658457589
+      },
+      "return": -0.0006736800823071987
+    },
+    {
+      "date": "2023-01-10",
+      "ticker": "TSLA",
+      "agent_signals": {
+        "warren_buffett_agent": {
+          "signal": "bullish",
+          "confidence": 59.270805827431836,
+          "reasoning": "warren_buffett_agent analysis for TSLA on 2023-01-10"
+        },
+        "technical_analyst_agent": {
+          "signal": "bullish",
+          "confidence": 76.84104402489453,
+          "reasoning": "technical_analyst_agent analysis for TSLA on 2023-01-10"
+        },
+        "sentiment_agent": {
+          "signal": "bearish",
+          "confidence": 69.88055246609031,
+          "reasoning": "sentiment_agent analysis for TSLA on 2023-01-10"
+        }
+      },
+      "portfolio_decision": {
+        "action": "buy",
+        "planned_quantity": 199,
+        "executed_quantity": 199,
+        "confidence": 68.66413410613889
+      },
+      "outcome": {
+        "ticker_return": 0.015706029637674784,
+        "daily_return": 0.012564823710139828
+      },
+      "return": 0.015706029637674784
+    },
+    {
+      "date": "2023-01-11",
+      "ticker": "TSLA",
+      "agent_signals": {
+        "warren_buffett_agent": {
+          "signal": "bullish",
+          "confidence": 84.91381622732885,
+          "reasoning": "warren_buffett_agent analysis for TSLA on 2023-01-11"
+        },
+        "technical_analyst_agent": {
+          "signal": "neutral",
+          "confidence": 62.72728236521382,
+          "reasoning": "technical_analyst_agent analysis for TSLA on 2023-01-11"
+        },
+        "sentiment_agent": {
+          "signal": "bullish",
+          "confidence": 74.44411638666664,
+          "reasoning": "sentiment_agent analysis for TSLA on 2023-01-11"
+        }
+      },
+      "portfolio_decision": {
+        "action": "buy",
+        "planned_quantity": 90,
+        "executed_quantity": 90,
+        "confidence": 74.02840499306977
+      },
+      "outcome": {
+        "ticker_return": -0.0008295208391043366,
+        "daily_return": -0.0006636166712834694
+      },
+      "return": -0.0008295208391043366
+    },
+    {
+      "date": "2023-01-12",
+      "ticker": "TSLA",
+      "agent_signals": {
+        "warren_buffett_agent": {
+          "signal": "bullish",
+          "confidence": 63.356675027728784,
+          "reasoning": "warren_buffett_agent analysis for TSLA on 2023-01-12"
+        },
+        "technical_analyst_agent": {
+          "signal": "bearish",
+          "confidence": 75.87343035297411,
+          "reasoning": "technical_analyst_agent analysis for TSLA on 2023-01-12"
+        },
+        "sentiment_agent": {
+          "signal": "neutral",
+          "confidence": 74.43118808937993,
+          "reasoning": "sentiment_agent analysis for TSLA on 2023-01-12"
+        }
+      },
+      "portfolio_decision": {
+        "action": "hold",
+        "planned_quantity": 0,
+        "executed_quantity": 0,
+        "confidence": 71.22043115669427
+      },
+      "outcome": {
+        "ticker_return": -0.019540759122287216,
+        "daily_return": -0.015632607297829774
+      },
+      "return": -0.019540759122287216
+    },
+    {
+      "date": "2023-01-13",
+      "ticker": "AAPL",
+      "agent_signals": {
+        "warren_buffett_agent": {
+          "signal": "neutral",
+          "confidence": 76.28072298570635,
+          "reasoning": "warren_buffett_agent analysis for AAPL on 2023-01-13"
+        },
+        "technical_analyst_agent": {
+          "signal": "neutral",
+          "confidence": 70.20526419093136,
+          "reasoning": "technical_analyst_agent analysis for AAPL on 2023-01-13"
+        },
+        "sentiment_agent": {
+          "signal": "bearish",
+          "confidence": 57.3906100267642,
+          "reasoning": "sentiment_agent analysis for AAPL on 2023-01-13"
+        }
+      },
+      "portfolio_decision": {
+        "action": "hold",
+        "planned_quantity": 0,
+        "executed_quantity": 0,
+        "confidence": 67.9588657344673
+      },
+      "outcome": {
+        "ticker_return": -0.012776577620247614,
+        "daily_return": -0.010221262096198093
+      },
+      "return": -0.012776577620247614
+    },
+    {
+      "date": "2023-01-14",
+      "ticker": "GOOGL",
+      "agent_signals": {
+        "warren_buffett_agent": {
+          "signal": "neutral",
+          "confidence": 67.76885861115139,
+          "reasoning": "warren_buffett_agent analysis for GOOGL on 2023-01-14"
+        },
+        "technical_analyst_agent": {
+          "signal": "bullish",
+          "confidence": 78.75900580699252,
+          "reasoning": "technical_analyst_agent analysis for GOOGL on 2023-01-14"
+        },
+        "sentiment_agent": {
+          "signal": "neutral",
+          "confidence": 60.30651527910537,
+          "reasoning": "sentiment_agent analysis for GOOGL on 2023-01-14"
+        }
+      },
+      "portfolio_decision": {
+        "action": "hold",
+        "planned_quantity": 0,
+        "executed_quantity": 0,
+        "confidence": 68.94479323241643
+      },
+      "outcome": {
+        "ticker_return": 0.001934666105883982,
+        "daily_return": 0.0015477328847071856
+      },
+      "return": 0.001934666105883982
+    },
+    {
+      "date": "2023-01-15",
+      "ticker": "GOOGL",
+      "agent_signals": {
+        "warren_buffett_agent": {
+          "signal": "bearish",
+          "confidence": 77.25192675206954,
+          "reasoning": "warren_buffett_agent analysis for GOOGL on 2023-01-15"
+        },
+        "technical_analyst_agent": {
+          "signal": "bearish",
+          "confidence": 60.017156883838304,
+          "reasoning": "technical_analyst_agent analysis for GOOGL on 2023-01-15"
+        },
+        "sentiment_agent": {
+          "signal": "bearish",
+          "confidence": 59.54422832115792,
+          "reasoning": "sentiment_agent analysis for GOOGL on 2023-01-15"
+        }
+      },
+      "portfolio_decision": {
+        "action": "sell",
+        "planned_quantity": 96,
+        "executed_quantity": 96,
+        "confidence": 65.60443731902193
+      },
+      "outcome": {
+        "ticker_return": -0.033287936480746294,
+        "daily_return": -0.026630349184597037
+      },
+      "return": -0.033287936480746294
+    },
+    {
+      "date": "2023-01-16",
+      "ticker": "GOOGL",
+      "agent_signals": {
+        "warren_buffett_agent": {
+          "signal": "bullish",
+          "confidence": 80.73033597214142,
+          "reasoning": "warren_buffett_agent analysis for GOOGL on 2023-01-16"
+        },
+        "technical_analyst_agent": {
+          "signal": "bearish",
+          "confidence": 62.56960356203636,
+          "reasoning": "technical_analyst_agent analysis for GOOGL on 2023-01-16"
+        },
+        "sentiment_agent": {
+          "signal": "bearish",
+          "confidence": 72.64093013680355,
+          "reasoning": "sentiment_agent analysis for GOOGL on 2023-01-16"
+        }
+      },
+      "portfolio_decision": {
+        "action": "sell",
+        "planned_quantity": 118,
+        "executed_quantity": 118,
+        "confidence": 71.98028989032711
+      },
+      "outcome": {
+        "ticker_return": 0.018679069620640046,
+        "daily_return": 0.014943255696512038
+      },
+      "return": 0.018679069620640046
+    },
+    {
+      "date": "2023-01-17",
+      "ticker": "MSFT",
+      "agent_signals": {
+        "warren_buffett_agent": {
+          "signal": "bearish",
+          "confidence": 83.13970378967468,
+          "reasoning": "warren_buffett_agent analysis for MSFT on 2023-01-17"
+        },
+        "technical_analyst_agent": {
+          "signal": "neutral",
+          "confidence": 75.83021362254762,
+          "reasoning": "technical_analyst_agent analysis for MSFT on 2023-01-17"
+        },
+        "sentiment_agent": {
+          "signal": "neutral",
+          "confidence": 56.92551760803548,
+          "reasoning": "sentiment_agent analysis for MSFT on 2023-01-17"
+        }
+      },
+      "portfolio_decision": {
+        "action": "hold",
+        "planned_quantity": 0,
+        "executed_quantity": 0,
+        "confidence": 71.96514500675259
+      },
+      "outcome": {
+        "ticker_return": -0.027292107673475077,
+        "daily_return": -0.021833686138780062
+      },
+      "return": -0.027292107673475077
+    },
+    {
+      "date": "2023-01-18",
+      "ticker": "NVDA",
+      "agent_signals": {
+        "warren_buffett_agent": {
+          "signal": "neutral",
+          "confidence": 74.95321404866927,
+          "reasoning": "warren_buffett_agent analysis for NVDA on 2023-01-18"
+        },
+        "technical_analyst_agent": {
+          "signal": "bullish",
+          "confidence": 80.15060878914849,
+          "reasoning": "technical_analyst_agent analysis for NVDA on 2023-01-18"
+        },
+        "sentiment_agent": {
+          "signal": "bearish",
+          "confidence": 57.52400335658017,
+          "reasoning": "sentiment_agent analysis for NVDA on 2023-01-18"
+        }
+      },
+      "portfolio_decision": {
+        "action": "hold",
+        "planned_quantity": 0,
+        "executed_quantity": 0,
+        "confidence": 70.8759420647993
+      },
+      "outcome": {
+        "ticker_return": 0.0007030336414236248,
+        "daily_return": 0.0005624269131388999
+      },
+      "return": 0.0007030336414236248
+    },
+    {
+      "date": "2023-01-19",
+      "ticker": "AAPL",
+      "agent_signals": {
+        "warren_buffett_agent": {
+          "signal": "neutral",
+          "confidence": 61.83299467516093,
+          "reasoning": "warren_buffett_agent analysis for AAPL on 2023-01-19"
+        },
+        "technical_analyst_agent": {
+          "signal": "bearish",
+          "confidence": 66.90344197789732,
+          "reasoning": "technical_analyst_agent analysis for AAPL on 2023-01-19"
+        },
+        "sentiment_agent": {
+          "signal": "bullish",
+          "confidence": 40.287633559403744,
+          "reasoning": "sentiment_agent analysis for AAPL on 2023-01-19"
+        }
+      },
+      "portfolio_decision": {
+        "action": "hold",
+        "planned_quantity": 0,
+        "executed_quantity": 0,
+        "confidence": 56.34135673748733
+      },
+      "outcome": {
+        "ticker_return": 0.008313637861938162,
+        "daily_return": 0.00665091028955053
+      },
+      "return": 0.008313637861938162
+    },
+    {
+      "date": "2023-01-20",
+      "ticker": "AAPL",
+      "agent_signals": {
+        "warren_buffett_agent": {
+          "signal": "bullish",
+          "confidence": 51.09945353185564,
+          "reasoning": "warren_buffett_agent analysis for AAPL on 2023-01-20"
+        },
+        "technical_analyst_agent": {
+          "signal": "bearish",
+          "confidence": 75.42468359425767,
+          "reasoning": "technical_analyst_agent analysis for AAPL on 2023-01-20"
+        },
+        "sentiment_agent": {
+          "signal": "bearish",
+          "confidence": 66.75911113185123,
+          "reasoning": "sentiment_agent analysis for AAPL on 2023-01-20"
+        }
+      },
+      "portfolio_decision": {
+        "action": "sell",
+        "planned_quantity": 66,
+        "executed_quantity": 66,
+        "confidence": 64.42774941932151
+      },
+      "outcome": {
+        "ticker_return": -0.027145791557773684,
+        "daily_return": -0.021716633246218947
+      },
+      "return": -0.027145791557773684
+    },
+    {
+      "date": "2023-01-21",
+      "ticker": "NVDA",
+      "agent_signals": {
+        "warren_buffett_agent": {
+          "signal": "bullish",
+          "confidence": 77.46167985017637,
+          "reasoning": "warren_buffett_agent analysis for NVDA on 2023-01-21"
+        },
+        "technical_analyst_agent": {
+          "signal": "neutral",
+          "confidence": 65.71229743085632,
+          "reasoning": "technical_analyst_agent analysis for NVDA on 2023-01-21"
+        },
+        "sentiment_agent": {
+          "signal": "bullish",
+          "confidence": 66.35930998058652,
+          "reasoning": "sentiment_agent analysis for NVDA on 2023-01-21"
+        }
+      },
+      "portfolio_decision": {
+        "action": "buy",
+        "planned_quantity": 155,
+        "executed_quantity": 155,
+        "confidence": 69.8444290872064
+      },
+      "outcome": {
+        "ticker_return": 0.011257853995373228,
+        "daily_return": 0.009006283196298584
+      },
+      "return": 0.011257853995373228
+    },
+    {
+      "date": "2023-01-22",
+      "ticker": "TSLA",
+      "agent_signals": {
+        "warren_buffett_agent": {
+          "signal": "bullish",
+          "confidence": 72.8709420893027,
+          "reasoning": "warren_buffett_agent analysis for TSLA on 2023-01-22"
+        },
+        "technical_analyst_agent": {
+          "signal": "bullish",
+          "confidence": 61.81838022231041,
+          "reasoning": "technical_analyst_agent analysis for TSLA on 2023-01-22"
+        },
+        "sentiment_agent": {
+          "signal": "neutral",
+          "confidence": 53.572104215798525,
+          "reasoning": "sentiment_agent analysis for TSLA on 2023-01-22"
+        }
+      },
+      "portfolio_decision": {
+        "action": "buy",
+        "planned_quantity": 113,
+        "executed_quantity": 113,
+        "confidence": 62.75380884247054
+      },
+      "outcome": {
+        "ticker_return": 0.041700352181167466,
+        "daily_return": 0.033360281744933974
+      },
+      "return": 0.041700352181167466
+    },
+    {
+      "date": "2023-01-23",
+      "ticker": "MSFT",
+      "agent_signals": {
+        "warren_buffett_agent": {
+          "signal": "bearish",
+          "confidence": 54.906380398317104,
+          "reasoning": "warren_buffett_agent analysis for MSFT on 2023-01-23"
+        },
+        "technical_analyst_agent": {
+          "signal": "neutral",
+          "confidence": 73.87884205202903,
+          "reasoning": "technical_analyst_agent analysis for MSFT on 2023-01-23"
+        },
+        "sentiment_agent": {
+          "signal": "bullish",
+          "confidence": 57.72522980213828,
+          "reasoning": "sentiment_agent analysis for MSFT on 2023-01-23"
+        }
+      },
+      "portfolio_decision": {
+        "action": "hold",
+        "planned_quantity": 0,
+        "executed_quantity": 0,
+        "confidence": 62.170150750828135
+      },
+      "outcome": {
+        "ticker_return": 0.014453964190473224,
+        "daily_return": 0.01156317135237858
+      },
+      "return": 0.014453964190473224
+    },
+    {
+      "date": "2023-01-24",
+      "ticker": "NVDA",
+      "agent_signals": {
+        "warren_buffett_agent": {
+          "signal": "bullish",
+          "confidence": 84.97488639444543,
+          "reasoning": "warren_buffett_agent analysis for NVDA on 2023-01-24"
+        },
+        "technical_analyst_agent": {
+          "signal": "bearish",
+          "confidence": 89.06988771854253,
+          "reasoning": "technical_analyst_agent analysis for NVDA on 2023-01-24"
+        },
+        "sentiment_agent": {
+          "signal": "bullish",
+          "confidence": 46.65244442415656,
+          "reasoning": "sentiment_agent analysis for NVDA on 2023-01-24"
+        }
+      },
+      "portfolio_decision": {
+        "action": "buy",
+        "planned_quantity": 104,
+        "executed_quantity": 104,
+        "confidence": 73.56573951238151
+      },
+      "outcome": {
+        "ticker_return": 0.01913846752704311,
+        "daily_return": 0.015310774021634489
+      },
+      "return": 0.01913846752704311
+    },
+    {
+      "date": "2023-01-25",
+      "ticker": "TSLA",
+      "agent_signals": {
+        "warren_buffett_agent": {
+          "signal": "neutral",
+          "confidence": 50.075438242299924,
+          "reasoning": "warren_buffett_agent analysis for TSLA on 2023-01-25"
+        },
+        "technical_analyst_agent": {
+          "signal": "bearish",
+          "confidence": 87.79554220678,
+          "reasoning": "technical_analyst_agent analysis for TSLA on 2023-01-25"
+        },
+        "sentiment_agent": {
+          "signal": "bearish",
+          "confidence": 51.409969157876816,
+          "reasoning": "sentiment_agent analysis for TSLA on 2023-01-25"
+        }
+      },
+      "portfolio_decision": {
+        "action": "sell",
+        "planned_quantity": 143,
+        "executed_quantity": 143,
+        "confidence": 63.09364986898558
+      },
+      "outcome": {
+        "ticker_return": 0.0017954902160097486,
+        "daily_return": 0.001436392172807799
+      },
+      "return": 0.0017954902160097486
+    },
+    {
+      "date": "2023-01-26",
+      "ticker": "NVDA",
+      "agent_signals": {
+        "warren_buffett_agent": {
+          "signal": "neutral",
+          "confidence": 55.417888884592244,
+          "reasoning": "warren_buffett_agent analysis for NVDA on 2023-01-26"
+        },
+        "technical_analyst_agent": {
+          "signal": "bullish",
+          "confidence": 89.06128094907476,
+          "reasoning": "technical_analyst_agent analysis for NVDA on 2023-01-26"
+        },
+        "sentiment_agent": {
+          "signal": "neutral",
+          "confidence": 69.42948715156174,
+          "reasoning": "sentiment_agent analysis for NVDA on 2023-01-26"
+        }
+      },
+      "portfolio_decision": {
+        "action": "hold",
+        "planned_quantity": 0,
+        "executed_quantity": 0,
+        "confidence": 71.3028856617429
+      },
+      "outcome": {
+        "ticker_return": -0.006342545711409051,
+        "daily_return": -0.0050740365691272415
+      },
+      "return": -0.006342545711409051
+    },
+    {
+      "date": "2023-01-27",
+      "ticker": "GOOGL",
+      "agent_signals": {
+        "warren_buffett_agent": {
+          "signal": "bullish",
+          "confidence": 66.68759809881271,
+          "reasoning": "warren_buffett_agent analysis for GOOGL on 2023-01-27"
+        },
+        "technical_analyst_agent": {
+          "signal": "bearish",
+          "confidence": 75.93378405811625,
+          "reasoning": "technical_analyst_agent analysis for GOOGL on 2023-01-27"
+        },
+        "sentiment_agent": {
+          "signal": "bullish",
+          "confidence": 78.43115613097802,
+          "reasoning": "sentiment_agent analysis for GOOGL on 2023-01-27"
+        }
+      },
+      "portfolio_decision": {
+        "action": "buy",
+        "planned_quantity": 97,
+        "executed_quantity": 97,
+        "confidence": 73.68417942930233
+      },
+      "outcome": {
+        "ticker_return": -0.005193312085564787,
+        "daily_return": -0.00415464966845183
+      },
+      "return": -0.005193312085564787
+    },
+    {
+      "date": "2023-01-28",
+      "ticker": "AAPL",
+      "agent_signals": {
+        "warren_buffett_agent": {
+          "signal": "bullish",
+          "confidence": 80.16367206895453,
+          "reasoning": "warren_buffett_agent analysis for AAPL on 2023-01-28"
+        },
+        "technical_analyst_agent": {
+          "signal": "bullish",
+          "confidence": 88.24788381687267,
+          "reasoning": "technical_analyst_agent analysis for AAPL on 2023-01-28"
+        },
+        "sentiment_agent": {
+          "signal": "neutral",
+          "confidence": 49.848613911544994,
+          "reasoning": "sentiment_agent analysis for AAPL on 2023-01-28"
+        }
+      },
+      "portfolio_decision": {
+        "action": "buy",
+        "planned_quantity": 70,
+        "executed_quantity": 70,
+        "confidence": 72.7533899324574
+      },
+      "outcome": {
+        "ticker_return": 0.025671149212006472,
+        "daily_return": 0.02053691936960518
+      },
+      "return": 0.025671149212006472
+    },
+    {
+      "date": "2023-01-29",
+      "ticker": "TSLA",
+      "agent_signals": {
+        "warren_buffett_agent": {
+          "signal": "bullish",
+          "confidence": 68.29739504361856,
+          "reasoning": "warren_buffett_agent analysis for TSLA on 2023-01-29"
+        },
+        "technical_analyst_agent": {
+          "signal": "bearish",
+          "confidence": 66.1277759827061,
+          "reasoning": "technical_analyst_agent analysis for TSLA on 2023-01-29"
+        },
+        "sentiment_agent": {
+          "signal": "neutral",
+          "confidence": 52.56735451182304,
+          "reasoning": "sentiment_agent analysis for TSLA on 2023-01-29"
+        }
+      },
+      "portfolio_decision": {
+        "action": "hold",
+        "planned_quantity": 0,
+        "executed_quantity": 0,
+        "confidence": 62.33084184604923
+      },
+      "outcome": {
+        "ticker_return": -0.009375419498745848,
+        "daily_return": -0.007500335598996679
+      },
+      "return": -0.009375419498745848
+    },
+    {
+      "date": "2023-01-30",
+      "ticker": "MSFT",
+      "agent_signals": {
+        "warren_buffett_agent": {
+          "signal": "neutral",
+          "confidence": 66.00286003996582,
+          "reasoning": "warren_buffett_agent analysis for MSFT on 2023-01-30"
+        },
+        "technical_analyst_agent": {
+          "signal": "bearish",
+          "confidence": 88.07202862334469,
+          "reasoning": "technical_analyst_agent analysis for MSFT on 2023-01-30"
+        },
+        "sentiment_agent": {
+          "signal": "bullish",
+          "confidence": 58.331420904743446,
+          "reasoning": "sentiment_agent analysis for MSFT on 2023-01-30"
+        }
+      },
+      "portfolio_decision": {
+        "action": "hold",
+        "planned_quantity": 0,
+        "executed_quantity": 0,
+        "confidence": 70.80210318935131
+      },
+      "outcome": {
+        "ticker_return": 0.019938177634177694,
+        "daily_return": 0.015950542107342158
+      },
+      "return": 0.019938177634177694
+    },
+    {
+      "date": "2023-01-31",
+      "ticker": "AAPL",
+      "agent_signals": {
+        "warren_buffett_agent": {
+          "signal": "bearish",
+          "confidence": 67.70596429170679,
+          "reasoning": "warren_buffett_agent analysis for AAPL on 2023-01-31"
+        },
+        "technical_analyst_agent": {
+          "signal": "neutral",
+          "confidence": 70.47026504893546,
+          "reasoning": "technical_analyst_agent analysis for AAPL on 2023-01-31"
+        },
+        "sentiment_agent": {
+          "signal": "bullish",
+          "confidence": 75.17080969938172,
+          "reasoning": "sentiment_agent analysis for AAPL on 2023-01-31"
+        }
+      },
+      "portfolio_decision": {
+        "action": "hold",
+        "planned_quantity": 0,
+        "executed_quantity": 0,
+        "confidence": 71.11567968000799
+      },
+      "outcome": {
+        "ticker_return": -0.005218916450444642,
+        "daily_return": -0.004175133160355714
+      },
+      "return": -0.005218916450444642
+    },
+    {
+      "date": "2023-02-01",
+      "ticker": "MSFT",
+      "agent_signals": {
+        "warren_buffett_agent": {
+          "signal": "bearish",
+          "confidence": 74.62389737805799,
+          "reasoning": "warren_buffett_agent analysis for MSFT on 2023-02-01"
+        },
+        "technical_analyst_agent": {
+          "signal": "bearish",
+          "confidence": 89.61699190894512,
+          "reasoning": "technical_analyst_agent analysis for MSFT on 2023-02-01"
+        },
+        "sentiment_agent": {
+          "signal": "neutral",
+          "confidence": 61.1576277040908,
+          "reasoning": "sentiment_agent analysis for MSFT on 2023-02-01"
+        }
+      },
+      "portfolio_decision": {
+        "action": "sell",
+        "planned_quantity": 120,
+        "executed_quantity": 120,
+        "confidence": 75.1328389970313
+      },
+      "outcome": {
+        "ticker_return": 7.179222275500996e-05,
+        "daily_return": 5.743377820400797e-05
+      },
+      "return": 7.179222275500996e-05
+    },
+    {
+      "date": "2023-02-02",
+      "ticker": "GOOGL",
+      "agent_signals": {
+        "warren_buffett_agent": {
+          "signal": "bullish",
+          "confidence": 80.73444377407573,
+          "reasoning": "warren_buffett_agent analysis for GOOGL on 2023-02-02"
+        },
+        "technical_analyst_agent": {
+          "signal": "bullish",
+          "confidence": 86.69138121017127,
+          "reasoning": "technical_analyst_agent analysis for GOOGL on 2023-02-02"
+        },
+        "sentiment_agent": {
+          "signal": "neutral",
+          "confidence": 62.12894563539264,
+          "reasoning": "sentiment_agent analysis for GOOGL on 2023-02-02"
+        }
+      },
+      "portfolio_decision": {
+        "action": "buy",
+        "planned_quantity": 103,
+        "executed_quantity": 103,
+        "confidence": 76.51825687321322
+      },
+      "outcome": {
+        "ticker_return": 0.00634089273888898,
+        "daily_return": 0.005072714191111185
+      },
+      "return": 0.00634089273888898
+    },
+    {
+      "date": "2023-02-03",
+      "ticker": "GOOGL",
+      "agent_signals": {
+        "warren_buffett_agent": {
+          "signal": "bearish",
+          "confidence": 79.85194853871641,
+          "reasoning": "warren_buffett_agent analysis for GOOGL on 2023-02-03"
+        },
+        "technical_analyst_agent": {
+          "signal": "bearish",
+          "confidence": 67.53363756209683,
+          "reasoning": "technical_analyst_agent analysis for GOOGL on 2023-02-03"
+        },
+        "sentiment_agent": {
+          "signal": "bullish",
+          "confidence": 43.69193870850934,
+          "reasoning": "sentiment_agent analysis for GOOGL on 2023-02-03"
+        }
+      },
+      "portfolio_decision": {
+        "action": "sell",
+        "planned_quantity": 85,
+        "executed_quantity": 85,
+        "confidence": 63.6925082697742
+      },
+      "outcome": {
+        "ticker_return": -0.01458545364617642,
+        "daily_return": -0.011668362916941136
+      },
+      "return": -0.01458545364617642
+    },
+    {
+      "date": "2023-02-04",
+      "ticker": "AAPL",
+      "agent_signals": {
+        "warren_buffett_agent": {
+          "signal": "neutral",
+          "confidence": 54.57868812455958,
+          "reasoning": "warren_buffett_agent analysis for AAPL on 2023-02-04"
+        },
+        "technical_analyst_agent": {
+          "signal": "bearish",
+          "confidence": 64.84745928821658,
+          "reasoning": "technical_analyst_agent analysis for AAPL on 2023-02-04"
+        },
+        "sentiment_agent": {
+          "signal": "bearish",
+          "confidence": 62.067216845055654,
+          "reasoning": "sentiment_agent analysis for AAPL on 2023-02-04"
+        }
+      },
+      "portfolio_decision": {
+        "action": "sell",
+        "planned_quantity": 51,
+        "executed_quantity": 51,
+        "confidence": 60.49778808594394
+      },
+      "outcome": {
+        "ticker_return": -0.014338784861159241,
+        "daily_return": -0.011471027888927393
+      },
+      "return": -0.014338784861159241
+    },
+    {
+      "date": "2023-02-05",
+      "ticker": "AAPL",
+      "agent_signals": {
+        "warren_buffett_agent": {
+          "signal": "bearish",
+          "confidence": 74.18568683145568,
+          "reasoning": "warren_buffett_agent analysis for AAPL on 2023-02-05"
+        },
+        "technical_analyst_agent": {
+          "signal": "neutral",
+          "confidence": 61.08084414182492,
+          "reasoning": "technical_analyst_agent analysis for AAPL on 2023-02-05"
+        },
+        "sentiment_agent": {
+          "signal": "bearish",
+          "confidence": 63.30038265959176,
+          "reasoning": "sentiment_agent analysis for AAPL on 2023-02-05"
+        }
+      },
+      "portfolio_decision": {
+        "action": "sell",
+        "planned_quantity": 66,
+        "executed_quantity": 66,
+        "confidence": 66.18897121095746
+      },
+      "outcome": {
+        "ticker_return": -0.03111437286595104,
+        "daily_return": -0.024891498292760834
+      },
+      "return": -0.03111437286595104
+    },
+    {
+      "date": "2023-02-06",
+      "ticker": "AAPL",
+      "agent_signals": {
+        "warren_buffett_agent": {
+          "signal": "neutral",
+          "confidence": 82.6580803682229,
+          "reasoning": "warren_buffett_agent analysis for AAPL on 2023-02-06"
+        },
+        "technical_analyst_agent": {
+          "signal": "bearish",
+          "confidence": 61.196846343336546,
+          "reasoning": "technical_analyst_agent analysis for AAPL on 2023-02-06"
+        },
+        "sentiment_agent": {
+          "signal": "bearish",
+          "confidence": 48.40306153359016,
+          "reasoning": "sentiment_agent analysis for AAPL on 2023-02-06"
+        }
+      },
+      "portfolio_decision": {
+        "action": "sell",
+        "planned_quantity": 63,
+        "executed_quantity": 63,
+        "confidence": 64.08599608171653
+      },
+      "outcome": {
+        "ticker_return": -0.025028215646624538,
+        "daily_return": -0.020022572517299633
+      },
+      "return": -0.025028215646624538
+    },
+    {
+      "date": "2023-02-07",
+      "ticker": "GOOGL",
+      "agent_signals": {
+        "warren_buffett_agent": {
+          "signal": "neutral",
+          "confidence": 64.22320864412409,
+          "reasoning": "warren_buffett_agent analysis for GOOGL on 2023-02-07"
+        },
+        "technical_analyst_agent": {
+          "signal": "bullish",
+          "confidence": 64.63660014996614,
+          "reasoning": "technical_analyst_agent analysis for GOOGL on 2023-02-07"
+        },
+        "sentiment_agent": {
+          "signal": "bullish",
+          "confidence": 74.58422784879856,
+          "reasoning": "sentiment_agent analysis for GOOGL on 2023-02-07"
+        }
+      },
+      "portfolio_decision": {
+        "action": "buy",
+        "planned_quantity": 95,
+        "executed_quantity": 95,
+        "confidence": 67.81467888096293
+      },
+      "outcome": {
+        "ticker_return": 0.04857236197585778,
+        "daily_return": 0.03885788958068623
+      },
+      "return": 0.04857236197585778
+    },
+    {
+      "date": "2023-02-08",
+      "ticker": "TSLA",
+      "agent_signals": {
+        "warren_buffett_agent": {
+          "signal": "neutral",
+          "confidence": 82.3570553334541,
+          "reasoning": "warren_buffett_agent analysis for TSLA on 2023-02-08"
+        },
+        "technical_analyst_agent": {
+          "signal": "bearish",
+          "confidence": 72.35139499654662,
+          "reasoning": "technical_analyst_agent analysis for TSLA on 2023-02-08"
+        },
+        "sentiment_agent": {
+          "signal": "neutral",
+          "confidence": 74.56256113501118,
+          "reasoning": "sentiment_agent analysis for TSLA on 2023-02-08"
+        }
+      },
+      "portfolio_decision": {
+        "action": "hold",
+        "planned_quantity": 0,
+        "executed_quantity": 0,
+        "confidence": 76.4236704883373
+      },
+      "outcome": {
+        "ticker_return": 0.00864495899446334,
+        "daily_return": 0.006915967195570672
+      },
+      "return": 0.00864495899446334
+    },
+    {
+      "date": "2023-02-09",
+      "ticker": "GOOGL",
+      "agent_signals": {
+        "warren_buffett_agent": {
+          "signal": "bearish",
+          "confidence": 53.7833469241035,
+          "reasoning": "warren_buffett_agent analysis for GOOGL on 2023-02-09"
+        },
+        "technical_analyst_agent": {
+          "signal": "bearish",
+          "confidence": 85.75779754013345,
+          "reasoning": "technical_analyst_agent analysis for GOOGL on 2023-02-09"
+        },
+        "sentiment_agent": {
+          "signal": "bullish",
+          "confidence": 47.98291320103007,
+          "reasoning": "sentiment_agent analysis for GOOGL on 2023-02-09"
+        }
+      },
+      "portfolio_decision": {
+        "action": "sell",
+        "planned_quantity": 94,
+        "executed_quantity": 94,
+        "confidence": 62.50801922175568
+      },
+      "outcome": {
+        "ticker_return": 0.015107114073769703,
+        "daily_return": 0.012085691259015763
+      },
+      "return": 0.015107114073769703
+    },
+    {
+      "date": "2023-02-10",
+      "ticker": "GOOGL",
+      "agent_signals": {
+        "warren_buffett_agent": {
+          "signal": "neutral",
+          "confidence": 73.10116139620202,
+          "reasoning": "warren_buffett_agent analysis for GOOGL on 2023-02-10"
+        },
+        "technical_analyst_agent": {
+          "signal": "bearish",
+          "confidence": 68.35809183069011,
+          "reasoning": "technical_analyst_agent analysis for GOOGL on 2023-02-10"
+        },
+        "sentiment_agent": {
+          "signal": "bullish",
+          "confidence": 78.67556416193445,
+          "reasoning": "sentiment_agent analysis for GOOGL on 2023-02-10"
+        }
+      },
+      "portfolio_decision": {
+        "action": "hold",
+        "planned_quantity": 0,
+        "executed_quantity": 0,
+        "confidence": 73.37827246294219
+      },
+      "outcome": {
+        "ticker_return": -0.008835000291125144,
+        "daily_return": -0.0070680002329001155
+      },
+      "return": -0.008835000291125144
+    },
+    {
+      "date": "2023-02-11",
+      "ticker": "NVDA",
+      "agent_signals": {
+        "warren_buffett_agent": {
+          "signal": "neutral",
+          "confidence": 79.52814071452283,
+          "reasoning": "warren_buffett_agent analysis for NVDA on 2023-02-11"
+        },
+        "technical_analyst_agent": {
+          "signal": "bullish",
+          "confidence": 60.828016053589074,
+          "reasoning": "technical_analyst_agent analysis for NVDA on 2023-02-11"
+        },
+        "sentiment_agent": {
+          "signal": "bearish",
+          "confidence": 47.142712646898545,
+          "reasoning": "sentiment_agent analysis for NVDA on 2023-02-11"
+        }
+      },
+      "portfolio_decision": {
+        "action": "hold",
+        "planned_quantity": 0,
+        "executed_quantity": 0,
+        "confidence": 62.49962313833682
+      },
+      "outcome": {
+        "ticker_return": 0.018501372630462216,
+        "daily_return": 0.014801098104369774
+      },
+      "return": 0.018501372630462216
+    },
+    {
+      "date": "2023-02-12",
+      "ticker": "GOOGL",
+      "agent_signals": {
+        "warren_buffett_agent": {
+          "signal": "neutral",
+          "confidence": 65.20973154976255,
+          "reasoning": "warren_buffett_agent analysis for GOOGL on 2023-02-12"
+        },
+        "technical_analyst_agent": {
+          "signal": "bearish",
+          "confidence": 69.41031942584974,
+          "reasoning": "technical_analyst_agent analysis for GOOGL on 2023-02-12"
+        },
+        "sentiment_agent": {
+          "signal": "neutral",
+          "confidence": 79.3694339726636,
+          "reasoning": "sentiment_agent analysis for GOOGL on 2023-02-12"
+        }
+      },
+      "portfolio_decision": {
+        "action": "hold",
+        "planned_quantity": 0,
+        "executed_quantity": 0,
+        "confidence": 71.32982831609196
+      },
+      "outcome": {
+        "ticker_return": -0.033061252958240174,
+        "daily_return": -0.02644900236659214
+      },
+      "return": -0.033061252958240174
+    },
+    {
+      "date": "2023-02-13",
+      "ticker": "NVDA",
+      "agent_signals": {
+        "warren_buffett_agent": {
+          "signal": "neutral",
+          "confidence": 74.80748493419597,
+          "reasoning": "warren_buffett_agent analysis for NVDA on 2023-02-13"
+        },
+        "technical_analyst_agent": {
+          "signal": "bullish",
+          "confidence": 87.76725496497248,
+          "reasoning": "technical_analyst_agent analysis for NVDA on 2023-02-13"
+        },
+        "sentiment_agent": {
+          "signal": "neutral",
+          "confidence": 67.47428587658106,
+          "reasoning": "sentiment_agent analysis for NVDA on 2023-02-13"
+        }
+      },
+      "portfolio_decision": {
+        "action": "hold",
+        "planned_quantity": 0,
+        "executed_quantity": 0,
+        "confidence": 76.6830085919165
+      },
+      "outcome": {
+        "ticker_return": 0.0464157872238532,
+        "daily_return": 0.03713262977908256
+      },
+      "return": 0.0464157872238532
+    },
+    {
+      "date": "2023-02-14",
+      "ticker": "MSFT",
+      "agent_signals": {
+        "warren_buffett_agent": {
+          "signal": "neutral",
+          "confidence": 83.21060700899599,
+          "reasoning": "warren_buffett_agent analysis for MSFT on 2023-02-14"
+        },
+        "technical_analyst_agent": {
+          "signal": "bearish",
+          "confidence": 78.69466229839227,
+          "reasoning": "technical_analyst_agent analysis for MSFT on 2023-02-14"
+        },
+        "sentiment_agent": {
+          "signal": "neutral",
+          "confidence": 73.92061118025342,
+          "reasoning": "sentiment_agent analysis for MSFT on 2023-02-14"
+        }
+      },
+      "portfolio_decision": {
+        "action": "hold",
+        "planned_quantity": 0,
+        "executed_quantity": 0,
+        "confidence": 78.60862682921389
+      },
+      "outcome": {
+        "ticker_return": 0.003185255780837011,
+        "daily_return": 0.002548204624669609
+      },
+      "return": 0.003185255780837011
+    },
+    {
+      "date": "2023-02-15",
+      "ticker": "GOOGL",
+      "agent_signals": {
+        "warren_buffett_agent": {
+          "signal": "bullish",
+          "confidence": 64.29375180167258,
+          "reasoning": "warren_buffett_agent analysis for GOOGL on 2023-02-15"
+        },
+        "technical_analyst_agent": {
+          "signal": "bullish",
+          "confidence": 68.86965607577841,
+          "reasoning": "technical_analyst_agent analysis for GOOGL on 2023-02-15"
+        },
+        "sentiment_agent": {
+          "signal": "bullish",
+          "confidence": 47.6736037196059,
+          "reasoning": "sentiment_agent analysis for GOOGL on 2023-02-15"
+        }
+      },
+      "portfolio_decision": {
+        "action": "buy",
+        "planned_quantity": 147,
+        "executed_quantity": 147,
+        "confidence": 60.27900386568563
+      },
+      "outcome": {
+        "ticker_return": 0.02989576605276629,
+        "daily_return": 0.023916612842213032
+      },
+      "return": 0.02989576605276629
+    },
+    {
+      "date": "2023-02-16",
+      "ticker": "MSFT",
+      "agent_signals": {
+        "warren_buffett_agent": {
+          "signal": "bullish",
+          "confidence": 64.21263090653571,
+          "reasoning": "warren_buffett_agent analysis for MSFT on 2023-02-16"
+        },
+        "technical_analyst_agent": {
+          "signal": "neutral",
+          "confidence": 69.11624847805061,
+          "reasoning": "technical_analyst_agent analysis for MSFT on 2023-02-16"
+        },
+        "sentiment_agent": {
+          "signal": "bullish",
+          "confidence": 57.195525999593386,
+          "reasoning": "sentiment_agent analysis for MSFT on 2023-02-16"
+        }
+      },
+      "portfolio_decision": {
+        "action": "buy",
+        "planned_quantity": 132,
+        "executed_quantity": 132,
+        "confidence": 63.508135128059905
+      },
+      "outcome": {
+        "ticker_return": 0.02479908687174092,
+        "daily_return": 0.019839269497392738
+      },
+      "return": 0.02479908687174092
+    },
+    {
+      "date": "2023-02-17",
+      "ticker": "TSLA",
+      "agent_signals": {
+        "warren_buffett_agent": {
+          "signal": "neutral",
+          "confidence": 57.47954903461851,
+          "reasoning": "warren_buffett_agent analysis for TSLA on 2023-02-17"
+        },
+        "technical_analyst_agent": {
+          "signal": "neutral",
+          "confidence": 87.03542477484763,
+          "reasoning": "technical_analyst_agent analysis for TSLA on 2023-02-17"
+        },
+        "sentiment_agent": {
+          "signal": "neutral",
+          "confidence": 46.78765584792219,
+          "reasoning": "sentiment_agent analysis for TSLA on 2023-02-17"
+        }
+      },
+      "portfolio_decision": {
+        "action": "hold",
+        "planned_quantity": 0,
+        "executed_quantity": 0,
+        "confidence": 63.767543219129436
+      },
+      "outcome": {
+        "ticker_return": -0.01660817853099513,
+        "daily_return": -0.013286542824796105
+      },
+      "return": -0.01660817853099513
+    },
+    {
+      "date": "2023-02-18",
+      "ticker": "NVDA",
+      "agent_signals": {
+        "warren_buffett_agent": {
+          "signal": "neutral",
+          "confidence": 61.731588939343034,
+          "reasoning": "warren_buffett_agent analysis for NVDA on 2023-02-18"
+        },
+        "technical_analyst_agent": {
+          "signal": "neutral",
+          "confidence": 82.53414412622197,
+          "reasoning": "technical_analyst_agent analysis for NVDA on 2023-02-18"
+        },
+        "sentiment_agent": {
+          "signal": "neutral",
+          "confidence": 52.41677857179661,
+          "reasoning": "sentiment_agent analysis for NVDA on 2023-02-18"
+        }
+      },
+      "portfolio_decision": {
+        "action": "hold",
+        "planned_quantity": 0,
+        "executed_quantity": 0,
+        "confidence": 65.56083721245388
+      },
+      "outcome": {
+        "ticker_return": 0.012262515783050636,
+        "daily_return": 0.00981001262644051
+      },
+      "return": 0.012262515783050636
+    },
+    {
+      "date": "2023-02-19",
+      "ticker": "MSFT",
+      "agent_signals": {
+        "warren_buffett_agent": {
+          "signal": "bullish",
+          "confidence": 84.4377607973648,
+          "reasoning": "warren_buffett_agent analysis for MSFT on 2023-02-19"
+        },
+        "technical_analyst_agent": {
+          "signal": "bearish",
+          "confidence": 83.05468017000591,
+          "reasoning": "technical_analyst_agent analysis for MSFT on 2023-02-19"
+        },
+        "sentiment_agent": {
+          "signal": "bearish",
+          "confidence": 56.57764043990878,
+          "reasoning": "sentiment_agent analysis for MSFT on 2023-02-19"
+        }
+      },
+      "portfolio_decision": {
+        "action": "sell",
+        "planned_quantity": 74,
+        "executed_quantity": 74,
+        "confidence": 74.69002713575982
+      },
+      "outcome": {
+        "ticker_return": -0.002214077155737182,
+        "daily_return": -0.0017712617245897455
+      },
+      "return": -0.002214077155737182
+    },
+    {
+      "date": "2023-02-20",
+      "ticker": "TSLA",
+      "agent_signals": {
+        "warren_buffett_agent": {
+          "signal": "neutral",
+          "confidence": 55.16499707819544,
+          "reasoning": "warren_buffett_agent analysis for TSLA on 2023-02-20"
+        },
+        "technical_analyst_agent": {
+          "signal": "bearish",
+          "confidence": 86.779794786341,
+          "reasoning": "technical_analyst_agent analysis for TSLA on 2023-02-20"
+        },
+        "sentiment_agent": {
+          "signal": "bullish",
+          "confidence": 71.136816270693,
+          "reasoning": "sentiment_agent analysis for TSLA on 2023-02-20"
+        }
+      },
+      "portfolio_decision": {
+        "action": "hold",
+        "planned_quantity": 0,
+        "executed_quantity": 0,
+        "confidence": 71.02720271174314
+      },
+      "outcome": {
+        "ticker_return": -0.011246354527507224,
+        "daily_return": -0.00899708362200578
+      },
+      "return": -0.011246354527507224
+    },
+    {
+      "date": "2023-02-21",
+      "ticker": "NVDA",
+      "agent_signals": {
+        "warren_buffett_agent": {
+          "signal": "bullish",
+          "confidence": 58.72193978809901,
+          "reasoning": "warren_buffett_agent analysis for NVDA on 2023-02-21"
+        },
+        "technical_analyst_agent": {
+          "signal": "bearish",
+          "confidence": 73.69385476410518,
+          "reasoning": "technical_analyst_agent analysis for NVDA on 2023-02-21"
+        },
+        "sentiment_agent": {
+          "signal": "bearish",
+          "confidence": 66.70310930345413,
+          "reasoning": "sentiment_agent analysis for NVDA on 2023-02-21"
+        }
+      },
+      "portfolio_decision": {
+        "action": "sell",
+        "planned_quantity": 126,
+        "executed_quantity": 126,
+        "confidence": 66.37296795188611
+      },
+      "outcome": {
+        "ticker_return": 0.019273547183986876,
+        "daily_return": 0.015418837747189502
+      },
+      "return": 0.019273547183986876
+    },
+    {
+      "date": "2023-02-22",
+      "ticker": "GOOGL",
+      "agent_signals": {
+        "warren_buffett_agent": {
+          "signal": "neutral",
+          "confidence": 75.17458864465885,
+          "reasoning": "warren_buffett_agent analysis for GOOGL on 2023-02-22"
+        },
+        "technical_analyst_agent": {
+          "signal": "neutral",
+          "confidence": 84.91707509164246,
+          "reasoning": "technical_analyst_agent analysis for GOOGL on 2023-02-22"
+        },
+        "sentiment_agent": {
+          "signal": "neutral",
+          "confidence": 57.83654448306802,
+          "reasoning": "sentiment_agent analysis for GOOGL on 2023-02-22"
+        }
+      },
+      "portfolio_decision": {
+        "action": "hold",
+        "planned_quantity": 0,
+        "executed_quantity": 0,
+        "confidence": 72.64273607312312
+      },
+      "outcome": {
+        "ticker_return": -0.013633683698280028,
+        "daily_return": -0.010906946958624023
+      },
+      "return": -0.013633683698280028
+    },
+    {
+      "date": "2023-02-23",
+      "ticker": "TSLA",
+      "agent_signals": {
+        "warren_buffett_agent": {
+          "signal": "bullish",
+          "confidence": 58.65339081283808,
+          "reasoning": "warren_buffett_agent analysis for TSLA on 2023-02-23"
+        },
+        "technical_analyst_agent": {
+          "signal": "bearish",
+          "confidence": 82.97441052891496,
+          "reasoning": "technical_analyst_agent analysis for TSLA on 2023-02-23"
+        },
+        "sentiment_agent": {
+          "signal": "neutral",
+          "confidence": 59.38388068281067,
+          "reasoning": "sentiment_agent analysis for TSLA on 2023-02-23"
+        }
+      },
+      "portfolio_decision": {
+        "action": "hold",
+        "planned_quantity": 0,
+        "executed_quantity": 0,
+        "confidence": 67.0038940081879
+      },
+      "outcome": {
+        "ticker_return": -0.010430165447414685,
+        "daily_return": -0.008344132357931749
+      },
+      "return": -0.010430165447414685
+    },
+    {
+      "date": "2023-02-24",
+      "ticker": "TSLA",
+      "agent_signals": {
+        "warren_buffett_agent": {
+          "signal": "bearish",
+          "confidence": 58.20727523051224,
+          "reasoning": "warren_buffett_agent analysis for TSLA on 2023-02-24"
+        },
+        "technical_analyst_agent": {
+          "signal": "bearish",
+          "confidence": 86.7908049837095,
+          "reasoning": "technical_analyst_agent analysis for TSLA on 2023-02-24"
+        },
+        "sentiment_agent": {
+          "signal": "bullish",
+          "confidence": 45.53496246064623,
+          "reasoning": "sentiment_agent analysis for TSLA on 2023-02-24"
+        }
+      },
+      "portfolio_decision": {
+        "action": "sell",
+        "planned_quantity": 138,
+        "executed_quantity": 138,
+        "confidence": 63.51101422495599
+      },
+      "outcome": {
+        "ticker_return": -0.026124311216308795,
+        "daily_return": -0.020899448973047036
+      },
+      "return": -0.026124311216308795
+    },
+    {
+      "date": "2023-02-25",
+      "ticker": "MSFT",
+      "agent_signals": {
+        "warren_buffett_agent": {
+          "signal": "bullish",
+          "confidence": 64.52037635643764,
+          "reasoning": "warren_buffett_agent analysis for MSFT on 2023-02-25"
+        },
+        "technical_analyst_agent": {
+          "signal": "bullish",
+          "confidence": 73.97772910053452,
+          "reasoning": "technical_analyst_agent analysis for MSFT on 2023-02-25"
+        },
+        "sentiment_agent": {
+          "signal": "bullish",
+          "confidence": 48.27337558057641,
+          "reasoning": "sentiment_agent analysis for MSFT on 2023-02-25"
+        }
+      },
+      "portfolio_decision": {
+        "action": "buy",
+        "planned_quantity": 199,
+        "executed_quantity": 199,
+        "confidence": 62.25716034584952
+      },
+      "outcome": {
+        "ticker_return": 0.01520861106640554,
+        "daily_return": 0.012166888853124433
+      },
+      "return": 0.01520861106640554
+    },
+    {
+      "date": "2023-02-26",
+      "ticker": "AAPL",
+      "agent_signals": {
+        "warren_buffett_agent": {
+          "signal": "bullish",
+          "confidence": 50.206362925439755,
+          "reasoning": "warren_buffett_agent analysis for AAPL on 2023-02-26"
+        },
+        "technical_analyst_agent": {
+          "signal": "bullish",
+          "confidence": 82.60425375178158,
+          "reasoning": "technical_analyst_agent analysis for AAPL on 2023-02-26"
+        },
+        "sentiment_agent": {
+          "signal": "bearish",
+          "confidence": 61.528822704409265,
+          "reasoning": "sentiment_agent analysis for AAPL on 2023-02-26"
+        }
+      },
+      "portfolio_decision": {
+        "action": "buy",
+        "planned_quantity": 106,
+        "executed_quantity": 106,
+        "confidence": 64.7798131272102
+      },
+      "outcome": {
+        "ticker_return": 0.034078043645381466,
+        "daily_return": 0.027262434916305173
+      },
+      "return": 0.034078043645381466
+    },
+    {
+      "date": "2023-02-27",
+      "ticker": "TSLA",
+      "agent_signals": {
+        "warren_buffett_agent": {
+          "signal": "neutral",
+          "confidence": 66.99746978294752,
+          "reasoning": "warren_buffett_agent analysis for TSLA on 2023-02-27"
+        },
+        "technical_analyst_agent": {
+          "signal": "bearish",
+          "confidence": 80.06620861868751,
+          "reasoning": "technical_analyst_agent analysis for TSLA on 2023-02-27"
+        },
+        "sentiment_agent": {
+          "signal": "bearish",
+          "confidence": 68.96725510509155,
+          "reasoning": "sentiment_agent analysis for TSLA on 2023-02-27"
+        }
+      },
+      "portfolio_decision": {
+        "action": "sell",
+        "planned_quantity": 66,
+        "executed_quantity": 66,
+        "confidence": 72.01031116890886
+      },
+      "outcome": {
+        "ticker_return": 0.01043033978375351,
+        "daily_return": 0.008344271827002809
+      },
+      "return": 0.01043033978375351
+    },
+    {
+      "date": "2023-02-28",
+      "ticker": "NVDA",
+      "agent_signals": {
+        "warren_buffett_agent": {
+          "signal": "bullish",
+          "confidence": 63.790708971889664,
+          "reasoning": "warren_buffett_agent analysis for NVDA on 2023-02-28"
+        },
+        "technical_analyst_agent": {
+          "signal": "bullish",
+          "confidence": 60.81306139020937,
+          "reasoning": "technical_analyst_agent analysis for NVDA on 2023-02-28"
+        },
+        "sentiment_agent": {
+          "signal": "neutral",
+          "confidence": 57.144510786443796,
+          "reasoning": "sentiment_agent analysis for NVDA on 2023-02-28"
+        }
+      },
+      "portfolio_decision": {
+        "action": "buy",
+        "planned_quantity": 96,
+        "executed_quantity": 96,
+        "confidence": 60.58276038284762
+      },
+      "outcome": {
+        "ticker_return": 0.04201108133570781,
+        "daily_return": 0.033608865068566245
+      },
+      "return": 0.04201108133570781
+    },
+    {
+      "date": "2023-03-01",
+      "ticker": "AAPL",
+      "agent_signals": {
+        "warren_buffett_agent": {
+          "signal": "neutral",
+          "confidence": 57.408109947401854,
+          "reasoning": "warren_buffett_agent analysis for AAPL on 2023-03-01"
+        },
+        "technical_analyst_agent": {
+          "signal": "bullish",
+          "confidence": 82.8368912368208,
+          "reasoning": "technical_analyst_agent analysis for AAPL on 2023-03-01"
+        },
+        "sentiment_agent": {
+          "signal": "bearish",
+          "confidence": 51.13026462555224,
+          "reasoning": "sentiment_agent analysis for AAPL on 2023-03-01"
+        }
+      },
+      "portfolio_decision": {
+        "action": "hold",
+        "planned_quantity": 0,
+        "executed_quantity": 0,
+        "confidence": 63.79175526992497
+      },
+      "outcome": {
+        "ticker_return": 0.018048164794422467,
+        "daily_return": 0.014438531835537975
+      },
+      "return": 0.018048164794422467
+    }
+  ]
+}

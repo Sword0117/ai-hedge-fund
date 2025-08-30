@@ -22,7 +22,7 @@ class TestRateLimiting:
         mock_get.side_effect = [mock_429_response, mock_200_response]
         
         # Call the function
-        headers = {"X-API-KEY": "test-key"}
+        headers = {"FINANCIAL_DATASETS_API_KEY": "test-key"}
         url = "https://api.financialdatasets.ai/test"
         
         result = _make_api_request(url, headers)
@@ -61,7 +61,7 @@ class TestRateLimiting:
         ]
         
         # Call the function
-        headers = {"X-API-KEY": "test-key"}
+        headers = {"FINANCIAL_DATASETS_API_KEY": "test-key"}
         url = "https://api.financialdatasets.ai/test"
         
         result = _make_api_request(url, headers)
@@ -93,7 +93,7 @@ class TestRateLimiting:
         mock_post.side_effect = [mock_429_response, mock_200_response]
         
         # Call the function with POST method
-        headers = {"X-API-KEY": "test-key"}
+        headers = {"FINANCIAL_DATASETS_API_KEY": "test-key"}
         url = "https://api.financialdatasets.ai/test"
         json_data = {"test": "data"}
         
@@ -125,7 +125,7 @@ class TestRateLimiting:
         mock_get.return_value = mock_500_response
         
         # Call the function
-        headers = {"X-API-KEY": "test-key"}
+        headers = {"FINANCIAL_DATASETS_API_KEY": "test-key"}
         url = "https://api.financialdatasets.ai/test"
         
         result = _make_api_request(url, headers)
@@ -152,7 +152,7 @@ class TestRateLimiting:
         mock_get.return_value = mock_200_response
         
         # Call the function
-        headers = {"X-API-KEY": "test-key"}
+        headers = {"FINANCIAL_DATASETS_API_KEY": "test-key"}
         url = "https://api.financialdatasets.ai/test"
         
         result = _make_api_request(url, headers)
@@ -227,7 +227,7 @@ class TestRateLimiting:
         mock_get.return_value = mock_429_response
         
         # Call the function with max_retries=2
-        headers = {"X-API-KEY": "test-key"}
+        headers = {"FINANCIAL_DATASETS_API_KEY": "test-key"}
         url = "https://api.financialdatasets.ai/test"
         
         result = _make_api_request(url, headers, max_retries=2)

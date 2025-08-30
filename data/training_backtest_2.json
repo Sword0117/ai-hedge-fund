@@ -1,0 +1,4459 @@
+{
+  "metadata": {
+    "generated_at": "2025-08-25T19:08:36.063077",
+    "backtest_period": {
+      "start_date": "2025-08-01",
+      "end_date": "2025-08-25"
+    },
+    "configuration": {
+      "tickers": [
+        "TSLA",
+        "GOOGL"
+      ],
+      "initial_capital": 100000,
+      "model_name": "gemini-2.5-flash-preview-05-20",
+      "model_provider": "Google",
+      "selected_analysts": [
+        "technical_analyst"
+      ],
+      "margin_requirement": 0.0
+    },
+    "performance_summary": {
+      "total_records": 34,
+      "unique_tickers": 2,
+      "date_range": {
+        "first_date": "2025-08-01",
+        "last_date": "2025-08-25"
+      }
+    },
+    "final_performance": {
+      "sharpe_ratio": 7.841449320381537,
+      "max_drawdown": -0.2674479987950476,
+      "sortino_ratio": 32.85764058707766,
+      "total_return": 0.029593699999999806,
+      "final_portfolio_value": 102959.36999999998
+    }
+  },
+  "trades": [
+    {
+      "date": "2025-08-01",
+      "ticker": "TSLA",
+      "agent_signals": {
+        "technical_analyst_agent": {
+          "signal": "neutral",
+          "confidence": 4,
+          "reasoning": {
+            "market_regime": {
+              "state": "neutral",
+              "volatility": "low",
+              "structure": "mean_reverting",
+              "confidence": 30,
+              "adaptive_weights": {
+                "trend": 0.15,
+                "mean_reversion": 0.35,
+                "momentum": 0.15,
+                "volatility": 0.1,
+                "stat_arb": 0.25
+              }
+            },
+            "trend_following": {
+              "signal": "neutral",
+              "confidence": 50,
+              "metrics": {
+                "adx": 23.289332252417566,
+                "trend_strength": 0.23289332252417566,
+                "ema_short_period": 8,
+                "ema_medium_period": 21,
+                "ema_long_period": 55
+              },
+              "regime_adjustments": "EMA periods: 8/21/55 (adapted for mean_reverting regime), ADX threshold: 20"
+            },
+            "mean_reversion": {
+              "signal": "neutral",
+              "confidence": 50,
+              "metrics": {
+                "z_score": -1.0450302744207123,
+                "price_vs_bb": -0.04854318935653,
+                "rsi": 40.24191672481969,
+                "rsi_period": 11,
+                "rsi_oversold": 30,
+                "rsi_overbought": 70,
+                "bollinger_std": 1.6
+              },
+              "regime_adjustments": "RSI: 11d/30/70, BB: 16d/1.6\u03c3 (adapted for mean_reverting regime)"
+            },
+            "momentum": {
+              "signal": "neutral",
+              "confidence": 45,
+              "metrics": {
+                "momentum_score": 0.0,
+                "volume_momentum": 0.944292695559606,
+                "momentum_short": -0.031531880953929114,
+                "momentum_medium": 0.0,
+                "momentum_long": 0.0,
+                "volume_threshold": 1.0
+              },
+              "regime_adjustments": "Momentum periods: [0.4, 0.3, 0.3], Volume threshold: 1.0, Signal thresholds: 0.05/-0.05 (adapted for neutral/low)"
+            },
+            "volatility": {
+              "signal": "neutral",
+              "confidence": 55,
+              "metrics": {
+                "historical_volatility": 0.5101409604221244,
+                "volatility_regime": 0.0,
+                "volatility_z_score": 0.0,
+                "atr_ratio": 0.04712324981300294,
+                "vol_period": 21,
+                "atr_period": 11
+              },
+              "regime_adjustments": "Vol period: 21d, Vol MA: 63d, Thresholds: 0.80/1.20 (adapted for neutral)"
+            },
+            "statistical_arbitrage": {
+              "signal": "neutral",
+              "confidence": 50,
+              "metrics": {
+                "hurst_exponent": 4.4162737839765496e-15,
+                "skewness": 0.0,
+                "kurtosis": 0.0,
+                "lookback_period": 63,
+                "hurst_threshold": 0.45,
+                "skew_threshold": 0.8
+              },
+              "regime_adjustments": "Lookback: 63d, Hurst threshold: 0.45, Skew threshold: \u00b10.8 (adapted for mean_reverting)"
+            }
+          }
+        },
+        "risk_management_agent": {
+          "signal": "neutral",
+          "confidence": 0.0,
+          "reasoning": {
+            "portfolio_value": 100000.0,
+            "current_position_value": 0.0,
+            "base_position_limit_pct": 0.1,
+            "position_limit": 10000.0,
+            "remaining_limit": 10000.0,
+            "available_cash": 100000.0,
+            "risk_adjustment": "Volatility-based limit: 10.0% (vs 20% baseline)"
+          }
+        }
+      },
+      "portfolio_decision": {
+        "action": "hold",
+        "planned_quantity": 0,
+        "executed_quantity": 0,
+        "confidence": 4.0,
+        "reasoning": "The signal for TSLA is neutral with low confidence (4), and there are no existing positions. Given the lack of a strong directional signal, it's prudent to hold and not open a new position at this time."
+      },
+      "market_data": {
+        "price": 302.63,
+        "position_before": {
+          "long": 0,
+          "short": 0
+        }
+      },
+      "outcome": {
+        "daily_return": 0.0,
+        "ticker_return": 0.0,
+        "portfolio_value_before": 100000,
+        "portfolio_value_after": 100000.0
+      },
+      "metadata": {
+        "model_name": "gemini-2.5-flash-preview-05-20",
+        "model_provider": "Google",
+        "analysts": [
+          "technical_analyst"
+        ]
+      }
+    },
+    {
+      "date": "2025-08-01",
+      "ticker": "GOOGL",
+      "agent_signals": {
+        "technical_analyst_agent": {
+          "signal": "bullish",
+          "confidence": 20,
+          "reasoning": {
+            "market_regime": {
+              "state": "neutral",
+              "volatility": "low",
+              "structure": "mean_reverting",
+              "confidence": 30,
+              "adaptive_weights": {
+                "trend": 0.15,
+                "mean_reversion": 0.35,
+                "momentum": 0.15,
+                "volatility": 0.1,
+                "stat_arb": 0.25
+              }
+            },
+            "trend_following": {
+              "signal": "bullish",
+              "confidence": 51,
+              "metrics": {
+                "adx": 53.464612901903855,
+                "trend_strength": 0.5346461290190385,
+                "ema_short_period": 8,
+                "ema_medium_period": 21,
+                "ema_long_period": 55
+              },
+              "regime_adjustments": "EMA periods: 8/21/55 (adapted for mean_reverting regime), ADX threshold: 20"
+            },
+            "mean_reversion": {
+              "signal": "neutral",
+              "confidence": 50,
+              "metrics": {
+                "z_score": 0.4258464070782185,
+                "price_vs_bb": 0.5288132829144291,
+                "rsi": 61.67437946992002,
+                "rsi_period": 11,
+                "rsi_oversold": 30,
+                "rsi_overbought": 70,
+                "bollinger_std": 1.6
+              },
+              "regime_adjustments": "RSI: 11d/30/70, BB: 16d/1.6\u03c3 (adapted for mean_reverting regime)"
+            },
+            "momentum": {
+              "signal": "neutral",
+              "confidence": 45,
+              "metrics": {
+                "momentum_score": 0.0,
+                "volume_momentum": 0.8813890208238088,
+                "momentum_short": 0.05857565725450431,
+                "momentum_medium": 0.0,
+                "momentum_long": 0.0,
+                "volume_threshold": 1.0
+              },
+              "regime_adjustments": "Momentum periods: [0.4, 0.3, 0.3], Volume threshold: 1.0, Signal thresholds: 0.05/-0.05 (adapted for neutral/low)"
+            },
+            "volatility": {
+              "signal": "neutral",
+              "confidence": 55,
+              "metrics": {
+                "historical_volatility": 0.19017292292899582,
+                "volatility_regime": 0.0,
+                "volatility_z_score": 0.0,
+                "atr_ratio": 0.022048326547877112,
+                "vol_period": 21,
+                "atr_period": 11
+              },
+              "regime_adjustments": "Vol period: 21d, Vol MA: 63d, Thresholds: 0.80/1.20 (adapted for neutral)"
+            },
+            "statistical_arbitrage": {
+              "signal": "neutral",
+              "confidence": 50,
+              "metrics": {
+                "hurst_exponent": 4.4162737839765496e-15,
+                "skewness": 0.0,
+                "kurtosis": 0.0,
+                "lookback_period": 63,
+                "hurst_threshold": 0.45,
+                "skew_threshold": 0.8
+              },
+              "regime_adjustments": "Lookback: 63d, Hurst threshold: 0.45, Skew threshold: \u00b10.8 (adapted for mean_reverting)"
+            }
+          }
+        },
+        "risk_management_agent": {
+          "signal": "neutral",
+          "confidence": 0.0,
+          "reasoning": {
+            "portfolio_value": 100000.0,
+            "current_position_value": 0.0,
+            "base_position_limit_pct": 0.19598270770710044,
+            "position_limit": 19598.270770710045,
+            "remaining_limit": 19598.270770710045,
+            "available_cash": 100000.0,
+            "risk_adjustment": "Volatility-based limit: 19.6% (vs 20% baseline)"
+          }
+        }
+      },
+      "portfolio_decision": {
+        "action": "buy",
+        "planned_quantity": 103,
+        "executed_quantity": 103,
+        "confidence": 20.0,
+        "reasoning": "The signal for GOOGL is bullish with a confidence of 20. The portfolio currently holds no shares of GOOGL. With sufficient cash (100000.00) and a maximum allowed purchase of 103 shares, we will open a long position by buying the maximum allowed quantity to capitalize on the bullish outlook. Cost for 103 shares at 189.13 is 19480.39, which is well within available cash."
+      },
+      "market_data": {
+        "price": 189.13,
+        "position_before": {
+          "long": 103,
+          "short": 0
+        }
+      },
+      "outcome": {
+        "daily_return": 0.0,
+        "ticker_return": 0.0,
+        "portfolio_value_before": 100000,
+        "portfolio_value_after": 100000.0
+      },
+      "metadata": {
+        "model_name": "gemini-2.5-flash-preview-05-20",
+        "model_provider": "Google",
+        "analysts": [
+          "technical_analyst"
+        ]
+      }
+    },
+    {
+      "date": "2025-08-04",
+      "ticker": "TSLA",
+      "agent_signals": {
+        "technical_analyst_agent": {
+          "signal": "bullish",
+          "confidence": 12,
+          "reasoning": {
+            "market_regime": {
+              "state": "neutral",
+              "volatility": "low",
+              "structure": "mean_reverting",
+              "confidence": 30,
+              "adaptive_weights": {
+                "trend": 0.15,
+                "mean_reversion": 0.35,
+                "momentum": 0.15,
+                "volatility": 0.1,
+                "stat_arb": 0.25
+              }
+            },
+            "trend_following": {
+              "signal": "bullish",
+              "confidence": 26,
+              "metrics": {
+                "adx": 32.79492488744443,
+                "trend_strength": 0.3279492488744443,
+                "ema_short_period": 8,
+                "ema_medium_period": 21,
+                "ema_long_period": 55
+              },
+              "regime_adjustments": "EMA periods: 8/21/55 (adapted for mean_reverting regime), ADX threshold: 20"
+            },
+            "mean_reversion": {
+              "signal": "neutral",
+              "confidence": 50,
+              "metrics": {
+                "z_score": -0.6005026526299538,
+                "price_vs_bb": 0.1907022621921072,
+                "rsi": 37.62292096637124,
+                "rsi_period": 11,
+                "rsi_oversold": 30,
+                "rsi_overbought": 70,
+                "bollinger_std": 1.6
+              },
+              "regime_adjustments": "RSI: 11d/30/70, BB: 16d/1.6\u03c3 (adapted for mean_reverting regime)"
+            },
+            "momentum": {
+              "signal": "neutral",
+              "confidence": 45,
+              "metrics": {
+                "momentum_score": 0.0,
+                "volume_momentum": 0.825107371962495,
+                "momentum_short": 0.0,
+                "momentum_medium": 0.0,
+                "momentum_long": 0.0,
+                "volume_threshold": 1.0
+              },
+              "regime_adjustments": "Momentum periods: [0.4, 0.3, 0.3], Volume threshold: 1.0, Signal thresholds: 0.05/-0.05 (adapted for neutral/low)"
+            },
+            "volatility": {
+              "signal": "neutral",
+              "confidence": 55,
+              "metrics": {
+                "historical_volatility": 0.0,
+                "volatility_regime": 0.0,
+                "volatility_z_score": 0.0,
+                "atr_ratio": 0.04552509509503623,
+                "vol_period": 21,
+                "atr_period": 11
+              },
+              "regime_adjustments": "Vol period: 21d, Vol MA: 63d, Thresholds: 0.80/1.20 (adapted for neutral)"
+            },
+            "statistical_arbitrage": {
+              "signal": "neutral",
+              "confidence": 50,
+              "metrics": {
+                "hurst_exponent": 4.4162737839765496e-15,
+                "skewness": 0.0,
+                "kurtosis": 0.0,
+                "lookback_period": 63,
+                "hurst_threshold": 0.45,
+                "skew_threshold": 0.8
+              },
+              "regime_adjustments": "Lookback: 63d, Hurst threshold: 0.45, Skew threshold: \u00b10.8 (adapted for mean_reverting)"
+            }
+          }
+        },
+        "risk_management_agent": {
+          "signal": "neutral",
+          "confidence": 0.0,
+          "reasoning": {
+            "portfolio_value": 100608.73,
+            "current_position_value": 0.0,
+            "base_position_limit_pct": 0.133367257611345,
+            "position_limit": 13417.910411860252,
+            "remaining_limit": 13417.910411860252,
+            "available_cash": 80519.61,
+            "risk_adjustment": "Volatility-based limit: 13.3% (vs 20% baseline)"
+          }
+        }
+      },
+      "portfolio_decision": {
+        "action": "buy",
+        "planned_quantity": 43,
+        "executed_quantity": 43,
+        "confidence": 12.0,
+        "reasoning": "The technical analyst agent indicates a bullish signal for TSLA with a confidence of 12.0. We currently have no position in TSLA. With sufficient cash (80519.61) and a maximum allowed purchase of 43 shares, we will open a new long position by buying 43 shares."
+      },
+      "market_data": {
+        "price": 309.26,
+        "position_before": {
+          "long": 43,
+          "short": 0
+        }
+      },
+      "outcome": {
+        "daily_return": 0.006087299999999814,
+        "ticker_return": 0.00242457494658141,
+        "portfolio_value_before": 100000.0,
+        "portfolio_value_after": 100608.72999999998
+      },
+      "metadata": {
+        "model_name": "gemini-2.5-flash-preview-05-20",
+        "model_provider": "Google",
+        "analysts": [
+          "technical_analyst"
+        ]
+      }
+    },
+    {
+      "date": "2025-08-04",
+      "ticker": "GOOGL",
+      "agent_signals": {
+        "technical_analyst_agent": {
+          "signal": "bullish",
+          "confidence": 19,
+          "reasoning": {
+            "market_regime": {
+              "state": "neutral",
+              "volatility": "low",
+              "structure": "mean_reverting",
+              "confidence": 30,
+              "adaptive_weights": {
+                "trend": 0.15,
+                "mean_reversion": 0.35,
+                "momentum": 0.15,
+                "volatility": 0.1,
+                "stat_arb": 0.25
+              }
+            },
+            "trend_following": {
+              "signal": "bullish",
+              "confidence": 50,
+              "metrics": {
+                "adx": 52.484754416645,
+                "trend_strength": 0.5248475441664501,
+                "ema_short_period": 8,
+                "ema_medium_period": 21,
+                "ema_long_period": 55
+              },
+              "regime_adjustments": "EMA periods: 8/21/55 (adapted for mean_reverting regime), ADX threshold: 20"
+            },
+            "mean_reversion": {
+              "signal": "neutral",
+              "confidence": 50,
+              "metrics": {
+                "z_score": 1.1650415030542323,
+                "price_vs_bb": 0.8413637014834819,
+                "rsi": 67.69503546099287,
+                "rsi_period": 11,
+                "rsi_oversold": 30,
+                "rsi_overbought": 70,
+                "bollinger_std": 1.6
+              },
+              "regime_adjustments": "RSI: 11d/30/70, BB: 16d/1.6\u03c3 (adapted for mean_reverting regime)"
+            },
+            "momentum": {
+              "signal": "neutral",
+              "confidence": 45,
+              "metrics": {
+                "momentum_score": 0.0,
+                "volume_momentum": 0.7888989757280603,
+                "momentum_short": 0.0,
+                "momentum_medium": 0.0,
+                "momentum_long": 0.0,
+                "volume_threshold": 1.0
+              },
+              "regime_adjustments": "Momentum periods: [0.4, 0.3, 0.3], Volume threshold: 1.0, Signal thresholds: 0.05/-0.05 (adapted for neutral/low)"
+            },
+            "volatility": {
+              "signal": "neutral",
+              "confidence": 55,
+              "metrics": {
+                "historical_volatility": 0.0,
+                "volatility_regime": 0.0,
+                "volatility_z_score": 0.0,
+                "atr_ratio": 0.022918375717801486,
+                "vol_period": 21,
+                "atr_period": 11
+              },
+              "regime_adjustments": "Vol period: 21d, Vol MA: 63d, Thresholds: 0.80/1.20 (adapted for neutral)"
+            },
+            "statistical_arbitrage": {
+              "signal": "neutral",
+              "confidence": 50,
+              "metrics": {
+                "hurst_exponent": 4.4162737839765496e-15,
+                "skewness": 0.0,
+                "kurtosis": 0.0,
+                "lookback_period": 63,
+                "hurst_threshold": 0.45,
+                "skew_threshold": 0.8
+              },
+              "regime_adjustments": "Lookback: 63d, Hurst threshold: 0.45, Skew threshold: \u00b10.8 (adapted for mean_reverting)"
+            }
+          }
+        },
+        "risk_management_agent": {
+          "signal": "neutral",
+          "confidence": 0.0,
+          "reasoning": {
+            "portfolio_value": 100608.73,
+            "current_position_value": 20089.12,
+            "base_position_limit_pct": 0.19423388241208916,
+            "position_limit": 19541.624232449627,
+            "remaining_limit": -547.495767550372,
+            "available_cash": 80519.61,
+            "risk_adjustment": "Volatility-based limit: 19.4% (vs 20% baseline)"
+          }
+        }
+      },
+      "portfolio_decision": {
+        "action": "hold",
+        "planned_quantity": 0,
+        "executed_quantity": 0,
+        "confidence": 19.0,
+        "reasoning": "The technical analyst agent indicates a bullish signal for GOOGL with a confidence of 19.0. We currently hold 103 long shares. However, the 'Maximum Shares Allowed For Purchases' is -2, which indicates that no additional long positions or additions to existing long positions are permitted at this time. Selling would contradict the bullish signal. Therefore, we will hold our current long position."
+      },
+      "market_data": {
+        "price": 195.04,
+        "position_before": {
+          "long": 103,
+          "short": 0
+        }
+      },
+      "outcome": {
+        "daily_return": 0.006087299999999814,
+        "ticker_return": 0.003662725053418403,
+        "portfolio_value_before": 100000.0,
+        "portfolio_value_after": 100608.72999999998
+      },
+      "metadata": {
+        "model_name": "gemini-2.5-flash-preview-05-20",
+        "model_provider": "Google",
+        "analysts": [
+          "technical_analyst"
+        ]
+      }
+    },
+    {
+      "date": "2025-08-05",
+      "ticker": "TSLA",
+      "agent_signals": {
+        "technical_analyst_agent": {
+          "signal": "neutral",
+          "confidence": 4,
+          "reasoning": {
+            "market_regime": {
+              "state": "neutral",
+              "volatility": "low",
+              "structure": "mean_reverting",
+              "confidence": 30,
+              "adaptive_weights": {
+                "trend": 0.15,
+                "mean_reversion": 0.35,
+                "momentum": 0.15,
+                "volatility": 0.1,
+                "stat_arb": 0.25
+              }
+            },
+            "trend_following": {
+              "signal": "neutral",
+              "confidence": 50,
+              "metrics": {
+                "adx": 30.89116326592566,
+                "trend_strength": 0.3089116326592566,
+                "ema_short_period": 8,
+                "ema_medium_period": 21,
+                "ema_long_period": 55
+              },
+              "regime_adjustments": "EMA periods: 8/21/55 (adapted for mean_reverting regime), ADX threshold: 20"
+            },
+            "mean_reversion": {
+              "signal": "neutral",
+              "confidence": 50,
+              "metrics": {
+                "z_score": -0.7481067425513188,
+                "price_vs_bb": 0.19974047543176393,
+                "rsi": 37.908256880733944,
+                "rsi_period": 11,
+                "rsi_oversold": 30,
+                "rsi_overbought": 70,
+                "bollinger_std": 1.6
+              },
+              "regime_adjustments": "RSI: 11d/30/70, BB: 16d/1.6\u03c3 (adapted for mean_reverting regime)"
+            },
+            "momentum": {
+              "signal": "neutral",
+              "confidence": 45,
+              "metrics": {
+                "momentum_score": 0.0,
+                "volume_momentum": 0.6308675442360261,
+                "momentum_short": 0.057473193106269305,
+                "momentum_medium": 0.0,
+                "momentum_long": 0.0,
+                "volume_threshold": 1.0
+              },
+              "regime_adjustments": "Momentum periods: [0.4, 0.3, 0.3], Volume threshold: 1.0, Signal thresholds: 0.05/-0.05 (adapted for neutral/low)"
+            },
+            "volatility": {
+              "signal": "neutral",
+              "confidence": 55,
+              "metrics": {
+                "historical_volatility": 0.45481213800265297,
+                "volatility_regime": 0.0,
+                "volatility_z_score": 0.0,
+                "atr_ratio": 0.04437678154962423,
+                "vol_period": 21,
+                "atr_period": 11
+              },
+              "regime_adjustments": "Vol period: 21d, Vol MA: 63d, Thresholds: 0.80/1.20 (adapted for neutral)"
+            },
+            "statistical_arbitrage": {
+              "signal": "neutral",
+              "confidence": 50,
+              "metrics": {
+                "hurst_exponent": 4.4162737839765496e-15,
+                "skewness": 0.0,
+                "kurtosis": 0.0,
+                "lookback_period": 63,
+                "hurst_threshold": 0.45,
+                "skew_threshold": 0.8
+              },
+              "regime_adjustments": "Lookback: 63d, Hurst threshold: 0.45, Skew threshold: \u00b10.8 (adapted for mean_reverting)"
+            }
+          }
+        },
+        "risk_management_agent": {
+          "signal": "neutral",
+          "confidence": 0.0,
+          "reasoning": {
+            "portfolio_value": 100547.4,
+            "current_position_value": 13274.960000000001,
+            "base_position_limit_pct": 0.1345187861997347,
+            "position_limit": 13525.514203539204,
+            "remaining_limit": 250.55420353920272,
+            "available_cash": 67221.43,
+            "risk_adjustment": "Volatility-based limit: 13.5% (vs 20% baseline)"
+          }
+        }
+      },
+      "portfolio_decision": {
+        "action": "hold",
+        "planned_quantity": 0,
+        "executed_quantity": 0,
+        "confidence": 4.0,
+        "reasoning": "The technical analyst signal is neutral with low confidence (4). We are currently long 43 shares and slightly underwater. The 'max_shares' for purchases is 0, preventing us from adding to the position. Given the neutral, low-confidence signal and inability to add, holding the current position is the most prudent action to await clearer market direction."
+      },
+      "market_data": {
+        "price": 308.72,
+        "position_before": {
+          "long": 43,
+          "short": 0
+        }
+      },
+      "outcome": {
+        "daily_return": -0.0006095892473743303,
+        "ticker_return": -0.00024282182560100547,
+        "portfolio_value_before": 100608.72999999998,
+        "portfolio_value_after": 100547.4
+      },
+      "metadata": {
+        "model_name": "gemini-2.5-flash-preview-05-20",
+        "model_provider": "Google",
+        "analysts": [
+          "technical_analyst"
+        ]
+      }
+    },
+    {
+      "date": "2025-08-05",
+      "ticker": "GOOGL",
+      "agent_signals": {
+        "technical_analyst_agent": {
+          "signal": "bullish",
+          "confidence": 19,
+          "reasoning": {
+            "market_regime": {
+              "state": "neutral",
+              "volatility": "low",
+              "structure": "mean_reverting",
+              "confidence": 30,
+              "adaptive_weights": {
+                "trend": 0.15,
+                "mean_reversion": 0.35,
+                "momentum": 0.15,
+                "volatility": 0.1,
+                "stat_arb": 0.25
+              }
+            },
+            "trend_following": {
+              "signal": "bullish",
+              "confidence": 49,
+              "metrics": {
+                "adx": 50.698903080957194,
+                "trend_strength": 0.5069890308095719,
+                "ema_short_period": 8,
+                "ema_medium_period": 21,
+                "ema_long_period": 55
+              },
+              "regime_adjustments": "EMA periods: 8/21/55 (adapted for mean_reverting regime), ADX threshold: 20"
+            },
+            "mean_reversion": {
+              "signal": "neutral",
+              "confidence": 50,
+              "metrics": {
+                "z_score": 1.0384019883874132,
+                "price_vs_bb": 0.7864012368598352,
+                "rsi": 59.711007224819355,
+                "rsi_period": 11,
+                "rsi_oversold": 30,
+                "rsi_overbought": 70,
+                "bollinger_std": 1.6
+              },
+              "regime_adjustments": "RSI: 11d/30/70, BB: 16d/1.6\u03c3 (adapted for mean_reverting regime)"
+            },
+            "momentum": {
+              "signal": "neutral",
+              "confidence": 45,
+              "metrics": {
+                "momentum_score": 0.0,
+                "volume_momentum": 0.7927031795752144,
+                "momentum_short": 0.0982069445046877,
+                "momentum_medium": 0.0,
+                "momentum_long": 0.0,
+                "volume_threshold": 1.0
+              },
+              "regime_adjustments": "Momentum periods: [0.4, 0.3, 0.3], Volume threshold: 1.0, Signal thresholds: 0.05/-0.05 (adapted for neutral/low)"
+            },
+            "volatility": {
+              "signal": "neutral",
+              "confidence": 55,
+              "metrics": {
+                "historical_volatility": 0.20381044580868704,
+                "volatility_regime": 0.0,
+                "volatility_z_score": 0.0,
+                "atr_ratio": 0.022382867043061232,
+                "vol_period": 21,
+                "atr_period": 11
+              },
+              "regime_adjustments": "Vol period: 21d, Vol MA: 63d, Thresholds: 0.80/1.20 (adapted for neutral)"
+            },
+            "statistical_arbitrage": {
+              "signal": "neutral",
+              "confidence": 50,
+              "metrics": {
+                "hurst_exponent": 4.4162737839765496e-15,
+                "skewness": 0.0,
+                "kurtosis": 0.0,
+                "lookback_period": 63,
+                "hurst_threshold": 0.45,
+                "skew_threshold": 0.8
+              },
+              "regime_adjustments": "Lookback: 63d, Hurst threshold: 0.45, Skew threshold: \u00b10.8 (adapted for mean_reverting)"
+            }
+          }
+        },
+        "risk_management_agent": {
+          "signal": "neutral",
+          "confidence": 0.0,
+          "reasoning": {
+            "portfolio_value": 100547.4,
+            "current_position_value": 20051.01,
+            "base_position_limit_pct": 0.19461895541913132,
+            "position_limit": 19568.429958109562,
+            "remaining_limit": -482.5800418904364,
+            "available_cash": 67221.43,
+            "risk_adjustment": "Volatility-based limit: 19.5% (vs 20% baseline)"
+          }
+        }
+      },
+      "portfolio_decision": {
+        "action": "hold",
+        "planned_quantity": 0,
+        "executed_quantity": 0,
+        "confidence": 19.0,
+        "reasoning": "The technical analyst signal is bullish with high confidence (19). We are currently long 103 shares and the position is profitable. However, the 'max_shares' for purchases is -2, which means we cannot add to our long position. Given the strong bullish signal and a profitable existing position, holding is the best course of action to maintain this exposure, as we are unable to buy more shares."
+      },
+      "market_data": {
+        "price": 194.67,
+        "position_before": {
+          "long": 103,
+          "short": 0
+        }
+      },
+      "outcome": {
+        "daily_return": -0.0006095892473743303,
+        "ticker_return": -0.0003667674217733248,
+        "portfolio_value_before": 100608.72999999998,
+        "portfolio_value_after": 100547.4
+      },
+      "metadata": {
+        "model_name": "gemini-2.5-flash-preview-05-20",
+        "model_provider": "Google",
+        "analysts": [
+          "technical_analyst"
+        ]
+      }
+    },
+    {
+      "date": "2025-08-06",
+      "ticker": "TSLA",
+      "agent_signals": {
+        "technical_analyst_agent": {
+          "signal": "bullish",
+          "confidence": 11,
+          "reasoning": {
+            "market_regime": {
+              "state": "neutral",
+              "volatility": "low",
+              "structure": "mean_reverting",
+              "confidence": 30,
+              "adaptive_weights": {
+                "trend": 0.15,
+                "mean_reversion": 0.35,
+                "momentum": 0.15,
+                "volatility": 0.1,
+                "stat_arb": 0.25
+              }
+            },
+            "trend_following": {
+              "signal": "bullish",
+              "confidence": 22,
+              "metrics": {
+                "adx": 27.000197856440572,
+                "trend_strength": 0.2700019785644057,
+                "ema_short_period": 8,
+                "ema_medium_period": 21,
+                "ema_long_period": 55
+              },
+              "regime_adjustments": "EMA periods: 8/21/55 (adapted for mean_reverting regime), ADX threshold: 20"
+            },
+            "mean_reversion": {
+              "signal": "neutral",
+              "confidence": 50,
+              "metrics": {
+                "z_score": 0.26262521927656535,
+                "price_vs_bb": 0.5378589424881834,
+                "rsi": 43.1706224809673,
+                "rsi_period": 11,
+                "rsi_oversold": 30,
+                "rsi_overbought": 70,
+                "bollinger_std": 1.6
+              },
+              "regime_adjustments": "RSI: 11d/30/70, BB: 16d/1.6\u03c3 (adapted for mean_reverting regime)"
+            },
+            "momentum": {
+              "signal": "neutral",
+              "confidence": 45,
+              "metrics": {
+                "momentum_score": 0.0,
+                "volume_momentum": 0.8657676098142335,
+                "momentum_short": 0.08055367777187095,
+                "momentum_medium": 0.0,
+                "momentum_long": 0.0,
+                "volume_threshold": 1.0
+              },
+              "regime_adjustments": "Momentum periods: [0.4, 0.3, 0.3], Volume threshold: 1.0, Signal thresholds: 0.05/-0.05 (adapted for neutral/low)"
+            },
+            "volatility": {
+              "signal": "neutral",
+              "confidence": 55,
+              "metrics": {
+                "historical_volatility": 0.46830808709571314,
+                "volatility_regime": 0.0,
+                "volatility_z_score": 0.0,
+                "atr_ratio": 0.04273360973682937,
+                "vol_period": 21,
+                "atr_period": 11
+              },
+              "regime_adjustments": "Vol period: 21d, Vol MA: 63d, Thresholds: 0.80/1.20 (adapted for neutral)"
+            },
+            "statistical_arbitrage": {
+              "signal": "neutral",
+              "confidence": 50,
+              "metrics": {
+                "hurst_exponent": 4.4162737839765496e-15,
+                "skewness": 0.0,
+                "kurtosis": 0.0,
+                "lookback_period": 63,
+                "hurst_threshold": 0.45,
+                "skew_threshold": 0.8
+              },
+              "regime_adjustments": "Lookback: 63d, Hurst threshold: 0.45, Skew threshold: \u00b10.8 (adapted for mean_reverting)"
+            }
+          }
+        },
+        "risk_management_agent": {
+          "signal": "neutral",
+          "confidence": 0.0,
+          "reasoning": {
+            "portfolio_value": 101174.83,
+            "current_position_value": 13756.130000000001,
+            "base_position_limit_pct": 0.1341888514922142,
+            "position_limit": 13576.534237620019,
+            "remaining_limit": -179.59576237998226,
+            "available_cash": 67221.43,
+            "risk_adjustment": "Volatility-based limit: 13.4% (vs 20% baseline)"
+          }
+        }
+      },
+      "portfolio_decision": {
+        "action": "hold",
+        "planned_quantity": 0,
+        "executed_quantity": 0,
+        "confidence": 11.0,
+        "reasoning": "The technical analyst agent indicates a bullish signal. We currently hold a profitable long position. However, 'max_shares' is 0, preventing us from adding to our position. Given the bullish sentiment, holding our current position is preferred over selling."
+      },
+      "market_data": {
+        "price": 319.91,
+        "position_before": {
+          "long": 43,
+          "short": 0
+        }
+      },
+      "outcome": {
+        "daily_return": 0.006240141465617142,
+        "ticker_return": 0.002557719809334105,
+        "portfolio_value_before": 100547.4,
+        "portfolio_value_after": 101174.82999999999
+      },
+      "metadata": {
+        "model_name": "gemini-2.5-flash-preview-05-20",
+        "model_provider": "Google",
+        "analysts": [
+          "technical_analyst"
+        ]
+      }
+    },
+    {
+      "date": "2025-08-06",
+      "ticker": "GOOGL",
+      "agent_signals": {
+        "technical_analyst_agent": {
+          "signal": "bullish",
+          "confidence": 18,
+          "reasoning": {
+            "market_regime": {
+              "state": "neutral",
+              "volatility": "low",
+              "structure": "mean_reverting",
+              "confidence": 30,
+              "adaptive_weights": {
+                "trend": 0.15,
+                "mean_reversion": 0.35,
+                "momentum": 0.15,
+                "volatility": 0.1,
+                "stat_arb": 0.25
+              }
+            },
+            "trend_following": {
+              "signal": "bullish",
+              "confidence": 47,
+              "metrics": {
+                "adx": 48.91369578917189,
+                "trend_strength": 0.4891369578917189,
+                "ema_short_period": 8,
+                "ema_medium_period": 21,
+                "ema_long_period": 55
+              },
+              "regime_adjustments": "EMA periods: 8/21/55 (adapted for mean_reverting regime), ADX threshold: 20"
+            },
+            "mean_reversion": {
+              "signal": "neutral",
+              "confidence": 50,
+              "metrics": {
+                "z_score": 1.1790879074239429,
+                "price_vs_bb": 0.8505501515085864,
+                "rsi": 60.01687051876844,
+                "rsi_period": 11,
+                "rsi_oversold": 30,
+                "rsi_overbought": 70,
+                "bollinger_std": 1.6
+              },
+              "regime_adjustments": "RSI: 11d/30/70, BB: 16d/1.6\u03c3 (adapted for mean_reverting regime)"
+            },
+            "momentum": {
+              "signal": "neutral",
+              "confidence": 45,
+              "metrics": {
+                "momentum_score": 0.0,
+                "volume_momentum": 0.5533559379633659,
+                "momentum_short": 0.11924646147898976,
+                "momentum_medium": 0.0,
+                "momentum_long": 0.0,
+                "volume_threshold": 1.0
+              },
+              "regime_adjustments": "Momentum periods: [0.4, 0.3, 0.3], Volume threshold: 1.0, Signal thresholds: 0.05/-0.05 (adapted for neutral/low)"
+            },
+            "volatility": {
+              "signal": "neutral",
+              "confidence": 55,
+              "metrics": {
+                "historical_volatility": 0.19257090933594773,
+                "volatility_regime": 0.0,
+                "volatility_z_score": 0.0,
+                "atr_ratio": 0.02165054079991101,
+                "vol_period": 21,
+                "atr_period": 11
+              },
+              "regime_adjustments": "Vol period: 21d, Vol MA: 63d, Thresholds: 0.80/1.20 (adapted for neutral)"
+            },
+            "statistical_arbitrage": {
+              "signal": "neutral",
+              "confidence": 50,
+              "metrics": {
+                "hurst_exponent": 4.4162737839765496e-15,
+                "skewness": 0.0,
+                "kurtosis": 0.0,
+                "lookback_period": 63,
+                "hurst_threshold": 0.45,
+                "skew_threshold": 0.8
+              },
+              "regime_adjustments": "Lookback: 63d, Hurst threshold: 0.45, Skew threshold: \u00b10.8 (adapted for mean_reverting)"
+            }
+          }
+        },
+        "risk_management_agent": {
+          "signal": "neutral",
+          "confidence": 0.0,
+          "reasoning": {
+            "portfolio_value": 101174.83,
+            "current_position_value": 20197.27,
+            "base_position_limit_pct": 0.195090412950794,
+            "position_limit": 19738.23936492638,
+            "remaining_limit": -459.03063507362094,
+            "available_cash": 67221.43,
+            "risk_adjustment": "Volatility-based limit: 19.5% (vs 20% baseline)"
+          }
+        }
+      },
+      "portfolio_decision": {
+        "action": "sell",
+        "planned_quantity": 2,
+        "executed_quantity": 2,
+        "confidence": 18.0,
+        "reasoning": "The technical analyst agent indicates a bullish signal with moderate confidence. We currently hold a profitable long position. However, 'max_shares' for purchases is -2, which indicates a requirement to reduce our long position. To comply with this position limit constraint while still maintaining a significant long exposure to the bullish signal, we will sell 2 shares."
+      },
+      "market_data": {
+        "price": 196.09,
+        "position_before": {
+          "long": 101,
+          "short": 0
+        }
+      },
+      "outcome": {
+        "daily_return": 0.006240141465617142,
+        "ticker_return": 0.003682421656283038,
+        "portfolio_value_before": 100547.4,
+        "portfolio_value_after": 101174.82999999999
+      },
+      "metadata": {
+        "model_name": "gemini-2.5-flash-preview-05-20",
+        "model_provider": "Google",
+        "analysts": [
+          "technical_analyst"
+        ]
+      }
+    },
+    {
+      "date": "2025-08-07",
+      "ticker": "TSLA",
+      "agent_signals": {
+        "technical_analyst_agent": {
+          "signal": "bullish",
+          "confidence": 10,
+          "reasoning": {
+            "market_regime": {
+              "state": "neutral",
+              "volatility": "low",
+              "structure": "mean_reverting",
+              "confidence": 30,
+              "adaptive_weights": {
+                "trend": 0.15,
+                "mean_reversion": 0.35,
+                "momentum": 0.15,
+                "volatility": 0.1,
+                "stat_arb": 0.25
+              }
+            },
+            "trend_following": {
+              "signal": "bullish",
+              "confidence": 19,
+              "metrics": {
+                "adx": 23.9797722788337,
+                "trend_strength": 0.239797722788337,
+                "ema_short_period": 8,
+                "ema_medium_period": 21,
+                "ema_long_period": 55
+              },
+              "regime_adjustments": "EMA periods: 8/21/55 (adapted for mean_reverting regime), ADX threshold: 20"
+            },
+            "mean_reversion": {
+              "signal": "neutral",
+              "confidence": 50,
+              "metrics": {
+                "z_score": 0.4626781589974078,
+                "price_vs_bb": 0.6129752982384415,
+                "rsi": 44.360407760605035,
+                "rsi_period": 11,
+                "rsi_oversold": 30,
+                "rsi_overbought": 70,
+                "bollinger_std": 1.6
+              },
+              "regime_adjustments": "RSI: 11d/30/70, BB: 16d/1.6\u03c3 (adapted for mean_reverting regime)"
+            },
+            "momentum": {
+              "signal": "neutral",
+              "confidence": 45,
+              "metrics": {
+                "momentum_score": 0.0,
+                "volume_momentum": 0.7384114889984627,
+                "momentum_short": 0.09441139459423897,
+                "momentum_medium": 0.0,
+                "momentum_long": 0.0,
+                "volume_threshold": 1.0
+              },
+              "regime_adjustments": "Momentum periods: [0.4, 0.3, 0.3], Volume threshold: 1.0, Signal thresholds: 0.05/-0.05 (adapted for neutral/low)"
+            },
+            "volatility": {
+              "signal": "neutral",
+              "confidence": 55,
+              "metrics": {
+                "historical_volatility": 0.4669199270003311,
+                "volatility_regime": 0.0,
+                "volatility_z_score": 0.0,
+                "atr_ratio": 0.04205677340005696,
+                "vol_period": 21,
+                "atr_period": 11
+              },
+              "regime_adjustments": "Vol period: 21d, Vol MA: 63d, Thresholds: 0.80/1.20 (adapted for neutral)"
+            },
+            "statistical_arbitrage": {
+              "signal": "neutral",
+              "confidence": 50,
+              "metrics": {
+                "hurst_exponent": 4.4162737839765496e-15,
+                "skewness": 0.0,
+                "kurtosis": 0.0,
+                "lookback_period": 63,
+                "hurst_threshold": 0.45,
+                "skew_threshold": 0.8
+              },
+              "regime_adjustments": "Lookback: 63d, Hurst threshold: 0.45, Skew threshold: \u00b10.8 (adapted for mean_reverting)"
+            }
+          }
+        },
+        "risk_management_agent": {
+          "signal": "neutral",
+          "confidence": 0.0,
+          "reasoning": {
+            "portfolio_value": 101319.73999999999,
+            "current_position_value": 13857.609999999999,
+            "base_position_limit_pct": 0.13428209828938883,
+            "position_limit": 13605.42728533532,
+            "remaining_limit": -252.18271466467922,
+            "available_cash": 67613.60999999999,
+            "risk_adjustment": "Volatility-based limit: 13.4% (vs 20% baseline)"
+          }
+        }
+      },
+      "portfolio_decision": {
+        "action": "hold",
+        "planned_quantity": 0,
+        "executed_quantity": 0,
+        "confidence": 10.0,
+        "reasoning": "The technical analyst signal is bullish, and we currently hold a profitable long position. However, max_shares is 0, preventing any further purchases. Therefore, we will hold our current position."
+      },
+      "market_data": {
+        "price": 322.27,
+        "position_before": {
+          "long": 43,
+          "short": 0
+        }
+      },
+      "outcome": {
+        "daily_return": 0.001432273224476913,
+        "ticker_return": 0.0005888508635741781,
+        "portfolio_value_before": 101174.82999999999,
+        "portfolio_value_after": 101319.73999999999
+      },
+      "metadata": {
+        "model_name": "gemini-2.5-flash-preview-05-20",
+        "model_provider": "Google",
+        "analysts": [
+          "technical_analyst"
+        ]
+      }
+    },
+    {
+      "date": "2025-08-07",
+      "ticker": "GOOGL",
+      "agent_signals": {
+        "technical_analyst_agent": {
+          "signal": "bullish",
+          "confidence": 20,
+          "reasoning": {
+            "market_regime": {
+              "state": "neutral",
+              "volatility": "low",
+              "structure": "mean_reverting",
+              "confidence": 30,
+              "adaptive_weights": {
+                "trend": 0.15,
+                "mean_reversion": 0.35,
+                "momentum": 0.15,
+                "volatility": 0.1,
+                "stat_arb": 0.25
+              }
+            },
+            "trend_following": {
+              "signal": "bullish",
+              "confidence": 52,
+              "metrics": {
+                "adx": 54.55576704678988,
+                "trend_strength": 0.5455576704678988,
+                "ema_short_period": 8,
+                "ema_medium_period": 21,
+                "ema_long_period": 55
+              },
+              "regime_adjustments": "EMA periods: 8/21/55 (adapted for mean_reverting regime), ADX threshold: 20"
+            },
+            "mean_reversion": {
+              "signal": "neutral",
+              "confidence": 50,
+              "metrics": {
+                "z_score": 1.1780852135579594,
+                "price_vs_bb": 0.8559589713852573,
+                "rsi": 63.65610073816763,
+                "rsi_period": 11,
+                "rsi_oversold": 30,
+                "rsi_overbought": 70,
+                "bollinger_std": 1.6
+              },
+              "regime_adjustments": "RSI: 11d/30/70, BB: 16d/1.6\u03c3 (adapted for mean_reverting regime)"
+            },
+            "momentum": {
+              "signal": "neutral",
+              "confidence": 45,
+              "metrics": {
+                "momentum_score": 0.0,
+                "volume_momentum": 0.6895562598719959,
+                "momentum_short": 0.10847764363896706,
+                "momentum_medium": 0.0,
+                "momentum_long": 0.0,
+                "volume_threshold": 1.0
+              },
+              "regime_adjustments": "Momentum periods: [0.4, 0.3, 0.3], Volume threshold: 1.0, Signal thresholds: 0.05/-0.05 (adapted for neutral/low)"
+            },
+            "volatility": {
+              "signal": "neutral",
+              "confidence": 55,
+              "metrics": {
+                "historical_volatility": 0.1910462470710422,
+                "volatility_regime": 0.0,
+                "volatility_z_score": 0.0,
+                "atr_ratio": 0.021538404603741478,
+                "vol_period": 21,
+                "atr_period": 11
+              },
+              "regime_adjustments": "Vol period: 21d, Vol MA: 63d, Thresholds: 0.80/1.20 (adapted for neutral)"
+            },
+            "statistical_arbitrage": {
+              "signal": "neutral",
+              "confidence": 50,
+              "metrics": {
+                "hurst_exponent": 4.4162737839765496e-15,
+                "skewness": 0.0,
+                "kurtosis": 0.0,
+                "lookback_period": 63,
+                "hurst_threshold": 0.45,
+                "skew_threshold": 0.8
+              },
+              "regime_adjustments": "Lookback: 63d, Hurst threshold: 0.45, Skew threshold: \u00b10.8 (adapted for mean_reverting)"
+            }
+          }
+        },
+        "risk_management_agent": {
+          "signal": "neutral",
+          "confidence": 0.0,
+          "reasoning": {
+            "portfolio_value": 101319.73999999999,
+            "current_position_value": 19848.52,
+            "base_position_limit_pct": 0.19617001538006604,
+            "position_limit": 19875.89495410429,
+            "remaining_limit": 27.374954104288918,
+            "available_cash": 67613.60999999999,
+            "risk_adjustment": "Volatility-based limit: 19.6% (vs 20% baseline)"
+          }
+        }
+      },
+      "portfolio_decision": {
+        "action": "hold",
+        "planned_quantity": 0,
+        "executed_quantity": 0,
+        "confidence": 20.0,
+        "reasoning": "The technical analyst signal is bullish with high confidence, and we currently hold a profitable long position. However, max_shares is 0, preventing any further purchases. Therefore, we will hold our current position."
+      },
+      "market_data": {
+        "price": 196.52,
+        "position_before": {
+          "long": 101,
+          "short": 0
+        }
+      },
+      "outcome": {
+        "daily_return": 0.001432273224476913,
+        "ticker_return": 0.0008434223609027349,
+        "portfolio_value_before": 101174.82999999999,
+        "portfolio_value_after": 101319.73999999999
+      },
+      "metadata": {
+        "model_name": "gemini-2.5-flash-preview-05-20",
+        "model_provider": "Google",
+        "analysts": [
+          "technical_analyst"
+        ]
+      }
+    },
+    {
+      "date": "2025-08-08",
+      "ticker": "TSLA",
+      "agent_signals": {
+        "technical_analyst_agent": {
+          "signal": "bullish",
+          "confidence": 11,
+          "reasoning": {
+            "market_regime": {
+              "state": "neutral",
+              "volatility": "low",
+              "structure": "mean_reverting",
+              "confidence": 30,
+              "adaptive_weights": {
+                "trend": 0.15,
+                "mean_reversion": 0.35,
+                "momentum": 0.15,
+                "volatility": 0.1,
+                "stat_arb": 0.25
+              }
+            },
+            "trend_following": {
+              "signal": "bullish",
+              "confidence": 20,
+              "metrics": {
+                "adx": 25.1846255840962,
+                "trend_strength": 0.251846255840962,
+                "ema_short_period": 8,
+                "ema_medium_period": 21,
+                "ema_long_period": 55
+              },
+              "regime_adjustments": "EMA periods: 8/21/55 (adapted for mean_reverting regime), ADX threshold: 20"
+            },
+            "mean_reversion": {
+              "signal": "neutral",
+              "confidence": 50,
+              "metrics": {
+                "z_score": 1.166476928364194,
+                "price_vs_bb": 0.8186870702162959,
+                "rsi": 67.06377014716189,
+                "rsi_period": 11,
+                "rsi_oversold": 30,
+                "rsi_overbought": 70,
+                "bollinger_std": 1.6
+              },
+              "regime_adjustments": "RSI: 11d/30/70, BB: 16d/1.6\u03c3 (adapted for mean_reverting regime)"
+            },
+            "momentum": {
+              "signal": "neutral",
+              "confidence": 45,
+              "metrics": {
+                "momentum_score": 0.0,
+                "volume_momentum": 1.0173365082698298,
+                "momentum_short": 0.07002876517659129,
+                "momentum_medium": 0.0,
+                "momentum_long": 0.0,
+                "volume_threshold": 1.0
+              },
+              "regime_adjustments": "Momentum periods: [0.4, 0.3, 0.3], Volume threshold: 1.0, Signal thresholds: 0.05/-0.05 (adapted for neutral/low)"
+            },
+            "volatility": {
+              "signal": "neutral",
+              "confidence": 55,
+              "metrics": {
+                "historical_volatility": 0.4459352970346366,
+                "volatility_regime": 0.0,
+                "volatility_z_score": 0.0,
+                "atr_ratio": 0.03615680542724374,
+                "vol_period": 21,
+                "atr_period": 11
+              },
+              "regime_adjustments": "Vol period: 21d, Vol MA: 63d, Thresholds: 0.80/1.20 (adapted for neutral)"
+            },
+            "statistical_arbitrage": {
+              "signal": "neutral",
+              "confidence": 50,
+              "metrics": {
+                "hurst_exponent": 4.4162737839765496e-15,
+                "skewness": 0.0,
+                "kurtosis": 0.0,
+                "lookback_period": 63,
+                "hurst_threshold": 0.45,
+                "skew_threshold": 0.8
+              },
+              "regime_adjustments": "Lookback: 63d, Hurst threshold: 0.45, Skew threshold: \u00b10.8 (adapted for mean_reverting)"
+            }
+          }
+        },
+        "risk_management_agent": {
+          "signal": "neutral",
+          "confidence": 0.0,
+          "reasoning": {
+            "portfolio_value": 102131.97999999998,
+            "current_position_value": 14174.949999999999,
+            "base_position_limit_pct": 0.134009518300342,
+            "position_limit": 13686.65744286016,
+            "remaining_limit": -488.2925571398391,
+            "available_cash": 67613.60999999999,
+            "risk_adjustment": "Volatility-based limit: 13.4% (vs 20% baseline)"
+          }
+        }
+      },
+      "portfolio_decision": {
+        "action": "hold",
+        "planned_quantity": 0,
+        "executed_quantity": 0,
+        "confidence": 11.0,
+        "reasoning": "The technical analyst agent is bullish on TSLA. We currently hold a profitable long position (43 shares at a cost basis of 309.26 vs. current price of 329.65). However, the 'max_shares' for TSLA is -1, which indicates that no further long purchases are allowed at this time. Given the bullish signal and the inability to add to the position, holding the current profitable long position is the most appropriate action to allow for potential further upside."
+      },
+      "market_data": {
+        "price": 329.65,
+        "position_before": {
+          "long": 43,
+          "short": 0
+        }
+      },
+      "outcome": {
+        "daily_return": 0.008016601700714892,
+        "ticker_return": 0.008016601700714892,
+        "portfolio_value_before": 101319.73999999999,
+        "portfolio_value_after": 102131.97999999998
+      },
+      "metadata": {
+        "model_name": "gemini-2.5-flash-preview-05-20",
+        "model_provider": "Google",
+        "analysts": [
+          "technical_analyst"
+        ]
+      }
+    },
+    {
+      "date": "2025-08-08",
+      "ticker": "GOOGL",
+      "agent_signals": {
+        "technical_analyst_agent": {
+          "signal": "bearish",
+          "confidence": 22,
+          "reasoning": {
+            "market_regime": {
+              "state": "neutral",
+              "volatility": "low",
+              "structure": "mean_reverting",
+              "confidence": 30,
+              "adaptive_weights": {
+                "trend": 0.15,
+                "mean_reversion": 0.35,
+                "momentum": 0.15,
+                "volatility": 0.1,
+                "stat_arb": 0.25
+              }
+            },
+            "trend_following": {
+              "signal": "bullish",
+              "confidence": 52,
+              "metrics": {
+                "adx": 54.15245469766598,
+                "trend_strength": 0.5415245469766599,
+                "ema_short_period": 8,
+                "ema_medium_period": 21,
+                "ema_long_period": 55
+              },
+              "regime_adjustments": "EMA periods: 8/21/55 (adapted for mean_reverting regime), ADX threshold: 20"
+            },
+            "mean_reversion": {
+              "signal": "bearish",
+              "confidence": 60,
+              "metrics": {
+                "z_score": 1.8581413553268618,
+                "price_vs_bb": 1.1713303932464796,
+                "rsi": 67.79530588687956,
+                "rsi_period": 11,
+                "rsi_oversold": 30,
+                "rsi_overbought": 70,
+                "bollinger_std": 1.6
+              },
+              "regime_adjustments": "RSI: 11d/30/70, BB: 16d/1.6\u03c3 (adapted for mean_reverting regime)"
+            },
+            "momentum": {
+              "signal": "neutral",
+              "confidence": 45,
+              "metrics": {
+                "momentum_score": 0.0,
+                "volume_momentum": 1.0134004625411028,
+                "momentum_short": 0.12774961966351073,
+                "momentum_medium": 0.0,
+                "momentum_long": 0.0,
+                "volume_threshold": 1.0
+              },
+              "regime_adjustments": "Momentum periods: [0.4, 0.3, 0.3], Volume threshold: 1.0, Signal thresholds: 0.05/-0.05 (adapted for neutral/low)"
+            },
+            "volatility": {
+              "signal": "neutral",
+              "confidence": 55,
+              "metrics": {
+                "historical_volatility": 0.20296943875903012,
+                "volatility_regime": 0.0,
+                "volatility_z_score": 0.0,
+                "atr_ratio": 0.02027874816078571,
+                "vol_period": 21,
+                "atr_period": 11
+              },
+              "regime_adjustments": "Vol period: 21d, Vol MA: 63d, Thresholds: 0.80/1.20 (adapted for neutral)"
+            },
+            "statistical_arbitrage": {
+              "signal": "neutral",
+              "confidence": 50,
+              "metrics": {
+                "hurst_exponent": 4.4162737839765496e-15,
+                "skewness": 0.0,
+                "kurtosis": 0.0,
+                "lookback_period": 63,
+                "hurst_threshold": 0.45,
+                "skew_threshold": 0.8
+              },
+              "regime_adjustments": "Lookback: 63d, Hurst threshold: 0.45, Skew threshold: \u00b10.8 (adapted for mean_reverting)"
+            }
+          }
+        },
+        "risk_management_agent": {
+          "signal": "neutral",
+          "confidence": 0.0,
+          "reasoning": {
+            "portfolio_value": 102131.97999999998,
+            "current_position_value": 20343.42,
+            "base_position_limit_pct": 0.19519169744123596,
+            "position_limit": 19935.314539234358,
+            "remaining_limit": -408.1054607656406,
+            "available_cash": 67613.60999999999,
+            "risk_adjustment": "Volatility-based limit: 19.5% (vs 20% baseline)"
+          }
+        }
+      },
+      "portfolio_decision": {
+        "action": "sell",
+        "planned_quantity": 101,
+        "executed_quantity": 101,
+        "confidence": 22.0,
+        "reasoning": "The technical analyst agent is bearish on GOOGL. We currently hold a profitable long position (101 shares at a cost basis of 189.13 vs. current price of 201.42). To mitigate potential downside risk and lock in the existing profits, selling the entire long position is advisable given the bearish signal. The 'max_shares' for GOOGL is -2, preventing any new long buys, reinforcing the decision to reduce exposure in light of the negative outlook."
+      },
+      "market_data": {
+        "price": 201.42,
+        "position_before": {
+          "long": 0,
+          "short": 0
+        }
+      },
+      "outcome": {
+        "daily_return": 0.008016601700714892,
+        "ticker_return": 0.0,
+        "portfolio_value_before": 101319.73999999999,
+        "portfolio_value_after": 102131.97999999998
+      },
+      "metadata": {
+        "model_name": "gemini-2.5-flash-preview-05-20",
+        "model_provider": "Google",
+        "analysts": [
+          "technical_analyst"
+        ]
+      }
+    },
+    {
+      "date": "2025-08-11",
+      "ticker": "TSLA",
+      "agent_signals": {
+        "technical_analyst_agent": {
+          "signal": "bearish",
+          "confidence": 34,
+          "reasoning": {
+            "market_regime": {
+              "state": "neutral",
+              "volatility": "low",
+              "structure": "mean_reverting",
+              "confidence": 30,
+              "adaptive_weights": {
+                "trend": 0.15,
+                "mean_reversion": 0.35,
+                "momentum": 0.15,
+                "volatility": 0.1,
+                "stat_arb": 0.25
+              }
+            },
+            "trend_following": {
+              "signal": "bullish",
+              "confidence": 21,
+              "metrics": {
+                "adx": 26.007114089385485,
+                "trend_strength": 0.26007114089385486,
+                "ema_short_period": 8,
+                "ema_medium_period": 21,
+                "ema_long_period": 55
+              },
+              "regime_adjustments": "EMA periods: 8/21/55 (adapted for mean_reverting regime), ADX threshold: 20"
+            },
+            "mean_reversion": {
+              "signal": "bearish",
+              "confidence": 61,
+              "metrics": {
+                "z_score": 1.863313971312641,
+                "price_vs_bb": 1.0451363216876106,
+                "rsi": 66.41417750464487,
+                "rsi_period": 11,
+                "rsi_oversold": 30,
+                "rsi_overbought": 70,
+                "bollinger_std": 1.6
+              },
+              "regime_adjustments": "RSI: 11d/30/70, BB: 16d/1.6\u03c3 (adapted for mean_reverting regime)"
+            },
+            "momentum": {
+              "signal": "neutral",
+              "confidence": 45,
+              "metrics": {
+                "momentum_score": 0.0,
+                "volume_momentum": 1.15878756665664,
+                "momentum_short": 0.0,
+                "momentum_medium": 0.0,
+                "momentum_long": 0.0,
+                "volume_threshold": 1.0
+              },
+              "regime_adjustments": "Momentum periods: [0.4, 0.3, 0.3], Volume threshold: 1.0, Signal thresholds: 0.05/-0.05 (adapted for neutral/low)"
+            },
+            "volatility": {
+              "signal": "neutral",
+              "confidence": 55,
+              "metrics": {
+                "historical_volatility": 0.0,
+                "volatility_regime": 0.0,
+                "volatility_z_score": 0.0,
+                "atr_ratio": 0.034797135142237326,
+                "vol_period": 21,
+                "atr_period": 11
+              },
+              "regime_adjustments": "Vol period: 21d, Vol MA: 63d, Thresholds: 0.80/1.20 (adapted for neutral)"
+            },
+            "statistical_arbitrage": {
+              "signal": "neutral",
+              "confidence": 50,
+              "metrics": {
+                "hurst_exponent": 4.4162737839765496e-15,
+                "skewness": 0.0,
+                "kurtosis": 0.0,
+                "lookback_period": 63,
+                "hurst_threshold": 0.45,
+                "skew_threshold": 0.8
+              },
+              "regime_adjustments": "Lookback: 63d, Hurst threshold: 0.45, Skew threshold: \u00b10.8 (adapted for mean_reverting)"
+            }
+          }
+        },
+        "risk_management_agent": {
+          "signal": "neutral",
+          "confidence": 0.0,
+          "reasoning": {
+            "portfolio_value": 102535.31999999998,
+            "current_position_value": 14578.289999999999,
+            "base_position_limit_pct": 0.13352885055469585,
+            "position_limit": 13691.423420857913,
+            "remaining_limit": -886.8665791420863,
+            "available_cash": 87957.02999999998,
+            "risk_adjustment": "Volatility-based limit: 13.4% (vs 20% baseline)"
+          }
+        }
+      },
+      "portfolio_decision": {
+        "action": "sell",
+        "planned_quantity": 20,
+        "executed_quantity": 20,
+        "confidence": 34.0,
+        "reasoning": "The technical analyst agent indicates a bearish signal for TSLA, although with low confidence (34). Given the existing profitable long position (cost basis 309.26 vs current price 339.03), selling a portion of shares will reduce exposure and lock in some profits while maintaining a reduced position. The 'max_shares' for purchases is -2, preventing any new long buys."
+      },
+      "market_data": {
+        "price": 339.03,
+        "position_before": {
+          "long": 23,
+          "short": 0
+        }
+      },
+      "outcome": {
+        "daily_return": 0.003949203765559143,
+        "ticker_return": 0.003949203765559143,
+        "portfolio_value_before": 102131.97999999998,
+        "portfolio_value_after": 102535.31999999999
+      },
+      "metadata": {
+        "model_name": "gemini-2.5-flash-preview-05-20",
+        "model_provider": "Google",
+        "analysts": [
+          "technical_analyst"
+        ]
+      }
+    },
+    {
+      "date": "2025-08-11",
+      "ticker": "GOOGL",
+      "agent_signals": {
+        "technical_analyst_agent": {
+          "signal": "bearish",
+          "confidence": 19,
+          "reasoning": {
+            "market_regime": {
+              "state": "neutral",
+              "volatility": "low",
+              "structure": "mean_reverting",
+              "confidence": 30,
+              "adaptive_weights": {
+                "trend": 0.15,
+                "mean_reversion": 0.35,
+                "momentum": 0.15,
+                "volatility": 0.1,
+                "stat_arb": 0.25
+              }
+            },
+            "trend_following": {
+              "signal": "bullish",
+              "confidence": 50,
+              "metrics": {
+                "adx": 52.09240591664039,
+                "trend_strength": 0.5209240591664038,
+                "ema_short_period": 8,
+                "ema_medium_period": 21,
+                "ema_long_period": 55
+              },
+              "regime_adjustments": "EMA periods: 8/21/55 (adapted for mean_reverting regime), ADX threshold: 20"
+            },
+            "mean_reversion": {
+              "signal": "bearish",
+              "confidence": 53,
+              "metrics": {
+                "z_score": 1.623774582522067,
+                "price_vs_bb": 1.0860315512363814,
+                "rsi": 65.39370078740157,
+                "rsi_period": 11,
+                "rsi_oversold": 30,
+                "rsi_overbought": 70,
+                "bollinger_std": 1.6
+              },
+              "regime_adjustments": "RSI: 11d/30/70, BB: 16d/1.6\u03c3 (adapted for mean_reverting regime)"
+            },
+            "momentum": {
+              "signal": "neutral",
+              "confidence": 45,
+              "metrics": {
+                "momentum_score": 0.0,
+                "volume_momentum": 0.6755065717133476,
+                "momentum_short": 0.0,
+                "momentum_medium": 0.0,
+                "momentum_long": 0.0,
+                "volume_threshold": 1.0
+              },
+              "regime_adjustments": "Momentum periods: [0.4, 0.3, 0.3], Volume threshold: 1.0, Signal thresholds: 0.05/-0.05 (adapted for neutral/low)"
+            },
+            "volatility": {
+              "signal": "neutral",
+              "confidence": 55,
+              "metrics": {
+                "historical_volatility": 0.0,
+                "volatility_regime": 0.0,
+                "volatility_z_score": 0.0,
+                "atr_ratio": 0.020018091361374953,
+                "vol_period": 21,
+                "atr_period": 11
+              },
+              "regime_adjustments": "Vol period: 21d, Vol MA: 63d, Thresholds: 0.80/1.20 (adapted for neutral)"
+            },
+            "statistical_arbitrage": {
+              "signal": "neutral",
+              "confidence": 50,
+              "metrics": {
+                "hurst_exponent": 4.4162737839765496e-15,
+                "skewness": 0.0,
+                "kurtosis": 0.0,
+                "lookback_period": 63,
+                "hurst_threshold": 0.45,
+                "skew_threshold": 0.8
+              },
+              "regime_adjustments": "Lookback: 63d, Hurst threshold: 0.45, Skew threshold: \u00b10.8 (adapted for mean_reverting)"
+            }
+          }
+        },
+        "risk_management_agent": {
+          "signal": "neutral",
+          "confidence": 0.0,
+          "reasoning": {
+            "portfolio_value": 102535.31999999998,
+            "current_position_value": 0.0,
+            "base_position_limit_pct": 0.1942467200826517,
+            "position_limit": 19917.149602625115,
+            "remaining_limit": 19917.149602625115,
+            "available_cash": 87957.02999999998,
+            "risk_adjustment": "Volatility-based limit: 19.4% (vs 20% baseline)"
+          }
+        }
+      },
+      "portfolio_decision": {
+        "action": "hold",
+        "planned_quantity": 0,
+        "executed_quantity": 0,
+        "confidence": 19.0,
+        "reasoning": "The bearish signal for GOOGL has extremely low confidence (19). Opening a new short position based on such a weak signal is not prudent, especially without an existing position to manage. Therefore, the decision is to hold and not initiate a position at this time."
+      },
+      "market_data": {
+        "price": 201.0,
+        "position_before": {
+          "long": 0,
+          "short": 0
+        }
+      },
+      "outcome": {
+        "daily_return": 0.003949203765559143,
+        "ticker_return": 0.0,
+        "portfolio_value_before": 102131.97999999998,
+        "portfolio_value_after": 102535.31999999999
+      },
+      "metadata": {
+        "model_name": "gemini-2.5-flash-preview-05-20",
+        "model_provider": "Google",
+        "analysts": [
+          "technical_analyst"
+        ]
+      }
+    },
+    {
+      "date": "2025-08-12",
+      "ticker": "TSLA",
+      "agent_signals": {
+        "technical_analyst_agent": {
+          "signal": "bearish",
+          "confidence": 32,
+          "reasoning": {
+            "market_regime": {
+              "state": "neutral",
+              "volatility": "low",
+              "structure": "mean_reverting",
+              "confidence": 30,
+              "adaptive_weights": {
+                "trend": 0.15,
+                "mean_reversion": 0.35,
+                "momentum": 0.15,
+                "volatility": 0.1,
+                "stat_arb": 0.25
+              }
+            },
+            "trend_following": {
+              "signal": "bullish",
+              "confidence": 23,
+              "metrics": {
+                "adx": 28.31273958219905,
+                "trend_strength": 0.2831273958219905,
+                "ema_short_period": 8,
+                "ema_medium_period": 21,
+                "ema_long_period": 55
+              },
+              "regime_adjustments": "EMA periods: 8/21/55 (adapted for mean_reverting regime), ADX threshold: 20"
+            },
+            "mean_reversion": {
+              "signal": "bearish",
+              "confidence": 57,
+              "metrics": {
+                "z_score": 1.76393066524767,
+                "price_vs_bb": 1.0253162642786828,
+                "rsi": 62.248995983935764,
+                "rsi_period": 11,
+                "rsi_oversold": 30,
+                "rsi_overbought": 70,
+                "bollinger_std": 1.6
+              },
+              "regime_adjustments": "RSI: 11d/30/70, BB: 16d/1.6\u03c3 (adapted for mean_reverting regime)"
+            },
+            "momentum": {
+              "signal": "neutral",
+              "confidence": 45,
+              "metrics": {
+                "momentum_score": 0.0,
+                "volume_momentum": 0.8865653707212765,
+                "momentum_short": 0.08126203331187687,
+                "momentum_medium": 0.0,
+                "momentum_long": 0.0,
+                "volume_threshold": 1.0
+              },
+              "regime_adjustments": "Momentum periods: [0.4, 0.3, 0.3], Volume threshold: 1.0, Signal thresholds: 0.05/-0.05 (adapted for neutral/low)"
+            },
+            "volatility": {
+              "signal": "neutral",
+              "confidence": 55,
+              "metrics": {
+                "historical_volatility": 0.4529762573104273,
+                "volatility_regime": 0.0,
+                "volatility_z_score": 0.0,
+                "atr_ratio": 0.03395088071182424,
+                "vol_period": 21,
+                "atr_period": 11
+              },
+              "regime_adjustments": "Vol period: 21d, Vol MA: 63d, Thresholds: 0.80/1.20 (adapted for neutral)"
+            },
+            "statistical_arbitrage": {
+              "signal": "neutral",
+              "confidence": 50,
+              "metrics": {
+                "hurst_exponent": 4.4162737839765496e-15,
+                "skewness": 0.0,
+                "kurtosis": 0.0,
+                "lookback_period": 63,
+                "hurst_threshold": 0.45,
+                "skew_threshold": 0.8
+              },
+              "regime_adjustments": "Lookback: 63d, Hurst threshold: 0.45, Skew threshold: \u00b10.8 (adapted for mean_reverting)"
+            }
+          }
+        },
+        "risk_management_agent": {
+          "signal": "neutral",
+          "confidence": 0.0,
+          "reasoning": {
+            "portfolio_value": 102576.94999999998,
+            "current_position_value": 7839.32,
+            "base_position_limit_pct": 0.13470237426895726,
+            "position_limit": 13817.358710268112,
+            "remaining_limit": 5978.0387102681125,
+            "available_cash": 94737.62999999999,
+            "risk_adjustment": "Volatility-based limit: 13.5% (vs 20% baseline)"
+          }
+        }
+      },
+      "portfolio_decision": {
+        "action": "sell",
+        "planned_quantity": 17,
+        "executed_quantity": 17,
+        "confidence": 32.0,
+        "reasoning": "The technical analyst agent issued a bearish signal with moderate confidence (32). Given we currently hold a profitable long position (current price 340.84 vs cost basis 309.26), selling a portion of the shares reduces our long exposure and locks in some profits, aligning with the bearish outlook. The quantity chosen (17) is less than our current long position (23) and also aligns with the max_shares allowed for new positions as a guide for partial liquidation."
+      },
+      "market_data": {
+        "price": 340.84,
+        "position_before": {
+          "long": 6,
+          "short": 0
+        }
+      },
+      "outcome": {
+        "daily_return": 0.0004060064375864834,
+        "ticker_return": 0.0004060064375864834,
+        "portfolio_value_before": 102535.31999999999,
+        "portfolio_value_after": 102576.94999999998
+      },
+      "metadata": {
+        "model_name": "gemini-2.5-flash-preview-05-20",
+        "model_provider": "Google",
+        "analysts": [
+          "technical_analyst"
+        ]
+      }
+    },
+    {
+      "date": "2025-08-12",
+      "ticker": "GOOGL",
+      "agent_signals": {
+        "technical_analyst_agent": {
+          "signal": "bearish",
+          "confidence": 22,
+          "reasoning": {
+            "market_regime": {
+              "state": "neutral",
+              "volatility": "low",
+              "structure": "mean_reverting",
+              "confidence": 30,
+              "adaptive_weights": {
+                "trend": 0.15,
+                "mean_reversion": 0.35,
+                "momentum": 0.15,
+                "volatility": 0.1,
+                "stat_arb": 0.25
+              }
+            },
+            "trend_following": {
+              "signal": "bullish",
+              "confidence": 52,
+              "metrics": {
+                "adx": 54.10670159289022,
+                "trend_strength": 0.5410670159289022,
+                "ema_short_period": 8,
+                "ema_medium_period": 21,
+                "ema_long_period": 55
+              },
+              "regime_adjustments": "EMA periods: 8/21/55 (adapted for mean_reverting regime), ADX threshold: 20"
+            },
+            "mean_reversion": {
+              "signal": "bearish",
+              "confidence": 60,
+              "metrics": {
+                "z_score": 1.8500326951567745,
+                "price_vs_bb": 1.1333453871576429,
+                "rsi": 69.82313927781871,
+                "rsi_period": 11,
+                "rsi_oversold": 30,
+                "rsi_overbought": 70,
+                "bollinger_std": 1.6
+              },
+              "regime_adjustments": "RSI: 11d/30/70, BB: 16d/1.6\u03c3 (adapted for mean_reverting regime)"
+            },
+            "momentum": {
+              "signal": "neutral",
+              "confidence": 45,
+              "metrics": {
+                "momentum_score": 0.0,
+                "volume_momentum": 0.7976837590601553,
+                "momentum_short": 0.11523403864322301,
+                "momentum_medium": 0.0,
+                "momentum_long": 0.0,
+                "volume_threshold": 1.0
+              },
+              "regime_adjustments": "Momentum periods: [0.4, 0.3, 0.3], Volume threshold: 1.0, Signal thresholds: 0.05/-0.05 (adapted for neutral/low)"
+            },
+            "volatility": {
+              "signal": "neutral",
+              "confidence": 55,
+              "metrics": {
+                "historical_volatility": 0.20351286601416657,
+                "volatility_regime": 0.0,
+                "volatility_z_score": 0.0,
+                "atr_ratio": 0.020100682242907092,
+                "vol_period": 21,
+                "atr_period": 11
+              },
+              "regime_adjustments": "Vol period: 21d, Vol MA: 63d, Thresholds: 0.80/1.20 (adapted for neutral)"
+            },
+            "statistical_arbitrage": {
+              "signal": "neutral",
+              "confidence": 50,
+              "metrics": {
+                "hurst_exponent": 4.4162737839765496e-15,
+                "skewness": 0.0,
+                "kurtosis": 0.0,
+                "lookback_period": 63,
+                "hurst_threshold": 0.45,
+                "skew_threshold": 0.8
+              },
+              "regime_adjustments": "Lookback: 63d, Hurst threshold: 0.45, Skew threshold: \u00b10.8 (adapted for mean_reverting)"
+            }
+          }
+        },
+        "risk_management_agent": {
+          "signal": "neutral",
+          "confidence": 0.0,
+          "reasoning": {
+            "portfolio_value": 102576.94999999998,
+            "current_position_value": 0.0,
+            "base_position_limit_pct": 0.19464871339858336,
+            "position_limit": 19966.47134185081,
+            "remaining_limit": 19966.47134185081,
+            "available_cash": 94737.62999999999,
+            "risk_adjustment": "Volatility-based limit: 19.5% (vs 20% baseline)"
+          }
+        }
+      },
+      "portfolio_decision": {
+        "action": "hold",
+        "planned_quantity": 0,
+        "executed_quantity": 0,
+        "confidence": 22.0,
+        "reasoning": "The technical analyst agent issued a bearish signal, but with very low confidence (22). As we do not currently hold any position in GOOGL, opening a new short position based on such low conviction is not advisable from a risk management perspective. Therefore, it is prudent to hold and await stronger signals."
+      },
+      "market_data": {
+        "price": 203.34,
+        "position_before": {
+          "long": 0,
+          "short": 0
+        }
+      },
+      "outcome": {
+        "daily_return": 0.0004060064375864834,
+        "ticker_return": 0.0,
+        "portfolio_value_before": 102535.31999999999,
+        "portfolio_value_after": 102576.94999999998
+      },
+      "metadata": {
+        "model_name": "gemini-2.5-flash-preview-05-20",
+        "model_provider": "Google",
+        "analysts": [
+          "technical_analyst"
+        ]
+      }
+    },
+    {
+      "date": "2025-08-13",
+      "ticker": "TSLA",
+      "agent_signals": {
+        "technical_analyst_agent": {
+          "signal": "bullish",
+          "confidence": 12,
+          "reasoning": {
+            "market_regime": {
+              "state": "neutral",
+              "volatility": "low",
+              "structure": "mean_reverting",
+              "confidence": 30,
+              "adaptive_weights": {
+                "trend": 0.15,
+                "mean_reversion": 0.35,
+                "momentum": 0.15,
+                "volatility": 0.1,
+                "stat_arb": 0.25
+              }
+            },
+            "trend_following": {
+              "signal": "bullish",
+              "confidence": 25,
+              "metrics": {
+                "adx": 30.977955346593745,
+                "trend_strength": 0.30977955346593744,
+                "ema_short_period": 8,
+                "ema_medium_period": 21,
+                "ema_long_period": 55
+              },
+              "regime_adjustments": "EMA periods: 8/21/55 (adapted for mean_reverting regime), ADX threshold: 20"
+            },
+            "mean_reversion": {
+              "signal": "neutral",
+              "confidence": 50,
+              "metrics": {
+                "z_score": 1.4553626443879235,
+                "price_vs_bb": 0.9530119965068428,
+                "rsi": 65.32366824005399,
+                "rsi_period": 11,
+                "rsi_oversold": 30,
+                "rsi_overbought": 70,
+                "bollinger_std": 1.6
+              },
+              "regime_adjustments": "RSI: 11d/30/70, BB: 16d/1.6\u03c3 (adapted for mean_reverting regime)"
+            },
+            "momentum": {
+              "signal": "neutral",
+              "confidence": 45,
+              "metrics": {
+                "momentum_score": 0.0,
+                "volume_momentum": 0.7491743061267041,
+                "momentum_short": 0.09629058434698412,
+                "momentum_medium": 0.0,
+                "momentum_long": 0.0,
+                "volume_threshold": 1.0
+              },
+              "regime_adjustments": "Momentum periods: [0.4, 0.3, 0.3], Volume threshold: 1.0, Signal thresholds: 0.05/-0.05 (adapted for neutral/low)"
+            },
+            "volatility": {
+              "signal": "neutral",
+              "confidence": 55,
+              "metrics": {
+                "historical_volatility": 0.44622686369424336,
+                "volatility_regime": 0.0,
+                "volatility_z_score": 0.0,
+                "atr_ratio": 0.034841609566107164,
+                "vol_period": 21,
+                "atr_period": 11
+              },
+              "regime_adjustments": "Vol period: 21d, Vol MA: 63d, Thresholds: 0.80/1.20 (adapted for neutral)"
+            },
+            "statistical_arbitrage": {
+              "signal": "neutral",
+              "confidence": 50,
+              "metrics": {
+                "hurst_exponent": 4.4162737839765496e-15,
+                "skewness": 0.0,
+                "kurtosis": 0.0,
+                "lookback_period": 63,
+                "hurst_threshold": 0.45,
+                "skew_threshold": 0.8
+              },
+              "regime_adjustments": "Lookback: 63d, Hurst threshold: 0.45, Skew threshold: \u00b10.8 (adapted for mean_reverting)"
+            }
+          }
+        },
+        "risk_management_agent": {
+          "signal": "neutral",
+          "confidence": 0.0,
+          "reasoning": {
+            "portfolio_value": 102568.18999999999,
+            "current_position_value": 2036.28,
+            "base_position_limit_pct": 0.1357080045999562,
+            "position_limit": 13919.324400329178,
+            "remaining_limit": 11883.044400329178,
+            "available_cash": 100531.90999999999,
+            "risk_adjustment": "Volatility-based limit: 13.6% (vs 20% baseline)"
+          }
+        }
+      },
+      "portfolio_decision": {
+        "action": "buy",
+        "planned_quantity": 35,
+        "executed_quantity": 35,
+        "confidence": 12.0,
+        "reasoning": "The technical analyst agent is bullish. We currently hold 6 shares of TSLA. Given the bullish signal and available cash, we will add to our existing long position by buying the maximum allowed shares (35) to increase exposure."
+      },
+      "market_data": {
+        "price": 339.38,
+        "position_before": {
+          "long": 41,
+          "short": 0
+        }
+      },
+      "outcome": {
+        "daily_return": -8.539930266979826e-05,
+        "ticker_return": -3.525402484088074e-05,
+        "portfolio_value_before": 102576.94999999998,
+        "portfolio_value_after": 102568.18999999999
+      },
+      "metadata": {
+        "model_name": "gemini-2.5-flash-preview-05-20",
+        "model_provider": "Google",
+        "analysts": [
+          "technical_analyst"
+        ]
+      }
+    },
+    {
+      "date": "2025-08-13",
+      "ticker": "GOOGL",
+      "agent_signals": {
+        "technical_analyst_agent": {
+          "signal": "bullish",
+          "confidence": 19,
+          "reasoning": {
+            "market_regime": {
+              "state": "neutral",
+              "volatility": "low",
+              "structure": "mean_reverting",
+              "confidence": 30,
+              "adaptive_weights": {
+                "trend": 0.15,
+                "mean_reversion": 0.35,
+                "momentum": 0.15,
+                "volatility": 0.1,
+                "stat_arb": 0.25
+              }
+            },
+            "trend_following": {
+              "signal": "bullish",
+              "confidence": 50,
+              "metrics": {
+                "adx": 51.594264392642984,
+                "trend_strength": 0.5159426439264299,
+                "ema_short_period": 8,
+                "ema_medium_period": 21,
+                "ema_long_period": 55
+              },
+              "regime_adjustments": "EMA periods: 8/21/55 (adapted for mean_reverting regime), ADX threshold: 20"
+            },
+            "mean_reversion": {
+              "signal": "neutral",
+              "confidence": 50,
+              "metrics": {
+                "z_score": 1.484534508566063,
+                "price_vs_bb": 0.9534573705691293,
+                "rsi": 62.24852071005919,
+                "rsi_period": 11,
+                "rsi_oversold": 30,
+                "rsi_overbought": 70,
+                "bollinger_std": 1.6
+              },
+              "regime_adjustments": "RSI: 11d/30/70, BB: 16d/1.6\u03c3 (adapted for mean_reverting regime)"
+            },
+            "momentum": {
+              "signal": "neutral",
+              "confidence": 45,
+              "metrics": {
+                "momentum_score": 0.0,
+                "volume_momentum": 0.7478761130322142,
+                "momentum_short": 0.10602393462422655,
+                "momentum_medium": 0.0,
+                "momentum_long": 0.0,
+                "volume_threshold": 1.0
+              },
+              "regime_adjustments": "Momentum periods: [0.4, 0.3, 0.3], Volume threshold: 1.0, Signal thresholds: 0.05/-0.05 (adapted for neutral/low)"
+            },
+            "volatility": {
+              "signal": "neutral",
+              "confidence": 55,
+              "metrics": {
+                "historical_volatility": 0.20771738520667402,
+                "volatility_regime": 0.0,
+                "volatility_z_score": 0.0,
+                "atr_ratio": 0.021669457498334523,
+                "vol_period": 21,
+                "atr_period": 11
+              },
+              "regime_adjustments": "Vol period: 21d, Vol MA: 63d, Thresholds: 0.80/1.20 (adapted for neutral)"
+            },
+            "statistical_arbitrage": {
+              "signal": "neutral",
+              "confidence": 50,
+              "metrics": {
+                "hurst_exponent": 4.4162737839765496e-15,
+                "skewness": 0.0,
+                "kurtosis": 0.0,
+                "lookback_period": 63,
+                "hurst_threshold": 0.45,
+                "skew_threshold": 0.8
+              },
+              "regime_adjustments": "Lookback: 63d, Hurst threshold: 0.45, Skew threshold: \u00b10.8 (adapted for mean_reverting)"
+            }
+          }
+        },
+        "risk_management_agent": {
+          "signal": "neutral",
+          "confidence": 0.0,
+          "reasoning": {
+            "portfolio_value": 102568.18999999999,
+            "current_position_value": 0.0,
+            "base_position_limit_pct": 0.19470939518545058,
+            "position_limit": 19970.99024016638,
+            "remaining_limit": 19970.99024016638,
+            "available_cash": 100531.90999999999,
+            "risk_adjustment": "Volatility-based limit: 19.5% (vs 20% baseline)"
+          }
+        }
+      },
+      "portfolio_decision": {
+        "action": "buy",
+        "planned_quantity": 98,
+        "executed_quantity": 98,
+        "confidence": 19.0,
+        "reasoning": "The technical analyst agent is bullish. We currently have no position in GOOGL. Given the strong bullish signal and available cash, we will open a new long position by buying the maximum allowed shares (98)."
+      },
+      "market_data": {
+        "price": 201.96,
+        "position_before": {
+          "long": 98,
+          "short": 0
+        }
+      },
+      "outcome": {
+        "daily_return": -8.539930266979826e-05,
+        "ticker_return": -5.014527782891751e-05,
+        "portfolio_value_before": 102576.94999999998,
+        "portfolio_value_after": 102568.18999999999
+      },
+      "metadata": {
+        "model_name": "gemini-2.5-flash-preview-05-20",
+        "model_provider": "Google",
+        "analysts": [
+          "technical_analyst"
+        ]
+      }
+    },
+    {
+      "date": "2025-08-14",
+      "ticker": "TSLA",
+      "agent_signals": {
+        "technical_analyst_agent": {
+          "signal": "bullish",
+          "confidence": 12,
+          "reasoning": {
+            "market_regime": {
+              "state": "neutral",
+              "volatility": "low",
+              "structure": "mean_reverting",
+              "confidence": 30,
+              "adaptive_weights": {
+                "trend": 0.15,
+                "mean_reversion": 0.35,
+                "momentum": 0.15,
+                "volatility": 0.1,
+                "stat_arb": 0.25
+              }
+            },
+            "trend_following": {
+              "signal": "bullish",
+              "confidence": 25,
+              "metrics": {
+                "adx": 31.2135610045729,
+                "trend_strength": 0.312135610045729,
+                "ema_short_period": 8,
+                "ema_medium_period": 21,
+                "ema_long_period": 55
+              },
+              "regime_adjustments": "EMA periods: 8/21/55 (adapted for mean_reverting regime), ADX threshold: 20"
+            },
+            "mean_reversion": {
+              "signal": "neutral",
+              "confidence": 50,
+              "metrics": {
+                "z_score": 1.0292067313868316,
+                "price_vs_bb": 0.8477973009199331,
+                "rsi": 63.56627296587925,
+                "rsi_period": 11,
+                "rsi_oversold": 30,
+                "rsi_overbought": 70,
+                "bollinger_std": 1.6
+              },
+              "regime_adjustments": "RSI: 11d/30/70, BB: 16d/1.6\u03c3 (adapted for mean_reverting regime)"
+            },
+            "momentum": {
+              "signal": "neutral",
+              "confidence": 45,
+              "metrics": {
+                "momentum_score": 0.0,
+                "volume_momentum": 0.838086140140456,
+                "momentum_short": 0.050052830982828866,
+                "momentum_medium": 0.0,
+                "momentum_long": 0.0,
+                "volume_threshold": 1.0
+              },
+              "regime_adjustments": "Momentum periods: [0.4, 0.3, 0.3], Volume threshold: 1.0, Signal thresholds: 0.05/-0.05 (adapted for neutral/low)"
+            },
+            "volatility": {
+              "signal": "neutral",
+              "confidence": 55,
+              "metrics": {
+                "historical_volatility": 0.4350712244497998,
+                "volatility_regime": 0.0,
+                "volatility_z_score": 0.0,
+                "atr_ratio": 0.03448845689146065,
+                "vol_period": 21,
+                "atr_period": 11
+              },
+              "regime_adjustments": "Vol period: 21d, Vol MA: 63d, Thresholds: 0.80/1.20 (adapted for neutral)"
+            },
+            "statistical_arbitrage": {
+              "signal": "neutral",
+              "confidence": 50,
+              "metrics": {
+                "hurst_exponent": 4.4162737839765496e-15,
+                "skewness": 0.0,
+                "kurtosis": 0.0,
+                "lookback_period": 63,
+                "hurst_threshold": 0.45,
+                "skew_threshold": 0.8
+              },
+              "regime_adjustments": "Lookback: 63d, Hurst threshold: 0.45, Skew threshold: \u00b10.8 (adapted for mean_reverting)"
+            }
+          }
+        },
+        "risk_management_agent": {
+          "signal": "neutral",
+          "confidence": 0.0,
+          "reasoning": {
+            "portfolio_value": 102508.42999999998,
+            "current_position_value": 13758.779999999999,
+            "base_position_limit_pct": 0.1361263585333857,
+            "position_limit": 13954.099294874468,
+            "remaining_limit": 195.31929487446905,
+            "available_cash": 68861.52999999998,
+            "risk_adjustment": "Volatility-based limit: 13.6% (vs 20% baseline)"
+          }
+        }
+      },
+      "portfolio_decision": {
+        "action": "hold",
+        "planned_quantity": 0,
+        "executed_quantity": 0,
+        "confidence": 12.0,
+        "reasoning": "The technical analyst agent is bullish. We currently hold a long position in TSLA. However, max_shares is 0, preventing us from adding to the position. Given the bullish signal, holding the existing long position is appropriate."
+      },
+      "market_data": {
+        "price": 335.58,
+        "position_before": {
+          "long": 41,
+          "short": 0
+        }
+      },
+      "outcome": {
+        "daily_return": -0.0005826367804677973,
+        "ticker_return": -0.0005826367804677973,
+        "portfolio_value_before": 102568.18999999999,
+        "portfolio_value_after": 102508.42999999998
+      },
+      "metadata": {
+        "model_name": "gemini-2.5-flash-preview-05-20",
+        "model_provider": "Google",
+        "analysts": [
+          "technical_analyst"
+        ]
+      }
+    },
+    {
+      "date": "2025-08-14",
+      "ticker": "GOOGL",
+      "agent_signals": {
+        "technical_analyst_agent": {
+          "signal": "bearish",
+          "confidence": 19,
+          "reasoning": {
+            "market_regime": {
+              "state": "neutral",
+              "volatility": "low",
+              "structure": "mean_reverting",
+              "confidence": 30,
+              "adaptive_weights": {
+                "trend": 0.15,
+                "mean_reversion": 0.35,
+                "momentum": 0.15,
+                "volatility": 0.1,
+                "stat_arb": 0.25
+              }
+            },
+            "trend_following": {
+              "signal": "bullish",
+              "confidence": 47,
+              "metrics": {
+                "adx": 49.18134163329599,
+                "trend_strength": 0.49181341633295994,
+                "ema_short_period": 8,
+                "ema_medium_period": 21,
+                "ema_long_period": 55
+              },
+              "regime_adjustments": "EMA periods: 8/21/55 (adapted for mean_reverting regime), ADX threshold: 20"
+            },
+            "mean_reversion": {
+              "signal": "bearish",
+              "confidence": 51,
+              "metrics": {
+                "z_score": 1.5622528970087415,
+                "price_vs_bb": 0.9572362380911065,
+                "rsi": 62.544031311154605,
+                "rsi_period": 11,
+                "rsi_oversold": 30,
+                "rsi_overbought": 70,
+                "bollinger_std": 1.6
+              },
+              "regime_adjustments": "RSI: 11d/30/70, BB: 16d/1.6\u03c3 (adapted for mean_reverting regime)"
+            },
+            "momentum": {
+              "signal": "neutral",
+              "confidence": 45,
+              "metrics": {
+                "momentum_score": 0.0,
+                "volume_momentum": 0.672400011912458,
+                "momentum_short": 0.10554671032347274,
+                "momentum_medium": 0.0,
+                "momentum_long": 0.0,
+                "volume_threshold": 1.0
+              },
+              "regime_adjustments": "Momentum periods: [0.4, 0.3, 0.3], Volume threshold: 1.0, Signal thresholds: 0.05/-0.05 (adapted for neutral/low)"
+            },
+            "volatility": {
+              "signal": "neutral",
+              "confidence": 55,
+              "metrics": {
+                "historical_volatility": 0.2077158317909981,
+                "volatility_regime": 0.0,
+                "volatility_z_score": 0.0,
+                "atr_ratio": 0.021703683130705916,
+                "vol_period": 21,
+                "atr_period": 11
+              },
+              "regime_adjustments": "Vol period: 21d, Vol MA: 63d, Thresholds: 0.80/1.20 (adapted for neutral)"
+            },
+            "statistical_arbitrage": {
+              "signal": "neutral",
+              "confidence": 50,
+              "metrics": {
+                "hurst_exponent": 4.4162737839765496e-15,
+                "skewness": 0.0,
+                "kurtosis": 0.0,
+                "lookback_period": 63,
+                "hurst_threshold": 0.45,
+                "skew_threshold": 0.8
+              },
+              "regime_adjustments": "Lookback: 63d, Hurst threshold: 0.45, Skew threshold: \u00b10.8 (adapted for mean_reverting)"
+            }
+          }
+        },
+        "risk_management_agent": {
+          "signal": "neutral",
+          "confidence": 0.0,
+          "reasoning": {
+            "portfolio_value": 102508.42999999998,
+            "current_position_value": 19888.12,
+            "base_position_limit_pct": 0.1947287499780359,
+            "position_limit": 19961.338436110993,
+            "remaining_limit": 73.21843611099393,
+            "available_cash": 68861.52999999998,
+            "risk_adjustment": "Volatility-based limit: 19.5% (vs 20% baseline)"
+          }
+        }
+      },
+      "portfolio_decision": {
+        "action": "sell",
+        "planned_quantity": 98,
+        "executed_quantity": 98,
+        "confidence": 19.0,
+        "reasoning": "The technical analyst agent is bearish. We currently hold a long position in GOOGL, which conflicts with the bearish signal. To align with the signal, we will sell all 98 shares to close our long position. Max_shares is 0, so we cannot open a new short position."
+      },
+      "market_data": {
+        "price": 202.94,
+        "position_before": {
+          "long": 0,
+          "short": 0
+        }
+      },
+      "outcome": {
+        "daily_return": -0.0005826367804677973,
+        "ticker_return": 0.0,
+        "portfolio_value_before": 102568.18999999999,
+        "portfolio_value_after": 102508.42999999998
+      },
+      "metadata": {
+        "model_name": "gemini-2.5-flash-preview-05-20",
+        "model_provider": "Google",
+        "analysts": [
+          "technical_analyst"
+        ]
+      }
+    },
+    {
+      "date": "2025-08-15",
+      "ticker": "TSLA",
+      "agent_signals": {
+        "technical_analyst_agent": {
+          "signal": "bearish",
+          "confidence": 8,
+          "reasoning": {
+            "market_regime": {
+              "state": "neutral",
+              "volatility": "low",
+              "structure": "mean_reverting",
+              "confidence": 30,
+              "adaptive_weights": {
+                "trend": 0.15,
+                "mean_reversion": 0.35,
+                "momentum": 0.15,
+                "volatility": 0.1,
+                "stat_arb": 0.25
+              }
+            },
+            "trend_following": {
+              "signal": "bullish",
+              "confidence": 23,
+              "metrics": {
+                "adx": 28.172969550821534,
+                "trend_strength": 0.28172969550821536,
+                "ema_short_period": 8,
+                "ema_medium_period": 21,
+                "ema_long_period": 55
+              },
+              "regime_adjustments": "EMA periods: 8/21/55 (adapted for mean_reverting regime), ADX threshold: 20"
+            },
+            "mean_reversion": {
+              "signal": "bearish",
+              "confidence": 20,
+              "metrics": {
+                "z_score": 0.6040763330957772,
+                "price_vs_bb": 0.6945784799321931,
+                "rsi": 70.18656040572367,
+                "rsi_period": 11,
+                "rsi_oversold": 30,
+                "rsi_overbought": 70,
+                "bollinger_std": 1.6
+              },
+              "regime_adjustments": "RSI: 11d/30/70, BB: 16d/1.6\u03c3 (adapted for mean_reverting regime)"
+            },
+            "momentum": {
+              "signal": "neutral",
+              "confidence": 45,
+              "metrics": {
+                "momentum_score": 0.0,
+                "volume_momentum": 0.8303024716760553,
+                "momentum_short": 0.042119489752585504,
+                "momentum_medium": 0.0,
+                "momentum_long": 0.0,
+                "volume_threshold": 1.0
+              },
+              "regime_adjustments": "Momentum periods: [0.4, 0.3, 0.3], Volume threshold: 1.0, Signal thresholds: 0.05/-0.05 (adapted for neutral/low)"
+            },
+            "volatility": {
+              "signal": "neutral",
+              "confidence": 55,
+              "metrics": {
+                "historical_volatility": 0.43809055539203723,
+                "volatility_regime": 0.0,
+                "volatility_z_score": 0.0,
+                "atr_ratio": 0.03418991463521959,
+                "vol_period": 21,
+                "atr_period": 11
+              },
+              "regime_adjustments": "Vol period: 21d, Vol MA: 63d, Thresholds: 0.80/1.20 (adapted for neutral)"
+            },
+            "statistical_arbitrage": {
+              "signal": "neutral",
+              "confidence": 50,
+              "metrics": {
+                "hurst_exponent": 4.4162737839765496e-15,
+                "skewness": 0.0,
+                "kurtosis": 0.0,
+                "lookback_period": 63,
+                "hurst_threshold": 0.45,
+                "skew_threshold": 0.8
+              },
+              "regime_adjustments": "Lookback: 63d, Hurst threshold: 0.45, Skew threshold: \u00b10.8 (adapted for mean_reverting)"
+            }
+          }
+        },
+        "risk_management_agent": {
+          "signal": "neutral",
+          "confidence": 0.0,
+          "reasoning": {
+            "portfolio_value": 102302.60999999999,
+            "current_position_value": 13552.960000000001,
+            "base_position_limit_pct": 0.13713760884741122,
+            "position_limit": 14029.535314249257,
+            "remaining_limit": 476.5753142492558,
+            "available_cash": 88749.64999999998,
+            "risk_adjustment": "Volatility-based limit: 13.7% (vs 20% baseline)"
+          }
+        }
+      },
+      "portfolio_decision": {
+        "action": "hold",
+        "planned_quantity": 0,
+        "executed_quantity": 0,
+        "confidence": 8.0,
+        "reasoning": "The technical analyst agent indicates a bearish signal for TSLA, but with extremely low confidence (8). Given the current long position (41 shares) and the very weak signal, it is not prudent to sell at an unrealized loss based on such unreliable information. Holding the current position is the most appropriate action, awaiting a stronger, more confident signal before making a significant move."
+      },
+      "market_data": {
+        "price": 330.56,
+        "position_before": {
+          "long": 41,
+          "short": 0
+        }
+      },
+      "outcome": {
+        "daily_return": -0.0020078348678249434,
+        "ticker_return": -0.002872002166788751,
+        "portfolio_value_before": 102508.42999999998,
+        "portfolio_value_after": 102302.60999999999
+      },
+      "metadata": {
+        "model_name": "gemini-2.5-flash-preview-05-20",
+        "model_provider": "Google",
+        "analysts": [
+          "technical_analyst"
+        ]
+      }
+    },
+    {
+      "date": "2025-08-15",
+      "ticker": "GOOGL",
+      "agent_signals": {
+        "technical_analyst_agent": {
+          "signal": "bearish",
+          "confidence": 20,
+          "reasoning": {
+            "market_regime": {
+              "state": "neutral",
+              "volatility": "low",
+              "structure": "mean_reverting",
+              "confidence": 30,
+              "adaptive_weights": {
+                "trend": 0.15,
+                "mean_reversion": 0.35,
+                "momentum": 0.15,
+                "volatility": 0.1,
+                "stat_arb": 0.25
+              }
+            },
+            "trend_following": {
+              "signal": "bullish",
+              "confidence": 46,
+              "metrics": {
+                "adx": 48.27728561145613,
+                "trend_strength": 0.4827728561145613,
+                "ema_short_period": 8,
+                "ema_medium_period": 21,
+                "ema_long_period": 55
+              },
+              "regime_adjustments": "EMA periods: 8/21/55 (adapted for mean_reverting regime), ADX threshold: 20"
+            },
+            "mean_reversion": {
+              "signal": "bearish",
+              "confidence": 53,
+              "metrics": {
+                "z_score": 1.6330912886307758,
+                "price_vs_bb": 0.9526635736801063,
+                "rsi": 77.42230347349178,
+                "rsi_period": 11,
+                "rsi_oversold": 30,
+                "rsi_overbought": 70,
+                "bollinger_std": 1.6
+              },
+              "regime_adjustments": "RSI: 11d/30/70, BB: 16d/1.6\u03c3 (adapted for mean_reverting regime)"
+            },
+            "momentum": {
+              "signal": "neutral",
+              "confidence": 45,
+              "metrics": {
+                "momentum_score": 0.0,
+                "volume_momentum": 0.9274759256823045,
+                "momentum_short": 0.10694329265803348,
+                "momentum_medium": 0.0,
+                "momentum_long": 0.0,
+                "volume_threshold": 1.0
+              },
+              "regime_adjustments": "Momentum periods: [0.4, 0.3, 0.3], Volume threshold: 1.0, Signal thresholds: 0.05/-0.05 (adapted for neutral/low)"
+            },
+            "volatility": {
+              "signal": "neutral",
+              "confidence": 55,
+              "metrics": {
+                "historical_volatility": 0.20762880009474627,
+                "volatility_regime": 0.0,
+                "volatility_z_score": 0.0,
+                "atr_ratio": 0.021476659681662156,
+                "vol_period": 21,
+                "atr_period": 11
+              },
+              "regime_adjustments": "Vol period: 21d, Vol MA: 63d, Thresholds: 0.80/1.20 (adapted for neutral)"
+            },
+            "statistical_arbitrage": {
+              "signal": "neutral",
+              "confidence": 50,
+              "metrics": {
+                "hurst_exponent": 4.4162737839765496e-15,
+                "skewness": 0.0,
+                "kurtosis": 0.0,
+                "lookback_period": 63,
+                "hurst_threshold": 0.45,
+                "skew_threshold": 0.8
+              },
+              "regime_adjustments": "Lookback: 63d, Hurst threshold: 0.45, Skew threshold: \u00b10.8 (adapted for mean_reverting)"
+            }
+          }
+        },
+        "risk_management_agent": {
+          "signal": "neutral",
+          "confidence": 0.0,
+          "reasoning": {
+            "portfolio_value": 102302.60999999999,
+            "current_position_value": 0.0,
+            "base_position_limit_pct": 0.19472876363151637,
+            "position_limit": 19921.2607615772,
+            "remaining_limit": 19921.2607615772,
+            "available_cash": 88749.64999999998,
+            "risk_adjustment": "Volatility-based limit: 19.5% (vs 20% baseline)"
+          }
+        }
+      },
+      "portfolio_decision": {
+        "action": "short",
+        "planned_quantity": 20,
+        "executed_quantity": 20,
+        "confidence": 20.0,
+        "reasoning": "The technical analyst agent provides a bearish signal for GOOGL with a confidence of 20. As there is no current position, opening a new short position aligns with the bearish outlook. While the confidence is moderate, a partial short position of 20 shares (approximately 20% of the maximum allowed shares of 97) is chosen to manage risk, rather than taking full exposure. Margin requirements are not a constraint in this scenario."
+      },
+      "market_data": {
+        "price": 203.9,
+        "position_before": {
+          "long": 0,
+          "short": 20
+        }
+      },
+      "outcome": {
+        "daily_return": -0.0020078348678249434,
+        "ticker_return": -0.0008641672989638077,
+        "portfolio_value_before": 102508.42999999998,
+        "portfolio_value_after": 102302.60999999999
+      },
+      "metadata": {
+        "model_name": "gemini-2.5-flash-preview-05-20",
+        "model_provider": "Google",
+        "analysts": [
+          "technical_analyst"
+        ]
+      }
+    },
+    {
+      "date": "2025-08-18",
+      "ticker": "TSLA",
+      "agent_signals": {
+        "technical_analyst_agent": {
+          "signal": "bearish",
+          "confidence": 17,
+          "reasoning": {
+            "market_regime": {
+              "state": "neutral",
+              "volatility": "low",
+              "structure": "mean_reverting",
+              "confidence": 30,
+              "adaptive_weights": {
+                "trend": 0.15,
+                "mean_reversion": 0.35,
+                "momentum": 0.15,
+                "volatility": 0.1,
+                "stat_arb": 0.25
+              }
+            },
+            "trend_following": {
+              "signal": "bullish",
+              "confidence": 22,
+              "metrics": {
+                "adx": 27.15874199639626,
+                "trend_strength": 0.2715874199639626,
+                "ema_short_period": 8,
+                "ema_medium_period": 21,
+                "ema_long_period": 55
+              },
+              "regime_adjustments": "EMA periods: 8/21/55 (adapted for mean_reverting regime), ADX threshold: 20"
+            },
+            "mean_reversion": {
+              "signal": "bearish",
+              "confidence": 31,
+              "metrics": {
+                "z_score": 0.9411838928073883,
+                "price_vs_bb": 0.7774569543326697,
+                "rsi": 80.02584456341157,
+                "rsi_period": 11,
+                "rsi_oversold": 30,
+                "rsi_overbought": 70,
+                "bollinger_std": 1.6
+              },
+              "regime_adjustments": "RSI: 11d/30/70, BB: 16d/1.6\u03c3 (adapted for mean_reverting regime)"
+            },
+            "momentum": {
+              "signal": "neutral",
+              "confidence": 45,
+              "metrics": {
+                "momentum_score": 0.0,
+                "volume_momentum": 0.6492019366166594,
+                "momentum_short": 0.0,
+                "momentum_medium": 0.0,
+                "momentum_long": 0.0,
+                "volume_threshold": 1.0
+              },
+              "regime_adjustments": "Momentum periods: [0.4, 0.3, 0.3], Volume threshold: 1.0, Signal thresholds: 0.05/-0.05 (adapted for neutral/low)"
+            },
+            "volatility": {
+              "signal": "neutral",
+              "confidence": 55,
+              "metrics": {
+                "historical_volatility": 0.0,
+                "volatility_regime": 0.0,
+                "volatility_z_score": 0.0,
+                "atr_ratio": 0.032415996701711,
+                "vol_period": 21,
+                "atr_period": 11
+              },
+              "regime_adjustments": "Vol period: 21d, Vol MA: 63d, Thresholds: 0.80/1.20 (adapted for neutral)"
+            },
+            "statistical_arbitrage": {
+              "signal": "neutral",
+              "confidence": 50,
+              "metrics": {
+                "hurst_exponent": 4.4162737839765496e-15,
+                "skewness": 0.0,
+                "kurtosis": 0.0,
+                "lookback_period": 63,
+                "hurst_threshold": 0.45,
+                "skew_threshold": 0.8
+              },
+              "regime_adjustments": "Lookback: 63d, Hurst threshold: 0.45, Skew threshold: \u00b10.8 (adapted for mean_reverting)"
+            }
+          }
+        },
+        "risk_management_agent": {
+          "signal": "neutral",
+          "confidence": 0.0,
+          "reasoning": {
+            "portfolio_value": 102499.20999999998,
+            "current_position_value": 13741.560000000001,
+            "base_position_limit_pct": 0.13624886809765108,
+            "position_limit": 13965.401343403435,
+            "remaining_limit": 223.8413434034337,
+            "available_cash": 92827.64999999998,
+            "risk_adjustment": "Volatility-based limit: 13.6% (vs 20% baseline)"
+          }
+        }
+      },
+      "portfolio_decision": {
+        "action": "sell",
+        "planned_quantity": 41,
+        "executed_quantity": 41,
+        "confidence": 17.0,
+        "reasoning": "The technical analyst agent provides a bearish signal for TSLA, albeit with low confidence (17). We currently hold a long position of 41 shares. Given the bearish signal and the 'max_shares' limit of 0 for buying, it is prudent to close our existing long position to reduce exposure in line with the signal."
+      },
+      "market_data": {
+        "price": 335.16,
+        "position_before": {
+          "long": 0,
+          "short": 0
+        }
+      },
+      "outcome": {
+        "daily_return": 0.0019217496015007955,
+        "ticker_return": 0.0,
+        "portfolio_value_before": 102302.60999999999,
+        "portfolio_value_after": 102499.20999999998
+      },
+      "metadata": {
+        "model_name": "gemini-2.5-flash-preview-05-20",
+        "model_provider": "Google",
+        "analysts": [
+          "technical_analyst"
+        ]
+      }
+    },
+    {
+      "date": "2025-08-18",
+      "ticker": "GOOGL",
+      "agent_signals": {
+        "technical_analyst_agent": {
+          "signal": "bearish",
+          "confidence": 16,
+          "reasoning": {
+            "market_regime": {
+              "state": "neutral",
+              "volatility": "low",
+              "structure": "mean_reverting",
+              "confidence": 30,
+              "adaptive_weights": {
+                "trend": 0.15,
+                "mean_reversion": 0.35,
+                "momentum": 0.15,
+                "volatility": 0.1,
+                "stat_arb": 0.25
+              }
+            },
+            "trend_following": {
+              "signal": "bullish",
+              "confidence": 46,
+              "metrics": {
+                "adx": 47.70820072120637,
+                "trend_strength": 0.4770820072120637,
+                "ema_short_period": 8,
+                "ema_medium_period": 21,
+                "ema_long_period": 55
+              },
+              "regime_adjustments": "EMA periods: 8/21/55 (adapted for mean_reverting regime), ADX threshold: 20"
+            },
+            "mean_reversion": {
+              "signal": "bearish",
+              "confidence": 45,
+              "metrics": {
+                "z_score": 1.3924326234802242,
+                "price_vs_bb": 0.8723215811942334,
+                "rsi": 86.82726806765764,
+                "rsi_period": 11,
+                "rsi_oversold": 30,
+                "rsi_overbought": 70,
+                "bollinger_std": 1.6
+              },
+              "regime_adjustments": "RSI: 11d/30/70, BB: 16d/1.6\u03c3 (adapted for mean_reverting regime)"
+            },
+            "momentum": {
+              "signal": "neutral",
+              "confidence": 45,
+              "metrics": {
+                "momentum_score": 0.0,
+                "volume_momentum": 0.5017307839086778,
+                "momentum_short": 0.0,
+                "momentum_medium": 0.0,
+                "momentum_long": 0.0,
+                "volume_threshold": 1.0
+              },
+              "regime_adjustments": "Momentum periods: [0.4, 0.3, 0.3], Volume threshold: 1.0, Signal thresholds: 0.05/-0.05 (adapted for neutral/low)"
+            },
+            "volatility": {
+              "signal": "neutral",
+              "confidence": 55,
+              "metrics": {
+                "historical_volatility": 0.0,
+                "volatility_regime": 0.0,
+                "volatility_z_score": 0.0,
+                "atr_ratio": 0.02093366093366094,
+                "vol_period": 21,
+                "atr_period": 11
+              },
+              "regime_adjustments": "Vol period: 21d, Vol MA: 63d, Thresholds: 0.80/1.20 (adapted for neutral)"
+            },
+            "statistical_arbitrage": {
+              "signal": "neutral",
+              "confidence": 50,
+              "metrics": {
+                "hurst_exponent": 4.4162737839765496e-15,
+                "skewness": 0.0,
+                "kurtosis": 0.0,
+                "lookback_period": 63,
+                "hurst_threshold": 0.45,
+                "skew_threshold": 0.8
+              },
+              "regime_adjustments": "Lookback: 63d, Hurst threshold: 0.45, Skew threshold: \u00b10.8 (adapted for mean_reverting)"
+            }
+          }
+        },
+        "risk_management_agent": {
+          "signal": "neutral",
+          "confidence": 0.0,
+          "reasoning": {
+            "portfolio_value": 102499.20999999998,
+            "current_position_value": 4070.0,
+            "base_position_limit_pct": 0.19531925353511403,
+            "position_limit": 20020.06918513889,
+            "remaining_limit": 15950.069185138891,
+            "available_cash": 92827.64999999998,
+            "risk_adjustment": "Volatility-based limit: 19.5% (vs 20% baseline)"
+          }
+        }
+      },
+      "portfolio_decision": {
+        "action": "hold",
+        "planned_quantity": 0,
+        "executed_quantity": 0,
+        "confidence": 16.0,
+        "reasoning": "The technical analyst agent indicates a bearish signal for GOOGL with low confidence (16). We currently have a short position of 20 shares, which is in line with the bearish sentiment. Given the low confidence of the signal and our current profitable short position, holding our existing short exposure is a reasonable decision rather than adding more to the position."
+      },
+      "market_data": {
+        "price": 203.5,
+        "position_before": {
+          "long": 0,
+          "short": 20
+        }
+      },
+      "outcome": {
+        "daily_return": 0.0019217496015007955,
+        "ticker_return": 0.0019217496015007955,
+        "portfolio_value_before": 102302.60999999999,
+        "portfolio_value_after": 102499.20999999998
+      },
+      "metadata": {
+        "model_name": "gemini-2.5-flash-preview-05-20",
+        "model_provider": "Google",
+        "analysts": [
+          "technical_analyst"
+        ]
+      }
+    },
+    {
+      "date": "2025-08-19",
+      "ticker": "TSLA",
+      "agent_signals": {
+        "technical_analyst_agent": {
+          "signal": "bullish",
+          "confidence": 11,
+          "reasoning": {
+            "market_regime": {
+              "state": "neutral",
+              "volatility": "low",
+              "structure": "mean_reverting",
+              "confidence": 30,
+              "adaptive_weights": {
+                "trend": 0.15,
+                "mean_reversion": 0.35,
+                "momentum": 0.15,
+                "volatility": 0.1,
+                "stat_arb": 0.25
+              }
+            },
+            "trend_following": {
+              "signal": "bullish",
+              "confidence": 21,
+              "metrics": {
+                "adx": 26.311749530890022,
+                "trend_strength": 0.2631174953089002,
+                "ema_short_period": 8,
+                "ema_medium_period": 21,
+                "ema_long_period": 55
+              },
+              "regime_adjustments": "EMA periods: 8/21/55 (adapted for mean_reverting regime), ADX threshold: 20"
+            },
+            "mean_reversion": {
+              "signal": "neutral",
+              "confidence": 50,
+              "metrics": {
+                "z_score": 0.4773947160644551,
+                "price_vs_bb": 0.6229464242668707,
+                "rsi": 68.77692451769998,
+                "rsi_period": 11,
+                "rsi_oversold": 30,
+                "rsi_overbought": 70,
+                "bollinger_std": 1.6
+              },
+              "regime_adjustments": "RSI: 11d/30/70, BB: 16d/1.6\u03c3 (adapted for mean_reverting regime)"
+            },
+            "momentum": {
+              "signal": "neutral",
+              "confidence": 45,
+              "metrics": {
+                "momentum_score": 0.0,
+                "volume_momentum": 0.865673428785016,
+                "momentum_short": 0.010040693557415103,
+                "momentum_medium": 0.0,
+                "momentum_long": 0.0,
+                "volume_threshold": 1.0
+              },
+              "regime_adjustments": "Momentum periods: [0.4, 0.3, 0.3], Volume threshold: 1.0, Signal thresholds: 0.05/-0.05 (adapted for neutral/low)"
+            },
+            "volatility": {
+              "signal": "neutral",
+              "confidence": 55,
+              "metrics": {
+                "historical_volatility": 0.4313928229610863,
+                "volatility_regime": 0.0,
+                "volatility_z_score": 0.0,
+                "atr_ratio": 0.03387799834916534,
+                "vol_period": 21,
+                "atr_period": 11
+              },
+              "regime_adjustments": "Vol period: 21d, Vol MA: 63d, Thresholds: 0.80/1.20 (adapted for neutral)"
+            },
+            "statistical_arbitrage": {
+              "signal": "neutral",
+              "confidence": 50,
+              "metrics": {
+                "hurst_exponent": 4.4162737839765496e-15,
+                "skewness": 0.0,
+                "kurtosis": 0.0,
+                "lookback_period": 63,
+                "hurst_threshold": 0.45,
+                "skew_threshold": 0.8
+              },
+              "regime_adjustments": "Lookback: 63d, Hurst threshold: 0.45, Skew threshold: \u00b10.8 (adapted for mean_reverting)"
+            }
+          }
+        },
+        "risk_management_agent": {
+          "signal": "neutral",
+          "confidence": 0.0,
+          "reasoning": {
+            "portfolio_value": 102537.80999999998,
+            "current_position_value": 0.0,
+            "base_position_limit_pct": 0.13686071770389138,
+            "position_limit": 14033.398268385248,
+            "remaining_limit": 14033.398268385248,
+            "available_cash": 106569.20999999998,
+            "risk_adjustment": "Volatility-based limit: 13.7% (vs 20% baseline)"
+          }
+        }
+      },
+      "portfolio_decision": {
+        "action": "buy",
+        "planned_quantity": 42,
+        "executed_quantity": 42,
+        "confidence": 11.0,
+        "reasoning": "The technical analyst agent indicates a strong bullish signal. With no current position and ample cash available, we will open a long position by buying the maximum allowed shares (42) to capitalize on the expected upward movement."
+      },
+      "market_data": {
+        "price": 329.31,
+        "position_before": {
+          "long": 42,
+          "short": 0
+        }
+      },
+      "outcome": {
+        "daily_return": 0.00037658826833890553,
+        "ticker_return": 0.002488569032714021,
+        "portfolio_value_before": 102499.20999999998,
+        "portfolio_value_after": 102537.80999999998
+      },
+      "metadata": {
+        "model_name": "gemini-2.5-flash-preview-05-20",
+        "model_provider": "Google",
+        "analysts": [
+          "technical_analyst"
+        ]
+      }
+    },
+    {
+      "date": "2025-08-19",
+      "ticker": "GOOGL",
+      "agent_signals": {
+        "technical_analyst_agent": {
+          "signal": "bearish",
+          "confidence": 7,
+          "reasoning": {
+            "market_regime": {
+              "state": "neutral",
+              "volatility": "low",
+              "structure": "mean_reverting",
+              "confidence": 30,
+              "adaptive_weights": {
+                "trend": 0.15,
+                "mean_reversion": 0.35,
+                "momentum": 0.15,
+                "volatility": 0.1,
+                "stat_arb": 0.25
+              }
+            },
+            "trend_following": {
+              "signal": "bullish",
+              "confidence": 42,
+              "metrics": {
+                "adx": 43.30630313537655,
+                "trend_strength": 0.4330630313537655,
+                "ema_short_period": 8,
+                "ema_medium_period": 21,
+                "ema_long_period": 55
+              },
+              "regime_adjustments": "EMA periods: 8/21/55 (adapted for mean_reverting regime), ADX threshold: 20"
+            },
+            "mean_reversion": {
+              "signal": "bearish",
+              "confidence": 29,
+              "metrics": {
+                "z_score": 0.9047864611064173,
+                "price_vs_bb": 0.7133184757617799,
+                "rsi": 71.02382485511913,
+                "rsi_period": 11,
+                "rsi_oversold": 30,
+                "rsi_overbought": 70,
+                "bollinger_std": 1.6
+              },
+              "regime_adjustments": "RSI: 11d/30/70, BB: 16d/1.6\u03c3 (adapted for mean_reverting regime)"
+            },
+            "momentum": {
+              "signal": "neutral",
+              "confidence": 45,
+              "metrics": {
+                "momentum_score": 0.0,
+                "volume_momentum": 0.6752424180747733,
+                "momentum_short": 0.06020122637950698,
+                "momentum_medium": 0.0,
+                "momentum_long": 0.0,
+                "volume_threshold": 1.0
+              },
+              "regime_adjustments": "Momentum periods: [0.4, 0.3, 0.3], Volume threshold: 1.0, Signal thresholds: 0.05/-0.05 (adapted for neutral/low)"
+            },
+            "volatility": {
+              "signal": "neutral",
+              "confidence": 55,
+              "metrics": {
+                "historical_volatility": 0.19701431036724495,
+                "volatility_regime": 0.0,
+                "volatility_z_score": 0.0,
+                "atr_ratio": 0.019961484167467194,
+                "vol_period": 21,
+                "atr_period": 11
+              },
+              "regime_adjustments": "Vol period: 21d, Vol MA: 63d, Thresholds: 0.80/1.20 (adapted for neutral)"
+            },
+            "statistical_arbitrage": {
+              "signal": "neutral",
+              "confidence": 50,
+              "metrics": {
+                "hurst_exponent": 4.4162737839765496e-15,
+                "skewness": 0.0,
+                "kurtosis": 0.0,
+                "lookback_period": 63,
+                "hurst_threshold": 0.45,
+                "skew_threshold": 0.8
+              },
+              "regime_adjustments": "Lookback: 63d, Hurst threshold: 0.45, Skew threshold: \u00b10.8 (adapted for mean_reverting)"
+            }
+          }
+        },
+        "risk_management_agent": {
+          "signal": "neutral",
+          "confidence": 0.0,
+          "reasoning": {
+            "portfolio_value": 102537.80999999998,
+            "current_position_value": 4031.3999999999996,
+            "base_position_limit_pct": 0.19529856896327552,
+            "position_limit": 20025.48755762824,
+            "remaining_limit": 15994.08755762824,
+            "available_cash": 106569.20999999998,
+            "risk_adjustment": "Volatility-based limit: 19.5% (vs 20% baseline)"
+          }
+        }
+      },
+      "portfolio_decision": {
+        "action": "short",
+        "planned_quantity": 59,
+        "executed_quantity": 59,
+        "confidence": 7.0,
+        "reasoning": "The technical analyst agent indicates a bearish signal. We currently hold a short position of 20 shares. Given the bearish signal and a margin requirement of 0.00, we will add to our existing short position up to the pre-calculated maximum allowed total position of 79 shares. This means shorting an additional 59 shares (79 max - 20 current)."
+      },
+      "market_data": {
+        "price": 201.57,
+        "position_before": {
+          "long": 0,
+          "short": 79
+        }
+      },
+      "outcome": {
+        "daily_return": 0.00037658826833890553,
+        "ticker_return": 0.0028651573010529266,
+        "portfolio_value_before": 102499.20999999998,
+        "portfolio_value_after": 102537.80999999998
+      },
+      "metadata": {
+        "model_name": "gemini-2.5-flash-preview-05-20",
+        "model_provider": "Google",
+        "analysts": [
+          "technical_analyst"
+        ]
+      }
+    },
+    {
+      "date": "2025-08-20",
+      "ticker": "TSLA",
+      "agent_signals": {
+        "technical_analyst_agent": {
+          "signal": "bullish",
+          "confidence": 10,
+          "reasoning": {
+            "market_regime": {
+              "state": "neutral",
+              "volatility": "low",
+              "structure": "mean_reverting",
+              "confidence": 30,
+              "adaptive_weights": {
+                "trend": 0.15,
+                "mean_reversion": 0.35,
+                "momentum": 0.15,
+                "volatility": 0.1,
+                "stat_arb": 0.25
+              }
+            },
+            "trend_following": {
+              "signal": "bullish",
+              "confidence": 20,
+              "metrics": {
+                "adx": 24.808110723891954,
+                "trend_strength": 0.24808110723891955,
+                "ema_short_period": 8,
+                "ema_medium_period": 21,
+                "ema_long_period": 55
+              },
+              "regime_adjustments": "EMA periods: 8/21/55 (adapted for mean_reverting regime), ADX threshold: 20"
+            },
+            "mean_reversion": {
+              "signal": "neutral",
+              "confidence": 50,
+              "metrics": {
+                "z_score": 0.06836757190534817,
+                "price_vs_bb": 0.4824814824101378,
+                "rsi": 63.02780638516989,
+                "rsi_period": 11,
+                "rsi_oversold": 30,
+                "rsi_overbought": 70,
+                "bollinger_std": 1.6
+              },
+              "regime_adjustments": "RSI: 11d/30/70, BB: 16d/1.6\u03c3 (adapted for mean_reverting regime)"
+            },
+            "momentum": {
+              "signal": "neutral",
+              "confidence": 45,
+              "metrics": {
+                "momentum_score": 0.0,
+                "volume_momentum": 0.8830092575770667,
+                "momentum_short": -0.01740771827444576,
+                "momentum_medium": 0.0,
+                "momentum_long": 0.0,
+                "volume_threshold": 1.0
+              },
+              "regime_adjustments": "Momentum periods: [0.4, 0.3, 0.3], Volume threshold: 1.0, Signal thresholds: 0.05/-0.05 (adapted for neutral/low)"
+            },
+            "volatility": {
+              "signal": "neutral",
+              "confidence": 55,
+              "metrics": {
+                "historical_volatility": 0.43341533700288026,
+                "volatility_regime": 0.0,
+                "volatility_z_score": 0.0,
+                "atr_ratio": 0.03720003368042887,
+                "vol_period": 21,
+                "atr_period": 11
+              },
+              "regime_adjustments": "Vol period: 21d, Vol MA: 63d, Thresholds: 0.80/1.20 (adapted for neutral)"
+            },
+            "statistical_arbitrage": {
+              "signal": "neutral",
+              "confidence": 50,
+              "metrics": {
+                "hurst_exponent": 4.4162737839765496e-15,
+                "skewness": 0.0,
+                "kurtosis": 0.0,
+                "lookback_period": 63,
+                "hurst_threshold": 0.45,
+                "skew_threshold": 0.8
+              },
+              "regime_adjustments": "Lookback: 63d, Hurst threshold: 0.45, Skew threshold: \u00b10.8 (adapted for mean_reverting)"
+            }
+          }
+        },
+        "risk_management_agent": {
+          "signal": "neutral",
+          "confidence": 0.0,
+          "reasoning": {
+            "portfolio_value": 102488.33999999998,
+            "current_position_value": 13603.8,
+            "base_position_limit_pct": 0.13751330891815086,
+            "position_limit": 14093.510758928474,
+            "remaining_limit": 489.7107589284751,
+            "available_cash": 104630.81999999998,
+            "risk_adjustment": "Volatility-based limit: 13.8% (vs 20% baseline)"
+          }
+        }
+      },
+      "portfolio_decision": {
+        "action": "buy",
+        "planned_quantity": 1,
+        "executed_quantity": 1,
+        "confidence": 10.0,
+        "reasoning": "The technical analyst agent is bullish on TSLA. We currently hold a long position at a slightly higher cost basis than the current price. Given the bullish signal and available cash, adding to the existing long position (respecting the max_shares limit of 1) is a prudent move to potentially improve the average cost basis if the price rises."
+      },
+      "market_data": {
+        "price": 323.9,
+        "position_before": {
+          "long": 43,
+          "short": 0
+        }
+      },
+      "outcome": {
+        "daily_return": -0.00048245617884759947,
+        "ticker_return": -0.00048245617884759947,
+        "portfolio_value_before": 102537.80999999998,
+        "portfolio_value_after": 102488.33999999998
+      },
+      "metadata": {
+        "model_name": "gemini-2.5-flash-preview-05-20",
+        "model_provider": "Google",
+        "analysts": [
+          "technical_analyst"
+        ]
+      }
+    },
+    {
+      "date": "2025-08-20",
+      "ticker": "GOOGL",
+      "agent_signals": {
+        "technical_analyst_agent": {
+          "signal": "bullish",
+          "confidence": 16,
+          "reasoning": {
+            "market_regime": {
+              "state": "neutral",
+              "volatility": "low",
+              "structure": "mean_reverting",
+              "confidence": 30,
+              "adaptive_weights": {
+                "trend": 0.15,
+                "mean_reversion": 0.35,
+                "momentum": 0.15,
+                "volatility": 0.1,
+                "stat_arb": 0.25
+              }
+            },
+            "trend_following": {
+              "signal": "bullish",
+              "confidence": 37,
+              "metrics": {
+                "adx": 38.689436584707,
+                "trend_strength": 0.38689436584707004,
+                "ema_short_period": 8,
+                "ema_medium_period": 21,
+                "ema_long_period": 55
+              },
+              "regime_adjustments": "EMA periods: 8/21/55 (adapted for mean_reverting regime), ADX threshold: 20"
+            },
+            "mean_reversion": {
+              "signal": "neutral",
+              "confidence": 50,
+              "metrics": {
+                "z_score": 0.3686463579177388,
+                "price_vs_bb": 0.5445515356052361,
+                "rsi": 63.354394026421616,
+                "rsi_period": 11,
+                "rsi_oversold": 30,
+                "rsi_overbought": 70,
+                "bollinger_std": 1.6
+              },
+              "regime_adjustments": "RSI: 11d/30/70, BB: 16d/1.6\u03c3 (adapted for mean_reverting regime)"
+            },
+            "momentum": {
+              "signal": "neutral",
+              "confidence": 45,
+              "metrics": {
+                "momentum_score": 0.0,
+                "volume_momentum": 0.8237526264482596,
+                "momentum_short": 0.04251596833271254,
+                "momentum_medium": 0.0,
+                "momentum_long": 0.0,
+                "volume_threshold": 1.0
+              },
+              "regime_adjustments": "Momentum periods: [0.4, 0.3, 0.3], Volume threshold: 1.0, Signal thresholds: 0.05/-0.05 (adapted for neutral/low)"
+            },
+            "volatility": {
+              "signal": "neutral",
+              "confidence": 55,
+              "metrics": {
+                "historical_volatility": 0.20233246012400388,
+                "volatility_regime": 0.0,
+                "volatility_z_score": 0.0,
+                "atr_ratio": 0.02064291317753086,
+                "vol_period": 21,
+                "atr_period": 11
+              },
+              "regime_adjustments": "Vol period: 21d, Vol MA: 63d, Thresholds: 0.80/1.20 (adapted for neutral)"
+            },
+            "statistical_arbitrage": {
+              "signal": "neutral",
+              "confidence": 50,
+              "metrics": {
+                "hurst_exponent": 4.4162737839765496e-15,
+                "skewness": 0.0,
+                "kurtosis": 0.0,
+                "lookback_period": 63,
+                "hurst_threshold": 0.45,
+                "skew_threshold": 0.8
+              },
+              "regime_adjustments": "Lookback: 63d, Hurst threshold: 0.45, Skew threshold: \u00b10.8 (adapted for mean_reverting)"
+            }
+          }
+        },
+        "risk_management_agent": {
+          "signal": "neutral",
+          "confidence": 0.0,
+          "reasoning": {
+            "portfolio_value": 102488.33999999998,
+            "current_position_value": 15746.279999999999,
+            "base_position_limit_pct": 0.19519576906865538,
+            "position_limit": 20005.29034686983,
+            "remaining_limit": 4259.010346869833,
+            "available_cash": 104630.81999999998,
+            "risk_adjustment": "Volatility-based limit: 19.5% (vs 20% baseline)"
+          }
+        }
+      },
+      "portfolio_decision": {
+        "action": "cover",
+        "planned_quantity": 79,
+        "executed_quantity": 79,
+        "confidence": 16.0,
+        "reasoning": "The technical analyst agent is bullish on GOOGL. We currently hold a short position, which contradicts a bullish outlook. To align with the signal and mitigate potential losses if the price increases, we will cover the entire short position. The current price is below our short cost basis, allowing us to close the position profitably."
+      },
+      "market_data": {
+        "price": 199.32,
+        "position_before": {
+          "long": 0,
+          "short": 0
+        }
+      },
+      "outcome": {
+        "daily_return": -0.00048245617884759947,
+        "ticker_return": 0.0,
+        "portfolio_value_before": 102537.80999999998,
+        "portfolio_value_after": 102488.33999999998
+      },
+      "metadata": {
+        "model_name": "gemini-2.5-flash-preview-05-20",
+        "model_provider": "Google",
+        "analysts": [
+          "technical_analyst"
+        ]
+      }
+    },
+    {
+      "date": "2025-08-21",
+      "ticker": "TSLA",
+      "agent_signals": {
+        "technical_analyst_agent": {
+          "signal": "neutral",
+          "confidence": 4,
+          "reasoning": {
+            "market_regime": {
+              "state": "neutral",
+              "volatility": "low",
+              "structure": "mean_reverting",
+              "confidence": 30,
+              "adaptive_weights": {
+                "trend": 0.15,
+                "mean_reversion": 0.35,
+                "momentum": 0.15,
+                "volatility": 0.1,
+                "stat_arb": 0.25
+              }
+            },
+            "trend_following": {
+              "signal": "neutral",
+              "confidence": 50,
+              "metrics": {
+                "adx": 23.298136754004755,
+                "trend_strength": 0.23298136754004756,
+                "ema_short_period": 8,
+                "ema_medium_period": 21,
+                "ema_long_period": 55
+              },
+              "regime_adjustments": "EMA periods: 8/21/55 (adapted for mean_reverting regime), ADX threshold: 20"
+            },
+            "mean_reversion": {
+              "signal": "neutral",
+              "confidence": 50,
+              "metrics": {
+                "z_score": -0.3307603408729002,
+                "price_vs_bb": 0.38490494972886774,
+                "rsi": 50.196618167518665,
+                "rsi_period": 11,
+                "rsi_oversold": 30,
+                "rsi_overbought": 70,
+                "bollinger_std": 1.6
+              },
+              "regime_adjustments": "RSI: 11d/30/70, BB: 16d/1.6\u03c3 (adapted for mean_reverting regime)"
+            },
+            "momentum": {
+              "signal": "neutral",
+              "confidence": 45,
+              "metrics": {
+                "momentum_score": 0.0,
+                "volume_momentum": 0.6482320947275855,
+                "momentum_short": -0.03046383335231706,
+                "momentum_medium": 0.0,
+                "momentum_long": 0.0,
+                "volume_threshold": 1.0
+              },
+              "regime_adjustments": "Momentum periods: [0.4, 0.3, 0.3], Volume threshold: 1.0, Signal thresholds: 0.05/-0.05 (adapted for neutral/low)"
+            },
+            "volatility": {
+              "signal": "neutral",
+              "confidence": 55,
+              "metrics": {
+                "historical_volatility": 0.43494351620984784,
+                "volatility_regime": 0.0,
+                "volatility_z_score": 0.0,
+                "atr_ratio": 0.0355616393228464,
+                "vol_period": 21,
+                "atr_period": 11
+              },
+              "regime_adjustments": "Vol period: 21d, Vol MA: 63d, Thresholds: 0.80/1.20 (adapted for neutral)"
+            },
+            "statistical_arbitrage": {
+              "signal": "neutral",
+              "confidence": 50,
+              "metrics": {
+                "hurst_exponent": 4.4162737839765496e-15,
+                "skewness": 0.0,
+                "kurtosis": 0.0,
+                "lookback_period": 63,
+                "hurst_threshold": 0.45,
+                "skew_threshold": 0.8
+              },
+              "regime_adjustments": "Lookback: 63d, Hurst threshold: 0.45, Skew threshold: \u00b10.8 (adapted for mean_reverting)"
+            }
+          }
+        },
+        "risk_management_agent": {
+          "signal": "neutral",
+          "confidence": 0.0,
+          "reasoning": {
+            "portfolio_value": 102325.36999999998,
+            "current_position_value": 13764.730000000001,
+            "base_position_limit_pct": 0.13754323927433673,
+            "position_limit": 14074.162849745035,
+            "remaining_limit": 309.4328497450333,
+            "available_cash": 88560.63999999998,
+            "risk_adjustment": "Volatility-based limit: 13.8% (vs 20% baseline)"
+          }
+        }
+      },
+      "portfolio_decision": {
+        "action": "sell",
+        "planned_quantity": 43,
+        "executed_quantity": 43,
+        "confidence": 50.0,
+        "reasoning": "The technical analyst signal for TSLA is neutral with low confidence (4). The current long position is at a loss (cost basis 329.18 vs current price 320.11). Given the lack of a clear bullish signal and the current loss, selling the entire position is a prudent risk management move to cut losses and free up capital for better opportunities. The max_shares for TSLA is 0, indicating no new long positions should be opened or added to."
+      },
+      "market_data": {
+        "price": 320.11,
+        "position_before": {
+          "long": 0,
+          "short": 0
+        }
+      },
+      "outcome": {
+        "daily_return": -0.0015901321067352753,
+        "ticker_return": 0.0,
+        "portfolio_value_before": 102488.33999999998,
+        "portfolio_value_after": 102325.36999999998
+      },
+      "metadata": {
+        "model_name": "gemini-2.5-flash-preview-05-20",
+        "model_provider": "Google",
+        "analysts": [
+          "technical_analyst"
+        ]
+      }
+    },
+    {
+      "date": "2025-08-21",
+      "ticker": "GOOGL",
+      "agent_signals": {
+        "technical_analyst_agent": {
+          "signal": "bullish",
+          "confidence": 12,
+          "reasoning": {
+            "market_regime": {
+              "state": "neutral",
+              "volatility": "low",
+              "structure": "mean_reverting",
+              "confidence": 30,
+              "adaptive_weights": {
+                "trend": 0.15,
+                "mean_reversion": 0.35,
+                "momentum": 0.15,
+                "volatility": 0.1,
+                "stat_arb": 0.25
+              }
+            },
+            "trend_following": {
+              "signal": "bullish",
+              "confidence": 26,
+              "metrics": {
+                "adx": 32.70555769939853,
+                "trend_strength": 0.32705557699398535,
+                "ema_short_period": 8,
+                "ema_medium_period": 21,
+                "ema_long_period": 55
+              },
+              "regime_adjustments": "EMA periods: 8/21/55 (adapted for mean_reverting regime), ADX threshold: 20"
+            },
+            "mean_reversion": {
+              "signal": "neutral",
+              "confidence": 50,
+              "metrics": {
+                "z_score": 0.39378494719979107,
+                "price_vs_bb": 0.5608081613616088,
+                "rsi": 61.144945188794146,
+                "rsi_period": 11,
+                "rsi_oversold": 30,
+                "rsi_overbought": 70,
+                "bollinger_std": 1.6
+              },
+              "regime_adjustments": "RSI: 11d/30/70, BB: 16d/1.6\u03c3 (adapted for mean_reverting regime)"
+            },
+            "momentum": {
+              "signal": "neutral",
+              "confidence": 45,
+              "metrics": {
+                "momentum_score": 0.0,
+                "volume_momentum": 0.5938686545118544,
+                "momentum_short": 0.05047449486761624,
+                "momentum_medium": 0.0,
+                "momentum_long": 0.0,
+                "volume_threshold": 1.0
+              },
+              "regime_adjustments": "Momentum periods: [0.4, 0.3, 0.3], Volume threshold: 1.0, Signal thresholds: 0.05/-0.05 (adapted for neutral/low)"
+            },
+            "volatility": {
+              "signal": "neutral",
+              "confidence": 55,
+              "metrics": {
+                "historical_volatility": 0.2003222094072696,
+                "volatility_regime": 0.0,
+                "volatility_z_score": 0.0,
+                "atr_ratio": 0.02068949823643188,
+                "vol_period": 21,
+                "atr_period": 11
+              },
+              "regime_adjustments": "Vol period: 21d, Vol MA: 63d, Thresholds: 0.80/1.20 (adapted for neutral)"
+            },
+            "statistical_arbitrage": {
+              "signal": "neutral",
+              "confidence": 50,
+              "metrics": {
+                "hurst_exponent": 4.4162737839765496e-15,
+                "skewness": 0.0,
+                "kurtosis": 0.0,
+                "lookback_period": 63,
+                "hurst_threshold": 0.45,
+                "skew_threshold": 0.8
+              },
+              "regime_adjustments": "Lookback: 63d, Hurst threshold: 0.45, Skew threshold: \u00b10.8 (adapted for mean_reverting)"
+            }
+          }
+        },
+        "risk_management_agent": {
+          "signal": "neutral",
+          "confidence": 0.0,
+          "reasoning": {
+            "portfolio_value": 102325.36999999998,
+            "current_position_value": 0.0,
+            "base_position_limit_pct": 0.19525432261429007,
+            "position_limit": 19979.470805606594,
+            "remaining_limit": 19979.470805606594,
+            "available_cash": 88560.63999999998,
+            "risk_adjustment": "Volatility-based limit: 19.5% (vs 20% baseline)"
+          }
+        }
+      },
+      "portfolio_decision": {
+        "action": "buy",
+        "planned_quantity": 100,
+        "executed_quantity": 100,
+        "confidence": 12.0,
+        "reasoning": "The technical analyst signal for GOOGL is bullish with a confidence of 12. There is no current position, and the portfolio has ample cash. Opening a new long position of 100 shares aligns with the bullish outlook, respects the maximum shares allowed (100), and is well within the available portfolio cash."
+      },
+      "market_data": {
+        "price": 199.75,
+        "position_before": {
+          "long": 100,
+          "short": 0
+        }
+      },
+      "outcome": {
+        "daily_return": -0.0015901321067352753,
+        "ticker_return": -0.0015901321067352753,
+        "portfolio_value_before": 102488.33999999998,
+        "portfolio_value_after": 102325.36999999998
+      },
+      "metadata": {
+        "model_name": "gemini-2.5-flash-preview-05-20",
+        "model_provider": "Google",
+        "analysts": [
+          "technical_analyst"
+        ]
+      }
+    },
+    {
+      "date": "2025-08-22",
+      "ticker": "TSLA",
+      "agent_signals": {
+        "technical_analyst_agent": {
+          "signal": "neutral",
+          "confidence": 4,
+          "reasoning": {
+            "market_regime": {
+              "state": "neutral",
+              "volatility": "low",
+              "structure": "mean_reverting",
+              "confidence": 30,
+              "adaptive_weights": {
+                "trend": 0.15,
+                "mean_reversion": 0.35,
+                "momentum": 0.15,
+                "volatility": 0.1,
+                "stat_arb": 0.25
+              }
+            },
+            "trend_following": {
+              "signal": "neutral",
+              "confidence": 50,
+              "metrics": {
+                "adx": 22.748233076860863,
+                "trend_strength": 0.22748233076860863,
+                "ema_short_period": 8,
+                "ema_medium_period": 21,
+                "ema_long_period": 55
+              },
+              "regime_adjustments": "EMA periods: 8/21/55 (adapted for mean_reverting regime), ADX threshold: 20"
+            },
+            "mean_reversion": {
+              "signal": "neutral",
+              "confidence": 50,
+              "metrics": {
+                "z_score": 1.2892977372230787,
+                "price_vs_bb": 0.8453006025973291,
+                "rsi": 62.96783625730995,
+                "rsi_period": 11,
+                "rsi_oversold": 30,
+                "rsi_overbought": 70,
+                "bollinger_std": 1.6
+              },
+              "regime_adjustments": "RSI: 11d/30/70, BB: 16d/1.6\u03c3 (adapted for mean_reverting regime)"
+            },
+            "momentum": {
+              "signal": "neutral",
+              "confidence": 45,
+              "metrics": {
+                "momentum_score": 0.0,
+                "volume_momentum": 1.1327683744668584,
+                "momentum_short": 0.11367246783660767,
+                "momentum_medium": 0.0,
+                "momentum_long": 0.0,
+                "volume_threshold": 1.0
+              },
+              "regime_adjustments": "Momentum periods: [0.4, 0.3, 0.3], Volume threshold: 1.0, Signal thresholds: 0.05/-0.05 (adapted for neutral/low)"
+            },
+            "volatility": {
+              "signal": "neutral",
+              "confidence": 55,
+              "metrics": {
+                "historical_volatility": 0.3821169574151864,
+                "volatility_regime": 0.0,
+                "volatility_z_score": 0.0,
+                "atr_ratio": 0.03730906310242213,
+                "vol_period": 21,
+                "atr_period": 11
+              },
+              "regime_adjustments": "Vol period: 21d, Vol MA: 63d, Thresholds: 0.80/1.20 (adapted for neutral)"
+            },
+            "statistical_arbitrage": {
+              "signal": "neutral",
+              "confidence": 50,
+              "metrics": {
+                "hurst_exponent": 4.4162737839765496e-15,
+                "skewness": 0.0,
+                "kurtosis": 0.0,
+                "lookback_period": 63,
+                "hurst_threshold": 0.45,
+                "skew_threshold": 0.8
+              },
+              "regime_adjustments": "Lookback: 63d, Hurst threshold: 0.45, Skew threshold: \u00b10.8 (adapted for mean_reverting)"
+            }
+          }
+        },
+        "risk_management_agent": {
+          "signal": "neutral",
+          "confidence": 0.0,
+          "reasoning": {
+            "portfolio_value": 102959.36999999998,
+            "current_position_value": 0.0,
+            "base_position_limit_pct": 0.13240534364372478,
+            "position_limit": 13632.370766191405,
+            "remaining_limit": 13632.370766191405,
+            "available_cash": 82350.36999999998,
+            "risk_adjustment": "Volatility-based limit: 13.2% (vs 20% baseline)"
+          }
+        }
+      },
+      "portfolio_decision": {
+        "action": "hold",
+        "planned_quantity": 0,
+        "executed_quantity": 0,
+        "confidence": 4.0,
+        "reasoning": "The signal for TSLA is neutral with very low confidence (4). Given no existing position and no strong directional conviction, the prudent decision is to hold and not initiate a new position."
+      },
+      "market_data": {
+        "price": 340.01,
+        "position_before": {
+          "long": 0,
+          "short": 0
+        }
+      },
+      "outcome": {
+        "daily_return": 0.0061959218911204535,
+        "ticker_return": 0.0,
+        "portfolio_value_before": 102325.36999999998,
+        "portfolio_value_after": 102959.36999999998
+      },
+      "metadata": {
+        "model_name": "gemini-2.5-flash-preview-05-20",
+        "model_provider": "Google",
+        "analysts": [
+          "technical_analyst"
+        ]
+      }
+    },
+    {
+      "date": "2025-08-22",
+      "ticker": "GOOGL",
+      "agent_signals": {
+        "technical_analyst_agent": {
+          "signal": "bearish",
+          "confidence": 28,
+          "reasoning": {
+            "market_regime": {
+              "state": "neutral",
+              "volatility": "low",
+              "structure": "mean_reverting",
+              "confidence": 30,
+              "adaptive_weights": {
+                "trend": 0.15,
+                "mean_reversion": 0.35,
+                "momentum": 0.15,
+                "volatility": 0.1,
+                "stat_arb": 0.25
+              }
+            },
+            "trend_following": {
+              "signal": "bullish",
+              "confidence": 26,
+              "metrics": {
+                "adx": 32.04169157244705,
+                "trend_strength": 0.3204169157244705,
+                "ema_short_period": 8,
+                "ema_medium_period": 21,
+                "ema_long_period": 55
+              },
+              "regime_adjustments": "EMA periods: 8/21/55 (adapted for mean_reverting regime), ADX threshold: 20"
+            },
+            "mean_reversion": {
+              "signal": "bearish",
+              "confidence": 52,
+              "metrics": {
+                "z_score": 1.6073461945727292,
+                "price_vs_bb": 0.9480803991927907,
+                "rsi": 71.42857142857143,
+                "rsi_period": 11,
+                "rsi_oversold": 30,
+                "rsi_overbought": 70,
+                "bollinger_std": 1.6
+              },
+              "regime_adjustments": "RSI: 11d/30/70, BB: 16d/1.6\u03c3 (adapted for mean_reverting regime)"
+            },
+            "momentum": {
+              "signal": "neutral",
+              "confidence": 45,
+              "metrics": {
+                "momentum_score": 0.0,
+                "volume_momentum": 1.3479669970388028,
+                "momentum_short": 0.07201598831172273,
+                "momentum_medium": 0.0,
+                "momentum_long": 0.0,
+                "volume_threshold": 1.0
+              },
+              "regime_adjustments": "Momentum periods: [0.4, 0.3, 0.3], Volume threshold: 1.0, Signal thresholds: 0.05/-0.05 (adapted for neutral/low)"
+            },
+            "volatility": {
+              "signal": "neutral",
+              "confidence": 55,
+              "metrics": {
+                "historical_volatility": 0.22344731320541356,
+                "volatility_regime": 0.0,
+                "volatility_z_score": 0.0,
+                "atr_ratio": 0.02251443544082681,
+                "vol_period": 21,
+                "atr_period": 11
+              },
+              "regime_adjustments": "Vol period: 21d, Vol MA: 63d, Thresholds: 0.80/1.20 (adapted for neutral)"
+            },
+            "statistical_arbitrage": {
+              "signal": "neutral",
+              "confidence": 50,
+              "metrics": {
+                "hurst_exponent": 4.4162737839765496e-15,
+                "skewness": 0.0,
+                "kurtosis": 0.0,
+                "lookback_period": 63,
+                "hurst_threshold": 0.45,
+                "skew_threshold": 0.8
+              },
+              "regime_adjustments": "Lookback: 63d, Hurst threshold: 0.45, Skew threshold: \u00b10.8 (adapted for mean_reverting)"
+            }
+          }
+        },
+        "risk_management_agent": {
+          "signal": "neutral",
+          "confidence": 0.0,
+          "reasoning": {
+            "portfolio_value": 102959.36999999998,
+            "current_position_value": 20609.0,
+            "base_position_limit_pct": 0.19307376890764077,
+            "position_limit": 19878.753610256277,
+            "remaining_limit": -730.2463897437228,
+            "available_cash": 82350.36999999998,
+            "risk_adjustment": "Volatility-based limit: 19.3% (vs 20% baseline)"
+          }
+        }
+      },
+      "portfolio_decision": {
+        "action": "sell",
+        "planned_quantity": 100,
+        "executed_quantity": 100,
+        "confidence": 28.0,
+        "reasoning": "The signal for GOOGL is bearish with moderate confidence (28). We currently hold a long position of 100 shares at a cost basis of 199.75, which is profitable at the current price of 206.09. To align with the bearish signal and realize profits, we will sell the entire long position. The 'max_shares' of -3 for GOOGL also indicates a restriction on holding or adding to long positions."
+      },
+      "market_data": {
+        "price": 206.09,
+        "position_before": {
+          "long": 0,
+          "short": 0
+        }
+      },
+      "outcome": {
+        "daily_return": 0.0061959218911204535,
+        "ticker_return": 0.0,
+        "portfolio_value_before": 102325.36999999998,
+        "portfolio_value_after": 102959.36999999998
+      },
+      "metadata": {
+        "model_name": "gemini-2.5-flash-preview-05-20",
+        "model_provider": "Google",
+        "analysts": [
+          "technical_analyst"
+        ]
+      }
+    },
+    {
+      "date": "2025-08-25",
+      "ticker": "TSLA",
+      "agent_signals": {
+        "technical_analyst_agent": {
+          "signal": "bearish",
+          "confidence": 29,
+          "reasoning": {
+            "market_regime": {
+              "state": "neutral",
+              "volatility": "low",
+              "structure": "mean_reverting",
+              "confidence": 30,
+              "adaptive_weights": {
+                "trend": 0.15,
+                "mean_reversion": 0.35,
+                "momentum": 0.15,
+                "volatility": 0.1,
+                "stat_arb": 0.25
+              }
+            },
+            "trend_following": {
+              "signal": "bullish",
+              "confidence": 25,
+              "metrics": {
+                "adx": 31.34086006311466,
+                "trend_strength": 0.3134086006311466,
+                "ema_short_period": 8,
+                "ema_medium_period": 21,
+                "ema_long_period": 55
+              },
+              "regime_adjustments": "EMA periods: 8/21/55 (adapted for mean_reverting regime), ADX threshold: 20"
+            },
+            "mean_reversion": {
+              "signal": "bearish",
+              "confidence": 53,
+              "metrics": {
+                "z_score": 1.6306512321104196,
+                "price_vs_bb": 0.9783842017471537,
+                "rsi": 62.535127939653925,
+                "rsi_period": 11,
+                "rsi_oversold": 30,
+                "rsi_overbought": 70,
+                "bollinger_std": 1.6
+              },
+              "regime_adjustments": "RSI: 11d/30/70, BB: 16d/1.6\u03c3 (adapted for mean_reverting regime)"
+            },
+            "momentum": {
+              "signal": "neutral",
+              "confidence": 45,
+              "metrics": {
+                "momentum_score": 0.0,
+                "volume_momentum": 1.0824754318720142,
+                "momentum_short": 0.0,
+                "momentum_medium": 0.0,
+                "momentum_long": 0.0,
+                "volume_threshold": 1.0
+              },
+              "regime_adjustments": "Momentum periods: [0.4, 0.3, 0.3], Volume threshold: 1.0, Signal thresholds: 0.05/-0.05 (adapted for neutral/low)"
+            },
+            "volatility": {
+              "signal": "neutral",
+              "confidence": 55,
+              "metrics": {
+                "historical_volatility": 0.0,
+                "volatility_regime": 0.0,
+                "volatility_z_score": 0.0,
+                "atr_ratio": 0.036612810155799196,
+                "vol_period": 21,
+                "atr_period": 11
+              },
+              "regime_adjustments": "Vol period: 21d, Vol MA: 63d, Thresholds: 0.80/1.20 (adapted for neutral)"
+            },
+            "statistical_arbitrage": {
+              "signal": "neutral",
+              "confidence": 50,
+              "metrics": {
+                "hurst_exponent": 4.4162737839765496e-15,
+                "skewness": 0.0,
+                "kurtosis": 0.0,
+                "lookback_period": 63,
+                "hurst_threshold": 0.45,
+                "skew_threshold": 0.8
+              },
+              "regime_adjustments": "Lookback: 63d, Hurst threshold: 0.45, Skew threshold: \u00b10.8 (adapted for mean_reverting)"
+            }
+          }
+        },
+        "risk_management_agent": {
+          "signal": "neutral",
+          "confidence": 0.0,
+          "reasoning": {
+            "portfolio_value": 102959.36999999998,
+            "current_position_value": 0.0,
+            "base_position_limit_pct": 0.1432205677393982,
+            "position_limit": 14745.899425490761,
+            "remaining_limit": 14745.899425490761,
+            "available_cash": 102959.36999999998,
+            "risk_adjustment": "Volatility-based limit: 14.3% (vs 20% baseline)"
+          }
+        }
+      },
+      "portfolio_decision": {
+        "action": "short",
+        "planned_quantity": 42,
+        "executed_quantity": 42,
+        "confidence": 29.0,
+        "reasoning": "The technical analyst agent indicates a bearish signal for TSLA with a confidence of 29. Since there is no existing position and the margin requirement is 0.00, opening a short position is aligned with the signal. The quantity is set to the maximum allowed shares for a new position."
+      },
+      "market_data": {
+        "price": 346.6,
+        "position_before": {
+          "long": 0,
+          "short": 42
+        }
+      },
+      "outcome": {
+        "daily_return": 0.0,
+        "ticker_return": 0.0,
+        "portfolio_value_before": 102959.36999999998,
+        "portfolio_value_after": 102959.36999999998
+      },
+      "metadata": {
+        "model_name": "gemini-2.5-flash-preview-05-20",
+        "model_provider": "Google",
+        "analysts": [
+          "technical_analyst"
+        ]
+      }
+    },
+    {
+      "date": "2025-08-25",
+      "ticker": "GOOGL",
+      "agent_signals": {
+        "technical_analyst_agent": {
+          "signal": "bearish",
+          "confidence": 32,
+          "reasoning": {
+            "market_regime": {
+              "state": "neutral",
+              "volatility": "low",
+              "structure": "mean_reverting",
+              "confidence": 30,
+              "adaptive_weights": {
+                "trend": 0.15,
+                "mean_reversion": 0.35,
+                "momentum": 0.15,
+                "volatility": 0.1,
+                "stat_arb": 0.25
+              }
+            },
+            "trend_following": {
+              "signal": "bullish",
+              "confidence": 25,
+              "metrics": {
+                "adx": 31.227821521604323,
+                "trend_strength": 0.3122782152160432,
+                "ema_short_period": 8,
+                "ema_medium_period": 21,
+                "ema_long_period": 55
+              },
+              "regime_adjustments": "EMA periods: 8/21/55 (adapted for mean_reverting regime), ADX threshold: 20"
+            },
+            "mean_reversion": {
+              "signal": "bearish",
+              "confidence": 60,
+              "metrics": {
+                "z_score": 1.8494379604625597,
+                "price_vs_bb": 1.0978239919690957,
+                "rsi": 67.826525466465,
+                "rsi_period": 11,
+                "rsi_oversold": 30,
+                "rsi_overbought": 70,
+                "bollinger_std": 1.6
+              },
+              "regime_adjustments": "RSI: 11d/30/70, BB: 16d/1.6\u03c3 (adapted for mean_reverting regime)"
+            },
+            "momentum": {
+              "signal": "neutral",
+              "confidence": 45,
+              "metrics": {
+                "momentum_score": 0.0,
+                "volume_momentum": 0.9561027461029737,
+                "momentum_short": 0.0,
+                "momentum_medium": 0.0,
+                "momentum_long": 0.0,
+                "volume_threshold": 1.0
+              },
+              "regime_adjustments": "Momentum periods: [0.4, 0.3, 0.3], Volume threshold: 1.0, Signal thresholds: 0.05/-0.05 (adapted for neutral/low)"
+            },
+            "volatility": {
+              "signal": "neutral",
+              "confidence": 55,
+              "metrics": {
+                "historical_volatility": 0.0,
+                "volatility_regime": 0.0,
+                "volatility_z_score": 0.0,
+                "atr_ratio": 0.021823588661326665,
+                "vol_period": 21,
+                "atr_period": 11
+              },
+              "regime_adjustments": "Vol period: 21d, Vol MA: 63d, Thresholds: 0.80/1.20 (adapted for neutral)"
+            },
+            "statistical_arbitrage": {
+              "signal": "neutral",
+              "confidence": 50,
+              "metrics": {
+                "hurst_exponent": 4.4162737839765496e-15,
+                "skewness": 0.0,
+                "kurtosis": 0.0,
+                "lookback_period": 63,
+                "hurst_threshold": 0.45,
+                "skew_threshold": 0.8
+              },
+              "regime_adjustments": "Lookback: 63d, Hurst threshold: 0.45, Skew threshold: \u00b10.8 (adapted for mean_reverting)"
+            }
+          }
+        },
+        "risk_management_agent": {
+          "signal": "neutral",
+          "confidence": 0.0,
+          "reasoning": {
+            "portfolio_value": 102959.36999999998,
+            "current_position_value": 0.0,
+            "base_position_limit_pct": 0.1920369094224929,
+            "position_limit": 19771.99921088693,
+            "remaining_limit": 19771.99921088693,
+            "available_cash": 102959.36999999998,
+            "risk_adjustment": "Volatility-based limit: 19.2% (vs 20% baseline)"
+          }
+        }
+      },
+      "portfolio_decision": {
+        "action": "short",
+        "planned_quantity": 94,
+        "executed_quantity": 94,
+        "confidence": 32.0,
+        "reasoning": "The technical analyst agent indicates a bearish signal for GOOGL with a confidence of 32. As there is no existing position and the margin requirement is 0.00, opening a short position is appropriate given the signal. The quantity is set to the maximum allowed shares for a new position."
+      },
+      "market_data": {
+        "price": 208.49,
+        "position_before": {
+          "long": 0,
+          "short": 94
+        }
+      },
+      "outcome": {
+        "daily_return": 0.0,
+        "ticker_return": 0.0,
+        "portfolio_value_before": 102959.36999999998,
+        "portfolio_value_after": 102959.36999999998
+      },
+      "metadata": {
+        "model_name": "gemini-2.5-flash-preview-05-20",
+        "model_provider": "Google",
+        "analysts": [
+          "technical_analyst"
+        ]
+      }
+    }
+  ]
+}

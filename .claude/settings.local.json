@@ -2,7 +2,12 @@
   "permissions": {
     "allow": [
       "Bash(poetry run:*)",
-      "Bash(sed:*)"
+      "Bash(sed:*)",
+      "Bash(python:*)",
+      "Bash(poetry add:*)",
+      "Bash(poetry install:*)",
+      "Bash(find:*)",
+      "Bash(grep:*)"
     ],
     "deny": [],
     "ask": []

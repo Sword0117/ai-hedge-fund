@@ -1,4 +1,7 @@
 import json
+import logging
+from datetime import datetime
+from typing import Dict, Any, Optional
 from langchain_core.messages import HumanMessage
 from langchain_core.prompts import ChatPromptTemplate
 
@@ -7,6 +10,8 @@ from pydantic import BaseModel, Field
 from typing_extensions import Literal
 from src.utils.progress import progress
 from src.utils.llm import call_llm
+
+logger = logging.getLogger(__name__)
 
 
 class PortfolioDecision(BaseModel):
@@ -18,6 +23,330 @@ class PortfolioDecision(BaseModel):
 
 class PortfolioManagerOutput(BaseModel):
     decisions: dict[str, PortfolioDecision] = Field(description="Dictionary of ticker to trading decisions")
+
+
+class EnhancedPortfolioManager:
+    """
+    Enhanced Portfolio Manager with dual-mode operation (LLM vs ML Ensemble).
+    
+    Supports A/B testing between traditional LLM-based decision making and
+    ML ensemble-based signal fusion for performance comparison.
+    """
+    
+    def __init__(self, config: Dict[str, Any] = None):
+        """
+        Initialize enhanced portfolio manager.
+        
+        Args:
+            config: Configuration dict with ensemble settings
+        """
+        self.config = config or {}
+        self.use_ml_ensemble = self.config.get('use_ml_ensemble', False)
+        self.ensemble_config = self.config.get('ensemble_config', {})
+        
+        # Initialize ML ensemble if enabled
+        self.ml_ensemble = None
+        if self.use_ml_ensemble:
+            try:
+                from src.agents.signal_fusion import create_signal_ensemble
+                self.ml_ensemble = create_signal_ensemble(self.ensemble_config)
+                logger.info("ML Ensemble initialized for portfolio management")
+            except ImportError as e:
+                logger.warning(f"Could not initialize ML ensemble: {e}. Using LLM mode only.")
+                self.use_ml_ensemble = False
+        
+        # Performance tracking
+        self.performance_tracker = None
+        if self.config.get('performance_tracking', {}).get('enabled', True):
+            try:
+                from src.agents.performance_tracker import AgentPerformanceTracker
+                self.performance_tracker = AgentPerformanceTracker(
+                    storage_dir=self.config.get('performance_tracking', {}).get('storage_path', 'data/agent_performance')
+                )
+                logger.info("Performance tracking enabled")
+            except ImportError as e:
+                logger.warning(f"Could not initialize performance tracker: {e}")
+        
+        # Decision logging for A/B testing analysis
+        self.decision_log = []
+        
+        logger.info(f"EnhancedPortfolioManager initialized - Mode: {'ML Ensemble' if self.use_ml_ensemble else 'LLM'}")
+    
+    def make_decision(
+        self,
+        tickers: list[str],
+        signals_by_ticker: dict[str, dict],
+        current_prices: dict[str, float], 
+        max_shares: dict[str, int],
+        portfolio: dict[str, float],
+        agent_id: str,
+        state: AgentState,
+        current_date: datetime = None
+    ) -> PortfolioManagerOutput:
+        """
+        Make portfolio decisions using either ML ensemble or LLM based on configuration.
+        
+        Args:
+            tickers: List of ticker symbols
+            signals_by_ticker: Agent signals by ticker
+            current_prices: Current prices for each ticker
+            max_shares: Maximum shares allowed per ticker
+            portfolio: Current portfolio state
+            agent_id: Agent identifier
+            state: Current agent state
+            current_date: Current trading date
+            
+        Returns:
+            PortfolioManagerOutput with trading decisions
+        """
+        current_date = current_date or datetime.now()
+        
+        try:
+            if self.use_ml_ensemble and self.ml_ensemble:
+                # Use ML ensemble for decision making
+                decisions = self._make_ml_ensemble_decisions(
+                    tickers, signals_by_ticker, current_prices, max_shares, 
+                    portfolio, current_date
+                )
+                decision_source = 'ML'
+            else:
+                # Use traditional LLM-based decision making
+                decisions = self._make_llm_decisions(
+                    tickers, signals_by_ticker, current_prices, max_shares,
+                    portfolio, agent_id, state
+                )
+                decision_source = 'LLM'
+            
+            # Log decisions for A/B testing analysis
+            self._log_decisions(tickers, decisions, decision_source, current_date)
+            
+            # Create output format
+            result = PortfolioManagerOutput(decisions=decisions)
+            
+            logger.debug(f"Generated {decision_source} decisions for {len(tickers)} tickers")
+            return result
+            
+        except Exception as e:
+            logger.error(f"Error in portfolio decision making: {e}")
+            # Fallback to default decisions
+            default_decisions = {
+                ticker: PortfolioDecision(
+                    action="hold", 
+                    quantity=0, 
+                    confidence=0.0, 
+                    reasoning=f"Error in decision making: {str(e)}"
+                )
+                for ticker in tickers
+            }
+            return PortfolioManagerOutput(decisions=default_decisions)
+    
+    def _make_ml_ensemble_decisions(
+        self,
+        tickers: list[str],
+        signals_by_ticker: dict[str, dict],
+        current_prices: dict[str, float],
+        max_shares: dict[str, int],
+        portfolio: dict[str, float],
+        current_date: datetime
+    ) -> dict[str, PortfolioDecision]:
+        """Generate decisions using ML ensemble"""
+        decisions = {}
+        
+        for ticker in tickers:
+            try:
+                agent_signals = signals_by_ticker.get(ticker, {})
+                
+                if not agent_signals:
+                    decisions[ticker] = PortfolioDecision(
+                        action="hold",
+                        quantity=0,
+                        confidence=0.0,
+                        reasoning="No agent signals available"
+                    )
+                    continue
+                
+                # Get ML ensemble decision
+                ml_decision = self.ml_ensemble.generate_decision(
+                    agent_signals=agent_signals,
+                    ticker=ticker,
+                    current_date=current_date,
+                    market_context={
+                        'current_price': current_prices.get(ticker, 0),
+                        'max_shares': max_shares.get(ticker, 0),
+                        'portfolio_cash': portfolio.get('cash', 0)
+                    }
+                )
+                
+                # Apply position and risk limits
+                adjusted_decision = self._apply_risk_limits(
+                    ml_decision, ticker, current_prices, max_shares, portfolio
+                )
+                
+                decisions[ticker] = adjusted_decision
+                
+            except Exception as e:
+                logger.error(f"Error in ML ensemble decision for {ticker}: {e}")
+                decisions[ticker] = PortfolioDecision(
+                    action="hold",
+                    quantity=0,
+                    confidence=0.0,
+                    reasoning=f"ML ensemble error: {str(e)}"
+                )
+        
+        return decisions
+    
+    def _make_llm_decisions(
+        self,
+        tickers: list[str],
+        signals_by_ticker: dict[str, dict],
+        current_prices: dict[str, float],
+        max_shares: dict[str, int],
+        portfolio: dict[str, float],
+        agent_id: str,
+        state: AgentState
+    ) -> dict[str, PortfolioDecision]:
+        """Generate decisions using traditional LLM approach"""
+        # Use the original LLM-based decision making
+        result = generate_trading_decision(
+            tickers=tickers,
+            signals_by_ticker=signals_by_ticker,
+            current_prices=current_prices,
+            max_shares=max_shares,
+            portfolio=portfolio,
+            agent_id=agent_id,
+            state=state
+        )
+        
+        # Add LLM identifier to reasoning
+        llm_decisions = {}
+        for ticker, decision in result.decisions.items():
+            enhanced_decision = PortfolioDecision(
+                action=decision.action,
+                quantity=decision.quantity,
+                confidence=decision.confidence,
+                reasoning=f"[LLM Decision] {decision.reasoning}"
+            )
+            llm_decisions[ticker] = enhanced_decision
+        
+        return llm_decisions
+    
+    def _apply_risk_limits(
+        self,
+        decision: PortfolioDecision,
+        ticker: str,
+        current_prices: dict[str, float],
+        max_shares: dict[str, int],
+        portfolio: dict[str, float]
+    ) -> PortfolioDecision:
+        """Apply risk management limits to ML ensemble decisions"""
+        current_price = current_prices.get(ticker, 0)
+        max_allowed = max_shares.get(ticker, 0)
+        
+        if current_price <= 0:
+            return PortfolioDecision(
+                action="hold",
+                quantity=0,
+                confidence=0.0,
+                reasoning="Invalid price - holding position"
+            )
+        
+        # Apply quantity limits
+        if decision.action in ["buy", "short"]:
+            # Limit buy/short quantity to max_shares
+            limited_quantity = min(decision.quantity, max_allowed)
+            
+            if limited_quantity != decision.quantity:
+                reasoning_addendum = f" (Limited from {decision.quantity} to {limited_quantity} shares by risk limits)"
+            else:
+                reasoning_addendum = ""
+            
+            return PortfolioDecision(
+                action=decision.action,
+                quantity=limited_quantity,
+                confidence=decision.confidence,
+                reasoning=decision.reasoning + reasoning_addendum
+            )
+        
+        # For sell/cover actions, quantities should be validated against current positions
+        # (This would require current position data which isn't directly available here)
+        return decision
+    
+    def _log_decisions(
+        self,
+        tickers: list[str],
+        decisions: dict[str, PortfolioDecision],
+        source: str,
+        timestamp: datetime
+    ) -> None:
+        """Log decisions for A/B testing analysis"""
+        try:
+            log_entry = {
+                'timestamp': timestamp.isoformat(),
+                'source': source,
+                'tickers': tickers,
+                'decisions': {
+                    ticker: {
+                        'action': decision.action,
+                        'quantity': decision.quantity,
+                        'confidence': decision.confidence
+                    }
+                    for ticker, decision in decisions.items()
+                }
+            }
+            
+            self.decision_log.append(log_entry)
+            
+            # Keep only recent decisions (last 1000 entries)
+            if len(self.decision_log) > 1000:
+                self.decision_log = self.decision_log[-1000:]
+                
+        except Exception as e:
+            logger.error(f"Error logging decisions: {e}")
+    
+    def update_performance(
+        self,
+        ticker: str,
+        date: datetime,
+        agent_signals: Dict[str, Dict[str, Any]],
+        actual_return: float,
+        market_regime: str = "neutral"
+    ) -> None:
+        """Update agent performance metrics"""
+        if self.performance_tracker:
+            try:
+                self.performance_tracker.update_performance(
+                    ticker=ticker,
+                    date=date,
+                    agent_signals=agent_signals,
+                    actual_return=actual_return,
+                    market_regime=market_regime
+                )
+            except Exception as e:
+                logger.error(f"Error updating performance for {ticker}: {e}")
+    
+    def get_decision_log(self) -> list:
+        """Get recent decision log for analysis"""
+        return self.decision_log.copy()
+    
+    def get_performance_report(self, ticker: str = None) -> Dict[str, Any]:
+        """Get performance report from tracker"""
+        if self.performance_tracker:
+            return self.performance_tracker.get_performance_report(ticker)
+        else:
+            return {"error": "Performance tracking not enabled"}
+
+
+# Global enhanced portfolio manager instance
+_enhanced_portfolio_manager = None
+
+def get_enhanced_portfolio_manager(config: Dict[str, Any] = None) -> EnhancedPortfolioManager:
+    """Get or create enhanced portfolio manager singleton"""
+    global _enhanced_portfolio_manager
+    
+    if _enhanced_portfolio_manager is None:
+        _enhanced_portfolio_manager = EnhancedPortfolioManager(config)
+    
+    return _enhanced_portfolio_manager
 
 
 ##### Portfolio Management Agent #####
@@ -68,16 +397,51 @@ def portfolio_management_agent(state: AgentState, agent_id: str = "portfolio_man
 
     progress.update_status(agent_id, None, "Generating trading decisions")
 
-    # Generate the trading decision
-    result = generate_trading_decision(
-        tickers=tickers,
-        signals_by_ticker=signals_by_ticker,
-        current_prices=current_prices,
-        max_shares=max_shares,
-        portfolio=portfolio,
-        agent_id=agent_id,
-        state=state,
-    )
+    # Check if enhanced portfolio manager is configured
+    config = state.get("config", {})
+    portfolio_config = config.get("portfolio_manager", {})
+    
+    if portfolio_config.get("use_enhanced_manager", False):
+        # Use enhanced portfolio manager with ML ensemble capability
+        try:
+            enhanced_manager = get_enhanced_portfolio_manager(portfolio_config)
+            
+            result = enhanced_manager.make_decision(
+                tickers=tickers,
+                signals_by_ticker=signals_by_ticker,
+                current_prices=current_prices,
+                max_shares=max_shares,
+                portfolio=portfolio,
+                agent_id=agent_id,
+                state=state,
+                current_date=datetime.fromisoformat(state["data"]["end_date"]) if "end_date" in state["data"] else datetime.now()
+            )
+            
+            logger.info(f"Used enhanced portfolio manager ({'ML Ensemble' if enhanced_manager.use_ml_ensemble else 'LLM'} mode)")
+            
+        except Exception as e:
+            logger.error(f"Enhanced portfolio manager failed: {e}. Falling back to traditional LLM.")
+            # Fallback to original method
+            result = generate_trading_decision(
+                tickers=tickers,
+                signals_by_ticker=signals_by_ticker,
+                current_prices=current_prices,
+                max_shares=max_shares,
+                portfolio=portfolio,
+                agent_id=agent_id,
+                state=state,
+            )
+    else:
+        # Use traditional LLM-based portfolio management
+        result = generate_trading_decision(
+            tickers=tickers,
+            signals_by_ticker=signals_by_ticker,
+            current_prices=current_prices,
+            max_shares=max_shares,
+            portfolio=portfolio,
+            agent_id=agent_id,
+            state=state,
+        )
 
     # Create the portfolio management message
     message = HumanMessage(

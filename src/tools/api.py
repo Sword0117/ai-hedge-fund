@@ -324,14 +324,38 @@ def get_market_cap(
     return market_cap
 
 
-def prices_to_df(prices: list[Price]) -> pd.DataFrame:
-    """Convert prices to a DataFrame."""
-    df = pd.DataFrame([p.model_dump() for p in prices])
-    df["Date"] = pd.to_datetime(df["time"])
-    df.set_index("Date", inplace=True)
+def prices_to_df(prices: list[Price] | list[dict]) -> pd.DataFrame:
+    """Convert prices to a DataFrame. Handles both Price objects and dicts."""
+    if not prices:
+        return pd.DataFrame()
+    
+    # Convert to list of dicts, handling both Price objects and dict objects
+    price_dicts = []
+    for p in prices:
+        if isinstance(p, dict):
+            price_dicts.append(p)
+        elif hasattr(p, 'model_dump'):
+            price_dicts.append(p.model_dump())
+        elif hasattr(p, 'dict'):  # Pydantic v1
+            price_dicts.append(p.dict())
+        else:
+            # Convert object attributes to dict
+            price_dict = {}
+            for attr in ['time', 'date', 'open', 'high', 'low', 'close', 'volume']:
+                if hasattr(p, attr):
+                    price_dict[attr] = getattr(p, attr)
+            price_dicts.append(price_dict)
+    
+    df = pd.DataFrame(price_dicts)
+    if 'time' in df.columns:
+        df["Date"] = pd.to_datetime(df["time"])
+        df.set_index("Date", inplace=True)
+    
     numeric_cols = ["open", "close", "high", "low", "volume"]
     for col in numeric_cols:
-        df[col] = pd.to_numeric(df[col], errors="coerce")
+        if col in df.columns:
+            df[col] = pd.to_numeric(df[col], errors="coerce")
+    
     df.sort_index(inplace=True)
     return df
 

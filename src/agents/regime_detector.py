@@ -15,6 +15,8 @@ from dataclasses import dataclass
 import warnings
 import math
 import statistics
+import os
+from dotenv import load_dotenv
 
 # Graceful import handling with fallback flags
 HAS_NUMPY = False
@@ -54,6 +56,8 @@ except ImportError:
 
 from src.tools.api import get_prices, prices_to_df
 from src.data.cache import get_cache
+from pathlib import Path
+import json
 
 
 @dataclass
@@ -292,13 +296,30 @@ class RegimeDetector:
             benchmark_ticker: Ticker to use for market regime detection (default: SPY)
             cache_days: Number of days to cache regime results
         """
+        # Load existing .env file
+        load_dotenv()
+        self.api_key = os.getenv('FINANCIAL_DATASETS_API_KEY')
+        
         self.benchmark_ticker = benchmark_ticker
         self.cache_days = cache_days
         self.cache = get_cache()
         self.logger = logging.getLogger(__name__)
         
+        # Initialize market data cache directory
+        self.market_cache_dir = Path("data/market_cache")
+        self.market_cache_dir.mkdir(parents=True, exist_ok=True)
+        
         # Initialize heuristic detector as fallback
         self.heuristic_detector = HeuristicRegimeDetector()
+        
+        # Log API key status
+        if not self.api_key:
+            self.logger.warning("FINANCIAL_DATASETS_API_KEY not found in .env file - may have limited API access")
+        else:
+            self.logger.info(f"Financial Datasets API key loaded successfully: {self.api_key[:8]}..." if len(self.api_key) >= 8 else "API key loaded")
+        
+        # Available tickers for fallback (from API error message)
+        self.available_tickers = ['AAPL', 'BRK.B', 'GOOGL', 'MSFT', 'NVDA', 'TSLA']
         
         # Model parameters
         self.lookback_days = 252  # 1 year of data for training
@@ -337,7 +358,7 @@ class RegimeDetector:
         
         Args:
             date: Date in YYYY-MM-DD format
-            api_key: Optional API key for data fetching
+            api_key: Optional API key for data fetching (defaults to .env key)
             
         Returns:
             MarketRegime object with current regime classification
@@ -349,18 +370,12 @@ class RegimeDetector:
             if (datetime.now() - cached_result.timestamp).days < self.cache_days:
                 return cached_result
         
+        # Use provided API key or fall back to instance API key
+        effective_api_key = api_key or self.api_key
+        
         try:
-            # Get market data for regime detection
-            end_date = datetime.strptime(date, '%Y-%m-%d')
-            start_date = end_date - timedelta(days=self.lookback_days)
-            
-            # Fetch price data
-            prices = get_prices(
-                ticker=self.benchmark_ticker,
-                start_date=start_date.strftime('%Y-%m-%d'),
-                end_date=date,
-                api_key=api_key
-            )
+            # Get market data for regime detection with SPY fallback
+            prices = self._get_market_proxy_data(date, effective_api_key)
             
             if not prices or len(prices) < self.min_data_points:
                 self.logger.warning(f"Insufficient data for regime detection on {date}")
@@ -371,6 +386,12 @@ class RegimeDetector:
                 # Use HMM-based detection with full scientific stack
                 df = prices_to_df(prices)
                 features = self._compute_features(df)
+                
+                # Validate feature dimensions for HMM compatibility
+                if features.shape[1] != 2:
+                    self.logger.error(f"Feature shape validation failed: expected (n, 2), got {features.shape}")
+                    raise ValueError(f"HMM requires exactly 2 features, got {features.shape[1]}")
+                
                 regime = self._detect_regime_hmm(features, date)
             else:
                 # Use heuristic-based fallback detection
@@ -385,6 +406,365 @@ class RegimeDetector:
             self.logger.error(f"Error in regime detection for {date}: {str(e)}")
             return self._get_fallback_regime(date)
     
+    def _ensure_dict_format(self, data_item) -> Dict:
+        """
+        Ensure data is in dict format, handling both Pydantic models and dicts.
+        
+        Args:
+            data_item: Either a Pydantic model or dict
+            
+        Returns:
+            Dictionary representation of the data
+        """
+        # First check: if it's already a dict, return it immediately
+        if isinstance(data_item, dict):
+            return data_item
+        
+        # Second check: if it's a list, handle it appropriately
+        if isinstance(data_item, list):
+            if not data_item:
+                return {}
+            return data_item[0] if isinstance(data_item[0], dict) else {}
+        
+        # Third check: if it has model_dump and is NOT a dict (double-check)
+        if hasattr(data_item, 'model_dump') and not isinstance(data_item, dict):
+            try:
+                return data_item.model_dump()
+            except Exception as e:
+                self.logger.warning(f"Failed to call model_dump on {type(data_item)}: {e}")
+        
+        # Fourth check: if it has dict method (Pydantic v1)
+        if hasattr(data_item, 'dict') and not isinstance(data_item, dict):
+            try:
+                return data_item.dict()
+            except Exception as e:
+                self.logger.warning(f"Failed to call dict on {type(data_item)}: {e}")
+        
+        # Last resort: convert object attributes to dict
+        try:
+            price_dict = {}
+            for attr in ['time', 'date', 'open', 'high', 'low', 'close', 'volume']:
+                if hasattr(data_item, attr):
+                    price_dict[attr] = getattr(data_item, attr)
+            if price_dict:  # Only return if we found some attributes
+                return price_dict
+        except Exception as e:
+            self.logger.warning(f"Failed to convert object attributes: {e}")
+        
+        # Ultimate fallback: return empty dict
+        self.logger.error(f"Could not convert {type(data_item)} to dict format: {data_item}")
+        return {}
+    
+    def _load_from_market_cache(self, ticker: str, start_date: str, end_date: str) -> Optional[List[Dict]]:
+        """Load cached market data if available and fresh."""
+        cache_key = f"{ticker}_{start_date}_{end_date}"
+        cache_file = self.market_cache_dir / f"{cache_key}.json"
+        
+        if cache_file.exists():
+            try:
+                # Check if cache is still fresh (within cache_days)
+                file_age = (datetime.now() - datetime.fromtimestamp(cache_file.stat().st_mtime)).days
+                if file_age <= self.cache_days:
+                    with open(cache_file, 'r') as f:
+                        cached_data = json.load(f)
+                    self.logger.info(f"Using cached market data for {ticker} ({start_date} to {end_date})")
+                    return cached_data
+                else:
+                    self.logger.debug(f"Cache for {ticker} is {file_age} days old, fetching fresh data")
+            except Exception as e:
+                self.logger.warning(f"Failed to load cache for {ticker}: {e}")
+        
+        return None
+    
+    def _save_to_market_cache(self, ticker: str, start_date: str, end_date: str, data: List[Dict]):
+        """Save market data to cache."""
+        cache_key = f"{ticker}_{start_date}_{end_date}"
+        cache_file = self.market_cache_dir / f"{cache_key}.json"
+        
+        try:
+            # Ensure all data is in dict format
+            cached_data = [self._ensure_dict_format(item) for item in data]
+            
+            with open(cache_file, 'w') as f:
+                json.dump(cached_data, f, indent=2)
+            self.logger.debug(f"Cached {len(cached_data)} data points for {ticker} ({start_date} to {end_date})")
+        except Exception as e:
+            self.logger.warning(f"Failed to save cache for {ticker}: {e}")
+    
+    def _get_market_proxy_data(self, date: str, api_key: Optional[str]) -> List[Dict]:
+        """
+        Handle SPY access with fallback to available tickers.
+        
+        Args:
+            date: Date for regime detection
+            api_key: API key for data fetching
+            
+        Returns:
+            List of price data dictionaries
+        """
+        end_date = datetime.strptime(date, '%Y-%m-%d')
+        start_date = end_date - timedelta(days=self.lookback_days)
+        start_date_str = start_date.strftime('%Y-%m-%d')
+        
+        # Check cache first
+        cached_data = self._load_from_market_cache(self.benchmark_ticker, start_date_str, date)
+        if cached_data and len(cached_data) >= self.min_data_points:
+            return cached_data
+        
+        try:
+            # Try SPY first with API key
+            self.logger.debug(f"Fetching fresh {self.benchmark_ticker} data with API key: {'Yes' if api_key else 'No'}")
+            
+            prices = get_prices(
+                ticker=self.benchmark_ticker,
+                start_date=start_date_str,
+                end_date=date,
+                api_key=api_key
+            )
+            
+            if prices and len(prices) >= self.min_data_points:
+                self.logger.info(f"Successfully fetched {len(prices)} data points for {self.benchmark_ticker}")
+                # Convert to dict format using utility function
+                price_dicts = [self._ensure_dict_format(price) for price in prices]
+                
+                # Cache the results for future use
+                self._save_to_market_cache(self.benchmark_ticker, start_date_str, date, price_dicts)
+                
+                return price_dicts
+            
+        except Exception as e:
+            if '401' in str(e) or 'SPY' in str(e) or 'Missing API key' in str(e):
+                self.logger.warning(f"{self.benchmark_ticker} not accessible: {str(e)}")
+                self.logger.info(f"Using market proxy from available tickers: {self.available_tickers}")
+                
+                # Try fallback using available tickers to create market proxy
+                return self._create_market_index_from_available_tickers(date, api_key)
+            else:
+                # Re-raise non-authentication errors
+                raise
+        
+        # If SPY didn't return enough data, try fallback
+        self.logger.warning(f"Insufficient {self.benchmark_ticker} data, using market proxy")
+        return self._create_market_index_from_available_tickers(date, api_key)
+    
+    def _create_market_index_from_available_tickers(self, date: str, api_key: Optional[str]) -> List[Dict]:
+        """
+        Create a market index proxy using available tickers.
+        
+        Args:
+            date: Date for regime detection
+            api_key: API key for data fetching
+            
+        Returns:
+            List of price data dictionaries representing market proxy
+        """
+        end_date = datetime.strptime(date, '%Y-%m-%d')
+        start_date = end_date - timedelta(days=self.lookback_days)
+        
+        all_ticker_data = {}
+        successful_tickers = []
+        
+        # Fetch data for available tickers with caching
+        for ticker in self.available_tickers:
+            try:
+                # Check cache first for individual ticker
+                cached_ticker_data = self._load_from_market_cache(ticker, start_date.strftime('%Y-%m-%d'), date)
+                
+                if cached_ticker_data and len(cached_ticker_data) >= self.min_data_points:
+                    # Use cached data
+                    all_ticker_data[ticker] = {price.get('time') or price.get('date', ''): price for price in cached_ticker_data}
+                    successful_tickers.append(ticker)
+                    self.logger.debug(f"Using cached data for {ticker} ({len(cached_ticker_data)} data points)")
+                    continue
+                
+                # Fetch fresh data if not in cache
+                self.logger.debug(f"Fetching fresh {ticker} data for market proxy")
+                prices = get_prices(
+                    ticker=ticker,
+                    start_date=start_date.strftime('%Y-%m-%d'),
+                    end_date=date,
+                    api_key=api_key
+                )
+                
+                if prices and len(prices) >= self.min_data_points:
+                    # Convert to dict format using utility function
+                    ticker_prices = [self._ensure_dict_format(price) for price in prices]
+                    
+                    # Cache the data
+                    self._save_to_market_cache(ticker, start_date.strftime('%Y-%m-%d'), date, ticker_prices)
+                    
+                    all_ticker_data[ticker] = {price.get('time') or price.get('date', ''): price for price in ticker_prices}
+                    successful_tickers.append(ticker)
+                    self.logger.debug(f"Successfully fetched {len(prices)} data points for {ticker}")
+                
+            except Exception as e:
+                self.logger.warning(f"Failed to fetch {ticker}: {str(e)}")
+                continue
+        
+        if not successful_tickers:
+            raise Exception("No ticker data available for market proxy creation")
+        
+        self.logger.info(f"Creating market proxy from {len(successful_tickers)} tickers: {successful_tickers}")
+        
+        # Create equal-weighted market index
+        return self._compute_equal_weighted_index(all_ticker_data, successful_tickers)
+    
+    def _compute_equal_weighted_index(self, ticker_data: Dict, tickers: List[str]) -> List[Dict]:
+        """
+        Compute equal-weighted market index from multiple tickers.
+        
+        Args:
+            ticker_data: Dictionary of ticker data
+            tickers: List of ticker symbols
+            
+        Returns:
+            List of market index price dictionaries
+        """
+        # Find common dates across all tickers
+        all_dates = set()
+        for ticker in tickers:
+            all_dates.update(ticker_data[ticker].keys())
+        
+        # Sort dates
+        sorted_dates = sorted(all_dates)
+        
+        market_index = []
+        
+        for date_str in sorted_dates:
+            # Get prices for this date from available tickers
+            daily_prices = []
+            daily_volumes = []
+            
+            for ticker in tickers:
+                if date_str in ticker_data[ticker]:
+                    price_data = ticker_data[ticker][date_str]
+                    close_price = float(price_data.get('close', 0))
+                    volume = float(price_data.get('volume', 0))
+                    
+                    if close_price > 0:
+                        daily_prices.append(close_price)
+                        daily_volumes.append(volume)
+            
+            if daily_prices:
+                # Calculate equal-weighted average (normalize by first price to create index)
+                if not market_index:
+                    # First data point - use as base (index = 100)
+                    base_price = sum(daily_prices) / len(daily_prices)
+                    index_value = 100.0
+                    previous_avg = base_price
+                else:
+                    # Calculate current average and index value
+                    current_avg = sum(daily_prices) / len(daily_prices)
+                    index_value = market_index[-1]['close'] * (current_avg / previous_avg)
+                    previous_avg = current_avg
+                
+                # Create market index data point
+                market_index.append({
+                    'time': date_str,
+                    'date': date_str,
+                    'open': index_value,  # Simplified - using same value
+                    'high': index_value * 1.005,  # Add small variation
+                    'low': index_value * 0.995,
+                    'close': index_value,
+                    'volume': sum(daily_volumes) if daily_volumes else 1000000  # Combined volume
+                })
+        
+        self.logger.info(f"Created market proxy index with {len(market_index)} data points")
+        return market_index
+    
+    def verify_api_authentication(self) -> bool:
+        """
+        Verify the API key from .env is working.
+        
+        Returns:
+            True if authentication successful, False otherwise
+        """
+        if not self.api_key:
+            self.logger.error("✗ FINANCIAL_DATASETS_API_KEY not found in .env file")
+            return False
+        
+        self.logger.debug(f"API key loaded: {self.api_key[:8]}..." if len(self.api_key) >= 8 else "API key loaded")
+        
+        # Test with a simple request to AAPL (known to be available)
+        try:
+            from datetime import date
+            test_date = (date.today() - timedelta(days=7)).strftime('%Y-%m-%d')
+            today = date.today().strftime('%Y-%m-%d')
+            
+            test_prices = get_prices('AAPL', test_date, today, self.api_key)
+            
+            if test_prices:
+                self.logger.info("✓ API authentication successful")
+                return True
+            else:
+                self.logger.error("✗ API authentication failed - no data returned")
+                return False
+                
+        except Exception as e:
+            self.logger.error(f"✗ API authentication failed: {str(e)}")
+            return False
+    
+    def clear_market_cache(self, ticker: Optional[str] = None, older_than_days: int = 30):
+        """
+        Clear old cache files to manage disk space.
+        
+        Args:
+            ticker: Specific ticker to clear (if None, clears all)
+            older_than_days: Remove cache files older than this many days
+        """
+        cutoff_date = datetime.now() - timedelta(days=older_than_days)
+        
+        if ticker:
+            cache_pattern = f"{ticker}_*.json"
+        else:
+            cache_pattern = "*.json"
+        
+        cache_files = self.market_cache_dir.glob(cache_pattern)
+        removed_count = 0
+        
+        for cache_file in cache_files:
+            try:
+                file_age = datetime.fromtimestamp(cache_file.stat().st_mtime)
+                if file_age < cutoff_date:
+                    cache_file.unlink()
+                    removed_count += 1
+                    self.logger.debug(f"Removed old cache: {cache_file.name}")
+            except Exception as e:
+                self.logger.warning(f"Failed to remove cache file {cache_file}: {e}")
+        
+        if removed_count > 0:
+            self.logger.info(f"Removed {removed_count} old cache files")
+    
+    def get_cache_stats(self) -> Dict[str, any]:
+        """
+        Report cache usage statistics.
+        
+        Returns:
+            Dictionary with cache statistics
+        """
+        try:
+            cache_files = list(self.market_cache_dir.glob("*.json"))
+            total_files = len(cache_files)
+            total_size = sum(f.stat().st_size for f in cache_files)
+            
+            # Group by ticker
+            ticker_counts = {}
+            for cache_file in cache_files:
+                ticker = cache_file.stem.split('_')[0]
+                ticker_counts[ticker] = ticker_counts.get(ticker, 0) + 1
+            
+            return {
+                "total_cached_periods": total_files,
+                "cache_size_mb": round(total_size / (1024 * 1024), 2),
+                "cache_location": str(self.market_cache_dir),
+                "ticker_breakdown": ticker_counts,
+                "oldest_cache": min((datetime.fromtimestamp(f.stat().st_mtime) for f in cache_files), default=None),
+                "newest_cache": max((datetime.fromtimestamp(f.stat().st_mtime) for f in cache_files), default=None)
+            }
+        except Exception as e:
+            self.logger.warning(f"Failed to get cache stats: {e}")
+            return {"error": str(e), "cache_location": str(self.market_cache_dir)}
+    
     def _df_to_dict_records(self, prices: List[Dict]) -> List[Dict]:
         """Convert price list to dict records format when pandas is not available."""
         return prices
@@ -392,62 +772,27 @@ class RegimeDetector:
     def _compute_features(self, df: pd.DataFrame) -> np.ndarray:
         """
         Compute feature matrix for HMM training/inference.
+        HMM uses exactly 2 features: daily returns and realized volatility.
         
         Args:
             df: Price DataFrame with OHLCV data
             
         Returns:
-            numpy array with computed features
+            numpy array with shape (n_samples, 2) for HMM compatibility
         """
-        features = []
-        
-        # 1. Returns at different horizons
+        # 1. Daily returns
         returns = df['close'].pct_change()
         
-        # Short-term returns (1-day, 5-day)
-        returns_1d = returns
-        returns_5d = df['close'].pct_change(periods=5)
-        returns_20d = df['close'].pct_change(periods=20)
-        
-        # 2. Realized volatility (20-day rolling)
+        # 2. Realized volatility (20-day rolling, annualized)
         realized_vol = returns.rolling(window=20).std() * np.sqrt(252)
         
-        # 3. Volume ratio (current volume / 20-day average)
-        volume_ma = df['volume'].rolling(window=20).mean()
-        volume_ratio = df['volume'] / volume_ma
-        
-        # 4. Price momentum indicators
-        momentum_20 = returns.rolling(window=20).sum()
-        momentum_60 = returns.rolling(window=60).sum()
-        
-        # 5. Volatility of volatility (regime change indicator)
-        vol_of_vol = realized_vol.rolling(window=10).std()
-        
-        # 6. Trend strength (using moving average crossover)
-        ma_5 = df['close'].rolling(5).mean()
-        ma_20 = df['close'].rolling(20).mean()
-        trend_strength = (ma_5 - ma_20) / ma_20
-        
-        # 7. Price location within recent range
-        high_20 = df['high'].rolling(20).max()
-        low_20 = df['low'].rolling(20).min()
-        price_position = (df['close'] - low_20) / (high_20 - low_20)
-        
-        # Combine features
+        # Combine only the 2 features needed for HMM
         feature_df = pd.DataFrame({
-            'returns_1d': returns_1d,
-            'returns_5d': returns_5d,
-            'returns_20d': returns_20d,
-            'realized_vol': realized_vol,
-            'volume_ratio': volume_ratio.fillna(1.0),
-            'momentum_20': momentum_20,
-            'momentum_60': momentum_60,
-            'vol_of_vol': vol_of_vol,
-            'trend_strength': trend_strength,
-            'price_position': price_position.fillna(0.5)
+            'returns': returns,
+            'volatility': realized_vol
         })
         
-        # Drop NaN rows and normalize features
+        # Drop NaN rows
         feature_df = feature_df.dropna()
         
         if len(feature_df) < self.min_data_points:
@@ -455,6 +800,9 @@ class RegimeDetector:
         
         # Normalize features to help HMM convergence
         normalized_features = self._normalize_features(feature_df.values)
+        
+        # Ensure we have exactly 2 features
+        assert normalized_features.shape[1] == 2, f"Expected 2 features, got {normalized_features.shape[1]}"
         
         return normalized_features
     
@@ -504,14 +852,16 @@ class RegimeDetector:
             market_confidence = market_probs[market_state_idx]
             
             # Volatility Regime Detection (2 states: High/Low)
-            vol_probs = self._volatility_model.predict_proba(latest_obs)[0]
+            latest_vol = latest_obs[:, [1]]  # volatility feature only
+            vol_probs = self._volatility_model.predict_proba(latest_vol)[0]
             vol_idx = np.argmax(vol_probs)
             vol_states = ['low', 'high']
             volatility = vol_states[vol_idx]
             vol_confidence = vol_probs[vol_idx]
             
             # Structure Detection (2 states: Trending/Mean-Reverting)
-            struct_probs = self._structure_model.predict_proba(latest_obs)[0]
+            latest_returns = latest_obs[:, [0]]  # returns feature only
+            struct_probs = self._structure_model.predict_proba(latest_returns)[0]
             struct_idx = np.argmax(struct_probs)
             struct_states = ['mean_reverting', 'trending']
             structure = struct_states[struct_idx]
@@ -542,36 +892,49 @@ class RegimeDetector:
             return self._detect_regime_heuristic(features, date)
     
     def _train_hmm_models(self, features: np.ndarray) -> None:
-        """Train HMM models for regime detection."""
+        """Train HMM models for regime detection with 2-feature input."""
         if len(features) < self.min_data_points:
             raise ValueError("Insufficient data for HMM training")
         
+        # Validate feature shape
+        if features.shape[1] != 2:
+            raise ValueError(f"Expected 2 features for HMM, got {features.shape[1]}")
+        
         try:
-            # Market State Model (3 hidden states)
+            # Market State Model (3 hidden states) - uses both features
             self._market_state_model = hmm.GaussianHMM(
                 n_components=3, 
                 covariance_type="diag",
-                n_iter=100,
+                n_iter=200,  # Increased from 100
+                tol=0.01,    # Relaxed tolerance for convergence
+                verbose=False,  # Suppress warnings
+                init_params="random",  # Better initialization
                 random_state=42
             )
             self._market_state_model.fit(features)
             
-            # Volatility Model (2 hidden states)
-            vol_features = features[:, [3, 7]]  # volatility and vol_of_vol features
+            # Volatility Model (2 hidden states) - uses volatility feature only
+            vol_features = features[:, [1]]  # volatility feature (column 1)
             self._volatility_model = hmm.GaussianHMM(
                 n_components=2,
                 covariance_type="diag", 
-                n_iter=100,
+                n_iter=200,  # Increased from 100
+                tol=0.01,    # Relaxed tolerance for convergence
+                verbose=False,  # Suppress warnings
+                init_params="random",  # Better initialization
                 random_state=42
             )
             self._volatility_model.fit(vol_features)
             
-            # Structure Model (2 hidden states)
-            struct_features = features[:, [5, 6, 8]]  # momentum and trend features
+            # Structure Model (2 hidden states) - uses returns feature only  
+            struct_features = features[:, [0]]  # returns feature (column 0)
             self._structure_model = hmm.GaussianHMM(
                 n_components=2,
                 covariance_type="diag",
-                n_iter=100,
+                n_iter=200,  # Increased from 100
+                tol=0.01,    # Relaxed tolerance for convergence
+                verbose=False,  # Suppress warnings
+                init_params="random",  # Better initialization
                 random_state=42
             )
             self._structure_model.fit(struct_features)
@@ -585,55 +948,61 @@ class RegimeDetector:
     def _detect_regime_heuristic(self, features: np.ndarray, date: str) -> MarketRegime:
         """
         Fallback heuristic-based regime detection when HMM is not available.
+        Uses only 2 features: returns (index 0) and volatility (index 1).
         
         Args:
-            features: Feature matrix
+            features: Feature matrix with shape (n_samples, 2)
             date: Date string
             
         Returns:
             MarketRegime object
         """
         try:
+            # Validate feature shape
+            if features.shape[1] != 2:
+                raise ValueError(f"Expected 2 features for heuristic detection, got {features.shape[1]}")
+            
             # Get latest feature values
             latest = features[-1, :]
             recent = features[-20:, :] if len(features) >= 20 else features
             
-            # Market State Detection (based on momentum and price position)
-            momentum_score = np.mean([latest[5], latest[6]])  # momentum_20, momentum_60
-            price_position = latest[9]  # price position in range
+            # Market State Detection (based on recent returns patterns)
+            recent_returns = recent[:, 0]  # returns column
+            avg_return = np.mean(recent_returns)
+            return_trend = np.polyfit(range(len(recent_returns)), recent_returns, 1)[0]  # trend slope
             
-            if momentum_score > 0.02 and price_position > 0.7:
+            if avg_return > 0.001 and return_trend > 0:
                 market_state = "bull"
-                market_confidence = min(0.8, abs(momentum_score) * 10)
-            elif momentum_score < -0.02 and price_position < 0.3:
-                market_state = "bear"
-                market_confidence = min(0.8, abs(momentum_score) * 10)
+                market_confidence = min(0.8, abs(avg_return) * 100)
+            elif avg_return < -0.001 and return_trend < 0:
+                market_state = "bear"  
+                market_confidence = min(0.8, abs(avg_return) * 100)
             else:
                 market_state = "neutral"
                 market_confidence = 0.6
             
             # Volatility Detection (based on realized vol percentile)
-            vol_percentile = np.percentile(recent[:, 3], 70)  # 70th percentile of recent volatility
-            current_vol = latest[3]  # realized_vol
+            recent_vol = recent[:, 1]  # volatility column
+            vol_percentile = np.percentile(recent_vol, 70)  # 70th percentile of recent volatility
+            current_vol = latest[1]  # current volatility
             
             if current_vol > vol_percentile:
                 volatility = "high"
-                vol_confidence = min(0.8, (current_vol - vol_percentile) / vol_percentile)
+                vol_confidence = min(0.8, (current_vol - vol_percentile) / (vol_percentile + 1e-8))
             else:
                 volatility = "low"
-                vol_confidence = min(0.8, (vol_percentile - current_vol) / vol_percentile)
+                vol_confidence = min(0.8, (vol_percentile - current_vol) / (vol_percentile + 1e-8))
             
-            # Structure Detection (based on trend consistency)
-            trend_values = recent[:, 8]  # trend_strength
-            trend_consistency = np.std(trend_values)
-            avg_trend = np.mean(trend_values)
+            # Structure Detection (based on return consistency)
+            return_std = np.std(recent_returns)
+            return_abs_mean = np.mean(np.abs(recent_returns))
             
-            if trend_consistency < 0.5 and abs(avg_trend) > 0.01:
+            if return_std > 0.01 and return_abs_mean > 0.005:
                 structure = "trending"
-                struct_confidence = min(0.8, abs(avg_trend) * 20)
+                struct_confidence = min(0.8, return_std * 50)
             else:
                 structure = "mean_reverting"
-                struct_confidence = min(0.8, trend_consistency * 2)
+                struct_confidence = min(0.8, 0.8 - return_std * 50)
             
             # Overall confidence
             overall_confidence = (market_confidence + vol_confidence + struct_confidence) / 3

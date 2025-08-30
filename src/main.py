@@ -49,9 +49,32 @@ def run_hedge_fund(
     portfolio: dict,
     show_reasoning: bool = False,
     selected_analysts: list[str] = [],
-    model_name: str = "gpt-4.1",
-    model_provider: str = "OpenAI",
+    model_name: str = None,
+    model_provider: str = None,
+    llm_provider: str = None
 ):
+    """Run hedge fund with correct LLM provider"""
+    
+    # Detect available LLM provider if not specified
+    if not llm_provider and not model_name and not model_provider:
+        from src.llm.models import detect_llm_provider
+        model_name, model_provider = detect_llm_provider()
+    elif llm_provider:
+        from src.llm.models import LLM_PROVIDER_CONFIG
+        config = LLM_PROVIDER_CONFIG.get(llm_provider)
+        if config:
+            model_name = config['model']
+            model_provider = config['provider_name']
+        else:
+            model_name = None
+            model_provider = None
+    
+    # Update the agent configuration with correct model
+    if model_name and model_provider:
+        print(f"Using {model_provider} with model {model_name}")
+    else:
+        print("No LLM provider available - using calculation-based agents only")
+
     # Start progress tracking
     progress.start()
 
